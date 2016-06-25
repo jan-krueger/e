@@ -8,6 +8,7 @@ e is a really simple 2D game engine (WIP).
 - [x] Simple log system
 - [ ] Entity Component System
 - [ ] Light mapping
+- [ ] Image manipulation
 - [ ] Multithreading
 - [ ] Loading Assets
 - [ ] Streaming Music Files
