@@ -15,6 +15,7 @@ public class Particle implements Renderable {
     private final Vector2D vector2D;
     private final Color color;
     private final int width;
+    private final boolean endless;
 
     private ParticleTypes particleType;
     private long lifeSpan;
@@ -33,6 +34,7 @@ public class Particle implements Renderable {
         this.width = width;
 
         this.lifeSpan = lifeSpan;
+        this.endless = (lifeSpan == -1);
     }
 
     public Particle(Location location, Vector2D vector2D, ParticleTypes particleType, Color color, int width) {
@@ -63,7 +65,7 @@ public class Particle implements Renderable {
 
     @Override
     public boolean isActive() {
-        return (this.lifeSpan > 0 || this.lifeSpan == -1);
+        return (this.lifeSpan > 0 || this.endless);
     }
 
 
