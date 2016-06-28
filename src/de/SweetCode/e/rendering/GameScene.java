@@ -1,15 +1,9 @@
 package de.SweetCode.e.rendering;
 
-import de.SweetCode.e.GameComponent;
+import de.SweetCode.e.Renderable;
 
-public abstract class GameScene<T> implements GameComponent {
+public abstract class GameScene implements Renderable {
 
     public GameScene() {}
-
-    /**
-     * Called every update.
-     * @param value
-     */
-    public abstract void render(T value);
 
 }

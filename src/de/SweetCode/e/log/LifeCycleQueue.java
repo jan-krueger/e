@@ -1,6 +1,7 @@
 package de.SweetCode.e.log;
 
 import de.SweetCode.e.utils.Assert;
+import de.SweetCode.e.utils.ToStringBuilder;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -113,6 +114,14 @@ public class LifeCycleQueue<E> implements Queue<E> {
     @Override
     public E peek() {
         return this.items.peek();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.create(this)
+                .append("capacity", this.capacity)
+                .append("items", this.items)
+            .build();
     }
 
 }

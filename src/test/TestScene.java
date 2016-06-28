@@ -1,34 +1,36 @@
 package test;
 
-import de.SweetCode.e.input.KeyEntry;
-import de.SweetCode.e.rendering.context.Graphics2DScene;
+import de.SweetCode.e.E;
+import de.SweetCode.e.input.InputEntry;
+import de.SweetCode.e.math.BoundingBox;
+import de.SweetCode.e.math.Location;
+import de.SweetCode.e.math.Vector2D;
+import de.SweetCode.e.rendering.GameScene;
+import de.SweetCode.e.rendering.particle.ParticleArea;
 
 import java.awt.*;
-import java.util.stream.Stream;
 
-public class TestScene extends Graphics2DScene {
+public class TestScene extends GameScene {
+
 
     public TestScene() {
+
+        E.getE().getGameComponents().add(new ParticleArea(new BoundingBox(new Location(0, 0), new Location(1000, 1000)), new Vector2D(0.000001, 0.000001), 5, 1000000));
+
     }
 
     @Override
     public void render(Graphics2D value) {
-        value.setColor(new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
 
-        value.fillRect(
-                0, 0, 1280, 720
-        );
     }
 
     @Override
-    public void update(Stream<KeyEntry> input, long delta) {
-
+    public void update(InputEntry input, long delta) {
     }
 
     @Override
     public boolean isActive() {
-        return true;
+        return false;
     }
-
 
 }

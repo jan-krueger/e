@@ -1,17 +1,14 @@
 package de.SweetCode.e;
 
-import de.SweetCode.e.input.KeyEntry;
-
-import java.util.stream.Stream;
+import de.SweetCode.e.input.InputEntry;
 
 public interface GameComponent {
 
     /**
      * Will be called each game loop iteration.
-     * @param input The input since the last call.
-     * @param delta The time passed in nano seconds since the last iteration.
+     * @param input The keyboard input since the last call.
      */
-    void update(Stream<KeyEntry> input, long delta);
+    void update(InputEntry input, long delta);
 
     /**
      * If the method returns true the loop will call the update method otherwise

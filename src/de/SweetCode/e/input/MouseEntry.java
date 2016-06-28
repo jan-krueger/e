@@ -2,27 +2,29 @@ package de.SweetCode.e.input;
 
 import de.SweetCode.e.utils.ToStringBuilder;
 
-public class KeyEntry {
+import java.awt.*;
 
-    private final char character;
+public class MouseEntry {
 
-    private final int keyCode;
-    private final int extendedKeyCode;
-    private final int keyLocation;
+    private final Point locationOnScreen;
+    private final Point point;
 
-    private final boolean isActionKey;
+    private final int button;
+    private final int clickCount;
+
+    private final boolean isPopupTrigger;
     private final boolean isAltDown;
     private final boolean isAltGraphDown;
     private final boolean isControlDown;
     private final boolean isMetaDown;
     private final boolean isShiftDown;
 
-    public KeyEntry(int keyCode, int extendedKeyCode, char character, int keyLocation, boolean isActionKey, boolean isAltDown, boolean isAltGraphDown, boolean isControlDown, boolean isMetaDown, boolean isShiftDown) {
-        this.keyCode = keyCode;
-        this.extendedKeyCode = extendedKeyCode;
-        this.character = character;
-        this.keyLocation = keyLocation;
-        this.isActionKey = isActionKey;
+    public MouseEntry(Point locationOnScreen, Point point, int button, int clickCount, boolean isPopupTrigger, boolean isAltDown, boolean isAltGraphDown, boolean isControlDown, boolean isMetaDown, boolean isShiftDown) {
+        this.locationOnScreen = locationOnScreen;
+        this.point = point;
+        this.button = button;
+        this.clickCount = clickCount;
+        this.isPopupTrigger = isPopupTrigger;
         this.isAltDown = isAltDown;
         this.isAltGraphDown = isAltGraphDown;
         this.isControlDown = isControlDown;
@@ -30,24 +32,24 @@ public class KeyEntry {
         this.isShiftDown = isShiftDown;
     }
 
-    public int getKeyCode() {
-        return this.keyCode;
+    public Point getLocationOnScreen() {
+        return this.locationOnScreen;
     }
 
-    public int getExtendedKeyCode() {
-        return this.extendedKeyCode;
+    public Point getPoint() {
+        return this.point;
     }
 
-    public char getCharacter() {
-        return this.character;
+    public int getButton() {
+        return this.button;
     }
 
-    public int getKeyLocation() {
-        return this.keyLocation;
+    public int getClickCount() {
+        return this.clickCount;
     }
 
-    public boolean isActionKey() {
-        return this.isActionKey;
+    public boolean isPopupTrigger() {
+        return this.isPopupTrigger;
     }
 
     public boolean isAltDown() {
@@ -73,13 +75,14 @@ public class KeyEntry {
     @Override
     public String toString() {
         return ToStringBuilder.create(this)
-                .append("keyCode", this.getKeyCode())
-                .append("extendedKeyCode", this.getExtendedKeyCode())
-                .append("character", this.getCharacter())
-                .append("keyLocation", this.getKeyLocation())
-                .append("isActionKey", this.isActionKey())
+                .append("locationOnScreen", this.getLocationOnScreen().toString())
+                .append("point", this.getPoint().toString())
+                .append("button", this.getButton())
+                .append("clickCount", this.getClickCount())
+                .append("isPopupTrigger", this.isPopupTrigger())
                 .append("isAltDown", this.isAltDown())
                 .append("isAltGraphDown", this.isAltGraphDown())
+                .append("isPopupTrigger", this.isPopupTrigger())
                 .append("isControlDown", this.isControlDown())
                 .append("isMetaDown", this.isMetaDown())
                 .append("isShiftDown", this.isShiftDown())
@@ -88,13 +91,13 @@ public class KeyEntry {
 
     public static class Builder {
 
-        private char character;
+        private Point locationOnScreen;
+        private Point point;
 
-        private int keyCode;
-        private int extendedKeyCode;
-        private int keyLocation;
+        private int button;
+        private int clickCount;
 
-        private boolean isActionKey;
+        private boolean isPopupTrigger;
         private boolean isAltDown;
         private boolean isAltGraphDown;
         private boolean isControlDown;
@@ -103,31 +106,32 @@ public class KeyEntry {
 
         public Builder() {}
 
-        public static KeyEntry.Builder create() {
+        public static Builder create() {
             return new Builder();
         }
 
-        public Builder character(char character) {
-            this.character = character;
+        public Builder locationOnScreen(Point locationOnScreen) {
+            this.locationOnScreen = locationOnScreen;
             return this;
         }
 
-        public Builder keyCode(int keyCode) {
-            this.keyCode = keyCode;
-            return this;
-        }
-        public Builder extendedKeyCode(int extendedKeyCode) {
-            this.extendedKeyCode = extendedKeyCode;
+        public Builder point(Point point) {
+            this.point = point;
             return this;
         }
 
-        public Builder keyLocation(int keyLocation) {
-            this.keyLocation = keyLocation;
+        public Builder button(int button) {
+            this.button = button;
             return this;
         }
 
-        public Builder isActionKey(boolean isActionKey) {
-            this.isActionKey = isActionKey;
+        public Builder clickCount(int clickCount) {
+            this.clickCount = clickCount;
+            return this;
+        }
+
+        public Builder isPopupTrigger(boolean isPopupTrigger) {
+            this.isPopupTrigger = isPopupTrigger;
             return this;
         }
 
@@ -156,13 +160,13 @@ public class KeyEntry {
             return this;
         }
 
-        public KeyEntry build() {
-            return new KeyEntry(
-                    this.keyCode,
-                    this.extendedKeyCode,
-                    this.character,
-                    this.keyLocation,
-                    this.isActionKey,
+        public MouseEntry build() {
+            return new MouseEntry(
+                    this.locationOnScreen,
+                    this.point,
+                    this.button,
+                    this.clickCount,
+                    this.isPopupTrigger,
                     this.isAltDown,
                     this.isAltGraphDown,
                     this.isControlDown,

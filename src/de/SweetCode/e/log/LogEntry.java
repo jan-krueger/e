@@ -25,8 +25,9 @@ public class LogEntry {
     @Override
     public String toString() {
         return ToStringBuilder.create(this)
-                .append(this)
-                .toString();
+                .append("message", this.message)
+                .append("timestamp", this.timestamp)
+            .build();
     }
 
     public static class Builder {
@@ -41,6 +42,11 @@ public class LogEntry {
 
         public Builder message(String message) {
             this.message = message;
+            return this;
+        }
+
+        public Builder message(String format, Object... objects) {
+            this.message = String.format(format, objects);
             return this;
         }
 

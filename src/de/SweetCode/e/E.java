@@ -1,22 +1,24 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.input.Input;
-import de.SweetCode.e.input.KeyEntry;
+import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.log.Log;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 public class E {
 
     private static E instance;
     private final static long NANO_SECOND = TimeUnit.SECONDS.toNanos(1);
+    private final static Random random = new Random();
+    private final static Random secureRandom = new SecureRandom();
 
-    private final Input input = new Input();
+    private final Input input;
     private final Log log;
 
     private final EScreen screen;
@@ -46,11 +48,26 @@ public class E {
         E.instance = this;
 
         this.settings = settings;
-        this.screen = new EScreen();
         this.log = new Log(settings.getLogCapacity());
+        this.screen = new EScreen();
+        this.input = new Input();
+
+
 
         this.optimalTime =  E.NANO_SECOND / this.settings.getTargetFPS();
 
+    }
+
+    public Random getRandom(boolean secure) {
+        return (secure ? E.secureRandom : E.random);
+    }
+
+    public Log getLog() {
+        return this.log;
+    }
+
+    public EScreen getScreen() {
+        return this.screen;
     }
 
     /**
@@ -69,14 +86,15 @@ public class E {
         return this.currentFPS;
     }
 
+    public List<GameComponent> getGameComponents() {
+        return this.gameComponents;
+    }
 
     /**
      * Add a new GameComponent.
      * @param gameComponent
      */
     public void addComponent(GameComponent gameComponent) {
-
-        Assert.assertFalse("The component has already been registered.", this.gameComponents.contains(gameComponent));
 
         this.gameComponents.add(gameComponent);
 
@@ -87,8 +105,6 @@ public class E {
      * @param gameScene
      */
     public void addScene(GameScene gameScene) {
-
-        Assert.assertFalse("The scene has already been registered.", this.scenes.containsKey(gameScene.getClass()));
 
         this.scenes.put(gameScene.getClass(), gameScene);
 
@@ -125,21 +141,19 @@ public class E {
             lastFrameTime += updateLength;
             tmpFPS++;
 
-            int delta = (int) (updateLength / Double.valueOf(this.optimalTime));
-
             if(lastFrameTime >= E.NANO_SECOND) {
-                lastFrameTime = 0;
                 this.currentFPS = tmpFPS;
+                lastFrameTime = 0;
                 tmpFPS = 0;
             }
 
             // get the input
-            Stream<KeyEntry> input = this.input.getPressedKeys();
+            InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries());
 
             this.gameComponents.forEach(e -> {
 
                 if(e.isActive()) {
-                    e.update(input, this.settings.getDeltaUnit().convert(delta, TimeUnit.NANOSECONDS));
+                    e.update(input, this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS));
                 }
 
             });
@@ -147,7 +161,7 @@ public class E {
             this.scenes.forEach((k, v) -> {
 
                 if(v.isActive()) {
-                    v.update(input, this.settings.getDeltaUnit().convert(delta, TimeUnit.NANOSECONDS));
+                    v.update(input, this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS));
                     this.screen.render(v);
                 }
 

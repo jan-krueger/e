@@ -1,5 +1,7 @@
 package de.SweetCode.e.log;
 
+import de.SweetCode.e.utils.ToStringBuilder;
+
 import java.util.Queue;
 import java.util.stream.Stream;
 
@@ -30,6 +32,13 @@ public class Log {
      */
     public Stream<LogEntry> getLog() {
         return this.entries.stream();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.create(this)
+                .append("entries", this.entries)
+            .build();
     }
 
 }

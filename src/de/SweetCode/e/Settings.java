@@ -2,6 +2,8 @@ package de.SweetCode.e;
 
 import de.SweetCode.e.utils.Version;
 
+import java.awt.*;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface Settings {
@@ -59,5 +61,11 @@ public interface Settings {
      * @return
      */
     boolean isResizable();
+
+    /**
+     * Hints to be used while rendering.
+     * @return
+     */
+    Map<RenderingHints.Key, Object> getRenderingHints();
 
 }

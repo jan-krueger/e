@@ -115,7 +115,7 @@ public class Assert {
     }
 
     public static void assertNotNull(Object object) {
-        Assert.assertNull(null, object);
+        Assert.assertNotNull(null, object);
     }
 
     public static void assertNotNull(String message, Object object) {

@@ -2,6 +2,7 @@ package de.SweetCode.e.utils;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 public class StringUtils {
 
@@ -236,7 +237,25 @@ public class StringUtils {
             return builder.toString().substring(0, builder.toString().length() - delimiter.length());
         }
 
-        return StringUtils.EMPTY;
+        return "empty";
+
+    }
+
+    public static <T> String join(Stream<T> value, String delimiter) {
+
+        if(value == null) {
+            return null;
+        }
+
+        StringBuffer builder = new StringBuffer();
+
+        value.forEach(e -> builder.append(e).append(delimiter));
+
+        if(builder.length() > 0) {
+            return builder.toString().substring(0, builder.toString().length() - delimiter.length());
+        }
+
+        return "empty";
 
     }
 

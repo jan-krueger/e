@@ -1,15 +1,21 @@
 package de.SweetCode.e.input;
 
+import de.SweetCode.e.E;
+import de.SweetCode.e.utils.ToStringBuilder;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.stream.Stream;
 
 public class Input extends KeyAdapter {
 
-    private Queue<KeyEntry> queue = new LinkedTransferQueue<>();
+    private final Queue<KeyEntry> keyQueue = new LinkedTransferQueue<>();
+    private final Queue<MouseEntry> mouseQueue = new LinkedTransferQueue<>();
 
     public Input() {
         this.register();
@@ -23,7 +29,7 @@ public class Input extends KeyAdapter {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
 
             if(e.getID() == KeyEvent.KEY_PRESSED) {
-                this.queue.add(
+                this.keyQueue.add(
                     KeyEntry.Builder.create()
                             .keyCode(e.getKeyCode())
                             .extendedKeyCode(e.getExtendedKeyCode())
@@ -37,8 +43,30 @@ public class Input extends KeyAdapter {
                     .build()
                 );
             }
+
             return false;
 
+        });
+
+        E.getE().getScreen().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Input.this.mouseQueue.add(
+                        MouseEntry.Builder.create()
+                                .button(e.getButton())
+                                .clickCount(e.getClickCount())
+                                .isPopupTrigger(e.isPopupTrigger())
+                                .locationOnScreen(e.getLocationOnScreen())
+                                .point(e.getPoint())
+                                .isAltDown(e.isAltDown())
+                                .isAltGraphDown(e.isAltGraphDown())
+                                .isControlDown(e.isControlDown())
+                                .isMetaDown(e.isMetaDown())
+                                .isShiftDown(e.isShiftDown())
+                        .build()
+                );
+
+            }
         });
 
     }
@@ -49,11 +77,30 @@ public class Input extends KeyAdapter {
      * The first element in the stream is the oldest key.
      * @return
      */
-    public Stream<KeyEntry> getPressedKeys() {
-        Stream<KeyEntry> stream = new LinkedList<>(this.queue).stream();
-        this.queue.clear();
+    public Stream<KeyEntry> getKeyboardEntries() {
+        Stream<KeyEntry> stream = new LinkedList<>(this.keyQueue).stream();
+        this.keyQueue.clear();
         return stream;
     }
 
+    /**
+     * Returns all pressed mouse buttons since the last method call in the wrong order.
+     *
+     * The first element in the stream is the oldest mouse button.
+     * @return
+     */
+    public Stream<MouseEntry> getMouseEntries() {
+        Stream<MouseEntry> stream = new LinkedList<>(this.mouseQueue).stream();
+        this.mouseQueue.clear();
+        return stream;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.create(this)
+                .append("keyQueue", this.keyQueue)
+                .append("mouseQueue", this.mouseQueue)
+                .build();
+    }
 
 }

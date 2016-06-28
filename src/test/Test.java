@@ -4,6 +4,9 @@ import de.SweetCode.e.E;
 import de.SweetCode.e.Settings;
 import de.SweetCode.e.utils.Version;
 
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Test {
@@ -14,7 +17,7 @@ public class Test {
 
             @Override
             public String getName() {
-                return "E";
+                return "E - Music";
             }
 
             @Override
@@ -29,22 +32,22 @@ public class Test {
 
             @Override
             public int getWidth() {
-                return 1280;
+                return 1920;
             }
 
             @Override
             public int getHeight() {
-                return 720;
+                return 1080;
             }
 
             @Override
             public int getTargetFPS() {
-                return 25;
+                return 5000;
             }
 
             @Override
             public int getLogCapacity() {
-                return 1000;
+                return Integer.MAX_VALUE;
             }
 
             @Override
@@ -54,10 +57,20 @@ public class Test {
 
             @Override
             public boolean isResizable() {
-                return true;
+                return false;
+            }
+
+            @Override
+            public Map<RenderingHints.Key, Object> getRenderingHints() {
+                return new HashMap<RenderingHints.Key, Object>() {{
+
+                    this.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                }};
             }
 
         });
+
 
         e.addScene(new TestScene());
         e.show(TestScene.class);
