@@ -58,7 +58,19 @@ public class ExplosionArea implements Renderable {
 
         for(int i = 0; i < this.amount; i++) {
 
-            this.particles.add(new Particle(ExplosionArea.getRandomLocation(this.circleBox, this.evenDistribution), new Vector2D(0, 0), ParticleTypes.RANDOM, Color.ORANGE, true, true, false, this.lifetime, 10));
+            this.particles.add(
+                    Particle.Builder.create()
+                            .location(ExplosionArea.getRandomLocation(this.circleBox, this.evenDistribution))
+                            .vector2D(new Vector2D(0, 0))
+                            .particleType(ParticleTypes.RANDOM)
+                            .color(Color.ORANGE)
+                            .fadeInAndOut(true)
+                            .destroyItself(true)
+                            .mixType(false)
+                            .lifeSpan(this.lifetime)
+                            .width(10)
+                    .build()
+            );
 
         }
 

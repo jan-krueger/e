@@ -42,7 +42,6 @@ public class EScreen extends JFrame {
             E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
         }
 
-        System.out.println(ToStringBuilder.create(null).append(null).build());
     }
 
     public void render(GameScene gameScene) {

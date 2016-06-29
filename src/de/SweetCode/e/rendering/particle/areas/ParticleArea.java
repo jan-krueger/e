@@ -29,8 +29,17 @@ public class ParticleArea implements Renderable {
 
         for(int i = 0; i < amount; i++) {
 
-            Particle particle = new Particle(ParticleArea.getRandomLocation(boundingBox), vector2D, particleType, (color == null ? new Color(E.getE().getRandom(false).nextInt(255), E.getE().getRandom(false).nextInt(255), E.getE().getRandom(false).nextInt(255)) : color), false, false, mixType, lifeSpan, width);
-
+            Particle particle = Particle.Builder.create()
+                                    .location(ParticleArea.getRandomLocation(boundingBox))
+                                    .vector2D(vector2D)
+                                    .particleType(particleType)
+                                    .color(color == null ? new Color(E.getE().getRandom(false).nextInt(255), E.getE().getRandom(false).nextInt(255), E.getE().getRandom(false).nextInt(255)) : color)
+                                    .destroyItself(false)
+                                    .fadeInAndOut(false)
+                                    .mixType(mixType)
+                                    .lifeSpan(lifeSpan)
+                                    .width(width)
+                                .build();
             this.particles.add(particle);
             E.getE().getGameComponents().add(particle);
 

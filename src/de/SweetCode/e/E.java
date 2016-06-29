@@ -54,7 +54,6 @@ public class E {
         this.input = new Input();
 
 
-
         this.optimalTime =  E.NANO_SECOND / this.settings.getTargetFPS();
 
     }
@@ -153,16 +152,13 @@ public class E {
 
             long delta = Math.max(this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (this.settings.roundDelta() ? 1 : 0));
 
-            Iterator<GameComponent> gameComponents = this.gameComponents.iterator();
-            while (gameComponents.hasNext()) {
-
-                GameComponent e = gameComponents.next();
+            this.gameComponents.forEach(e -> {
 
                 if(e.isActive()) {
                     e.update(input, delta);
                 }
 
-            }
+            });
 
             this.scenes.forEach((k, v) -> {
 

@@ -64,9 +64,21 @@ public class SpiralArea implements Renderable {
                     this.circleBox.getCenter().getY() + Math.sin(around) * away
             );
 
-            E.getE().addComponent(new Particle(location, new Vector2D(0, 0), this.particleType, this.color, false, true, true, -1, 2));
+            E.getE().addComponent(
+                    Particle.Builder.create()
+                        .location(location)
+                        .vector2D(new Vector2D(0, 0))
+                            .particleType(this.particleType)
+                            .color(this.color)
+                            .fadeInAndOut(false)
+                            .destroyItself(true)
+                            .mixType(true)
+                            .lifeSpan(-1)
+                            .width(2)
+                    .build()
+            );
 
-            theta += distance / away;
+            theta += this.distance / away;
 
         }
 

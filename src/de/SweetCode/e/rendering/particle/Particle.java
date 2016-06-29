@@ -12,7 +12,6 @@ import java.awt.*;
 public class Particle implements Renderable {
 
     private final Location location;
-    private final Vector2D vector2D;
     private final Color color;
     private final int width;
     private final boolean mixType;
@@ -26,6 +25,7 @@ public class Particle implements Renderable {
     private float fadeAlpha = 0;
 
     private ParticleTypes particleType;
+    private Vector2D vector2D;
     private boolean endless;
     private long lifeSpan;
     private boolean destroy = false;
@@ -126,11 +126,14 @@ public class Particle implements Renderable {
             value.setComposite(AlphaComposite.SrcOver.derive(this.fadeAlpha));
         }
 
+        int x = (int) (this.location.getX() + this.width / 2);
+        int y = (int) (this.location.getY() + this.width / 2);
+
         value.setColor(this.color);
         switch (this.particleType) {
 
             case CIRCLE:
-                value.fillOval((int) this.location.getX(), (int) this.location.getY(), this.width, this.width);
+                value.fillOval(x, y, this.width, this.width);
 
                 if(this.mixType) {
                     this.particleType = ParticleTypes.RANDOM;
@@ -138,7 +141,7 @@ public class Particle implements Renderable {
                 break;
 
             case SQUARE:
-                value.fillRect((int) this.location.getX(), (int) this.location.getY(), this.width, this.width);
+                value.fillRect(x, y, this.width, this.width);
 
                 if(this.mixType) {
                     this.particleType = ParticleTypes.RANDOM;
@@ -154,6 +157,81 @@ public class Particle implements Renderable {
 
         if(this.fadeInAndOut) {
             value.setComposite(AlphaComposite.SrcOver.derive(1));
+        }
+
+    }
+
+    public void setVector2D(Vector2D vector2D) {
+        this.vector2D = vector2D;
+    }
+
+    public static class Builder {
+
+        private Location location;
+        private Vector2D vector2D;
+        private ParticleTypes particleType;
+        private Color color;
+
+        private boolean fadeInAndOut = false;
+        private boolean destroyItself = false;
+        private boolean mixType = false;
+
+        private long lifeSpan;
+        private int width;
+
+        public Builder() {}
+
+        public static Builder create() {
+            return new Builder();
+        }
+
+        public Builder location(Location location) {
+            this.location = location;
+            return this;
+        }
+
+        public Builder vector2D(Vector2D vector2D) {
+            this.vector2D = vector2D;
+            return this;
+        }
+
+        public Builder particleType(ParticleTypes particleType) {
+            this.particleType = particleType;
+            return this;
+        }
+
+        public Builder color(Color color) {
+            this.color = color;
+            return this;
+        }
+
+        public Builder fadeInAndOut(boolean fadeInAndOut) {
+            this.fadeInAndOut = fadeInAndOut;
+            return this;
+        }
+
+        public Builder destroyItself(boolean destroyItself) {
+            this.destroyItself = destroyItself;
+            return this;
+        }
+
+        public Builder mixType(boolean mixType) {
+            this.mixType = mixType;
+            return this;
+        }
+
+        public Builder lifeSpan(long lifeSpan) {
+            this.lifeSpan = lifeSpan;
+            return this;
+        }
+
+        public Builder width(int width) {
+            this.width = width;
+            return this;
+        }
+
+        public Particle build() {
+            return new Particle(this.location, this.vector2D, this.particleType, this.color, this.fadeInAndOut, this.destroyItself, this.mixType, this.lifeSpan, this.width);
         }
 
     }
