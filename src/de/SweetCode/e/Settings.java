@@ -27,6 +27,12 @@ public interface Settings {
     TimeUnit getDeltaUnit();
 
     /**
+     * If this is set to true, the delta time will always be 1 or higher.
+     * @return
+     */
+    boolean roundDelta();
+
+    /**
      * The width of the screen.
      * @return
      */

@@ -9,6 +9,7 @@ import de.SweetCode.e.utils.StringUtils;
 
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class E {
@@ -24,7 +25,7 @@ public class E {
     private final EScreen screen;
     private final Settings settings;
 
-    private final List<GameComponent> gameComponents = new ArrayList<>();
+    private final List<GameComponent> gameComponents = new CopyOnWriteArrayList<>();
     private final Map<Class<? extends GameScene>, GameScene> scenes = new HashMap<>();
 
     private final long optimalTime;
@@ -150,18 +151,23 @@ public class E {
             // get the input
             InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries());
 
-            this.gameComponents.forEach(e -> {
+            long delta = Math.max(this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (this.settings.roundDelta() ? 1 : 0));
+
+            Iterator<GameComponent> gameComponents = this.gameComponents.iterator();
+            while (gameComponents.hasNext()) {
+
+                GameComponent e = gameComponents.next();
 
                 if(e.isActive()) {
-                    e.update(input, this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS));
+                    e.update(input, delta);
                 }
 
-            });
+            }
 
             this.scenes.forEach((k, v) -> {
 
                 if(v.isActive()) {
-                    v.update(input, this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS));
+                    v.update(input, delta);
                     this.screen.render(v);
                 }
 

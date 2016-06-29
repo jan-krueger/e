@@ -1,4 +1,4 @@
-package de.SweetCode.e.rendering.particle;
+package de.SweetCode.e.rendering.particle.areas;
 
 import de.SweetCode.e.E;
 import de.SweetCode.e.Renderable;
@@ -6,6 +6,8 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.BoundingBox;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.math.Vector2D;
+import de.SweetCode.e.rendering.particle.Particle;
+import de.SweetCode.e.rendering.particle.ParticleTypes;
 import de.SweetCode.e.utils.Assert;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class ParticleArea implements Renderable {
     private final List<Particle> particles = new ArrayList<>();
 
 
-    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, Color color, long lifeSpan, int width, int amount) {
+    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, Color color, boolean mixType, long lifeSpan, int width, int amount) {
 
         Assert.assertNotNull(boundingBox);
         Assert.assertNotNull(particleType);
@@ -27,7 +29,7 @@ public class ParticleArea implements Renderable {
 
         for(int i = 0; i < amount; i++) {
 
-            Particle particle = new Particle(ParticleArea.getRandomLocation(boundingBox), vector2D, particleType, (color == null ? new Color(E.getE().getRandom(false).nextInt(255), E.getE().getRandom(false).nextInt(255), E.getE().getRandom(false).nextInt(255)) : color), lifeSpan, width);
+            Particle particle = new Particle(ParticleArea.getRandomLocation(boundingBox), vector2D, particleType, (color == null ? new Color(E.getE().getRandom(false).nextInt(255), E.getE().getRandom(false).nextInt(255), E.getE().getRandom(false).nextInt(255)) : color), false, false, mixType, lifeSpan, width);
 
             this.particles.add(particle);
             E.getE().getGameComponents().add(particle);
@@ -37,21 +39,25 @@ public class ParticleArea implements Renderable {
     }
 
     public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, Color color, int width, int amount) {
-        this(boundingBox, vector2D, particleType, color, -1, width, amount);
+        this(boundingBox, vector2D, particleType, color, false, -1, width, amount);
     }
 
     public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, int width, int amount) {
-        this(boundingBox, vector2D, particleType, null, -1, width, amount);
+        this(boundingBox, vector2D, particleType, null, false, -1, width, amount);
     }
 
-    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, Color color, int width, int amount) {
-        this(boundingBox, vector2D, ParticleTypes.RANDOM, color, -1, width, amount);
+    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, Color color, boolean mixType, int width, int amount) {
+        this(boundingBox, vector2D, ParticleTypes.RANDOM, color, mixType, -1, width, amount);
     }
 
-    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, int width, int amount) {
-        this(boundingBox, vector2D, ParticleTypes.RANDOM, null, -1, width, amount);
+    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, boolean mixType, int width, int amount) {
+        this(boundingBox, vector2D, ParticleTypes.RANDOM, null, mixType, -1, width, amount);
     }
 
+
+    public void setDestroy(boolean destroy) {
+        this.particles.forEach(e -> e.setDestroy(destroy));
+    }
 
     @Override
     public void render(Graphics2D value) {}

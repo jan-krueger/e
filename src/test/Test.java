@@ -27,7 +27,12 @@ public class Test {
 
             @Override
             public TimeUnit getDeltaUnit() {
-                return TimeUnit.NANOSECONDS;
+                return TimeUnit.MILLISECONDS;
+            }
+
+            @Override
+            public boolean roundDelta() {
+                return true;
             }
 
             @Override
@@ -42,7 +47,7 @@ public class Test {
 
             @Override
             public int getTargetFPS() {
-                return 5000;
+                return Integer.MAX_VALUE;
             }
 
             @Override

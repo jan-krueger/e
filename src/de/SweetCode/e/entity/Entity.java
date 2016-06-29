@@ -4,10 +4,9 @@ import de.SweetCode.e.GameComponent;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.BoundingBox;
 import de.SweetCode.e.math.Location;
-import de.SweetCode.e.rendering.QuadTreeObject;
 import de.SweetCode.e.utils.ToStringBuilder;
 
-public abstract class Entity implements GameComponent, QuadTreeObject {
+public abstract class Entity implements GameComponent {
 
     private BoundingBox boundingBox;
 
@@ -17,11 +16,6 @@ public abstract class Entity implements GameComponent, QuadTreeObject {
 
     public Location getLocation() {
         return this.boundingBox.getCenter();
-    }
-
-    @Override
-    public BoundingBox getBoundingBox() {
-        return this.boundingBox;
     }
 
     @Override

@@ -1,9 +1,8 @@
 package de.SweetCode.e.math;
 
-import de.SweetCode.e.rendering.QuadTreeObject;
 import de.SweetCode.e.utils.ToStringBuilder;
 
-public class BoundingBox implements QuadTreeObject {
+public class BoundingBox {
 
     private final Location min;
     private final Location max;
@@ -75,8 +74,4 @@ public class BoundingBox implements QuadTreeObject {
         return ToStringBuilder.create(this).append(this).build();
     }
 
-    @Override
-    public BoundingBox getBoundingBox() {
-        return this;
-    }
 }
