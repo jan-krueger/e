@@ -4,6 +4,8 @@ import de.SweetCode.e.input.Input;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.log.Log;
 import de.SweetCode.e.rendering.GameScene;
+import de.SweetCode.e.rendering.layers.Layer;
+import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
 
@@ -23,6 +25,8 @@ public class E {
     private final Log log;
 
     private final EScreen screen;
+    private final Layers layers = new Layers();
+
     private final Settings settings;
 
     private final List<GameComponent> gameComponents = new CopyOnWriteArrayList<>();
@@ -56,6 +60,10 @@ public class E {
 
         this.optimalTime =  E.NANO_SECOND / this.settings.getTargetFPS();
 
+        for(int i = 0; i < settings.getAmountOfLayers(); i++) {
+            this.layers.add(new Layer());
+        }
+
     }
 
     public Random getRandom(boolean secure) {
@@ -68,6 +76,10 @@ public class E {
 
     public EScreen getScreen() {
         return this.screen;
+    }
+
+    public Layers getLayers() {
+        return this.layers;
     }
 
     /**
@@ -226,6 +238,10 @@ public class E {
 
         if(settings.getLogCapacity() < 1) {
             invalids.add("logCapacity cannot be negative or 0");
+        }
+
+        if(settings.getAmountOfLayers() < 1) {
+            invalids.add("The amount of layers must be at least 1");
         }
 
         return invalids;

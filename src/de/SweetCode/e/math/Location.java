@@ -1,6 +1,6 @@
 package de.SweetCode.e.math;
 
-import de.SweetCode.e.utils.ToStringBuilder;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 public class Location {
 

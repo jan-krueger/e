@@ -1,6 +1,6 @@
 package de.SweetCode.e.log;
 
-import de.SweetCode.e.utils.ToStringBuilder;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.util.Date;
 import java.sql.Timestamp;

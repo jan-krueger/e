@@ -6,9 +6,11 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.CircleBox;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.math.Vector2D;
+import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.rendering.particle.Particle;
 import de.SweetCode.e.rendering.particle.ParticleTypes;
 import de.SweetCode.e.utils.Assert;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -90,17 +92,19 @@ public class ExplosionArea implements Renderable {
     }
 
     @Override
-    public void render(Graphics2D value) {}
+    public void render(Layers value) {}
 
     @Override
     public void update(InputEntry input, long delta) {
 
         this.timePassed += delta;
 
+
         if(this.stepDelay <= this.timePassed && this.currentStep < this.particles.size()) {
 
-            long deltaStep = (currentStep + (this.timePassed / this.stepDelay * this.step));
-            for(int i = this.currentStep; i < deltaStep && this.currentStep < this.particles.size() - 1; i++) {
+            long deltaStep = Math.min((currentStep + (this.timePassed / this.stepDelay * this.step)), this.particles.size() - 1);
+
+            for(int i = this.currentStep; i < deltaStep; i++) {
                 E.getE().addComponent(this.particles.get(i));
             }
 
@@ -116,8 +120,22 @@ public class ExplosionArea implements Renderable {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.create(this)
+                .append("amount", this.amount)
+                .append("step", this.step)
+                .append("currentStep", this.currentStep)
+                .append("evenDistribution", this.evenDistribution)
+                .append("stepDelay", this.stepDelay)
+                .append("lifetime", this.lifetime)
+                .append("circleBox", this.circleBox)
+                .append("particles", this.particles)
+            .build();
+    }
+
     private static Location getRandomLocation(CircleBox circleBox, boolean evenDistribution) {
-        double angle = Math.random() * Math.PI * 2;
+        double angle = E.getE().getRandom(false).nextDouble() * Math.PI * 2;
         double radius = (evenDistribution ? Math.sqrt(Math.random()) : Math.random()) * circleBox.getRadius();
 
         return new Location(

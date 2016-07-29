@@ -6,6 +6,7 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.CircleBox;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.math.Vector2D;
+import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.rendering.particle.Particle;
 import de.SweetCode.e.rendering.particle.ParticleTypes;
 import de.SweetCode.e.utils.Assert;
@@ -13,8 +14,6 @@ import de.SweetCode.e.utils.Assert;
 import java.awt.*;
 
 public class SpiralArea implements Renderable {
-
-    private final static double rotation = 0;
 
     private final CircleBox circleBox;
     private final ParticleTypes particleType;
@@ -54,10 +53,11 @@ public class SpiralArea implements Renderable {
 
     private void setup() {
 
-        for (double theta = this.distance / this.step; theta <= this.thetaMax; ) {
+        double theta = this.distance / this.step;
+        while(theta <= this.thetaMax) {
 
             double away = this.step * theta;
-            double around = theta + this.rotation;
+            double around = theta * 1;
 
             Location location = new Location(
                     this.circleBox.getCenter().getX() + Math.cos(around) * away,
@@ -85,7 +85,7 @@ public class SpiralArea implements Renderable {
     }
 
     @Override
-    public void render(Graphics2D value) {}
+    public void render(Layers value) {}
 
     @Override
     public void update(InputEntry input, long delta) {}

@@ -5,14 +5,14 @@ import de.SweetCode.e.Renderable;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.math.Vector2D;
+import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.rendering.particle.Particle;
 import de.SweetCode.e.rendering.particle.ParticleTypes;
 import de.SweetCode.e.utils.Assert;
 
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
-
-import java.awt.*;
 
 public class HelixArea implements Renderable {
 
@@ -81,7 +81,7 @@ public class HelixArea implements Renderable {
     }
 
     @Override
-    public void render(Graphics2D value) {
+    public void render(Layers value) {
 
     }
 

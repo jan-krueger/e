@@ -1,5 +1,8 @@
 package de.SweetCode.e.input;
 
+import de.SweetCode.e.utils.StringUtils;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
+
 import java.util.stream.Stream;
 
 public class InputEntry {
@@ -18,6 +21,18 @@ public class InputEntry {
 
     public Stream<MouseEntry> getMouseEntries() {
         return this.mouseEntries;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.create(this)
+                .append("keyEntries", () -> {
+                    return StringUtils.join(this.keyEntries, ", ");
+                })
+                .append("mouseEntries", () -> {
+                    return StringUtils.join(this.mouseEntries, ", ");
+                })
+            .build();
     }
 
 }

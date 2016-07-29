@@ -1,5 +1,7 @@
 package de.SweetCode.e.math;
 
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
+
 public class CircleBox {
 
     private final Location center;
@@ -28,6 +30,14 @@ public class CircleBox {
 
     public boolean intersects(CircleBox circleBox) {
         return this.intersects(circleBox.getCenter().getX(), circleBox.getCenter().getY(), circleBox.getRadius());
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.create(this)
+                .append("radius", this.radius)
+                .append("center", this.center.toString())
+            .build();
     }
 
 }

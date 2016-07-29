@@ -4,6 +4,7 @@ e is a really simple 2D game engine (WIP).
 - [x] easy to set-up
 - [x] Mouse and Keyboard Input
 - [x] Simple render system
+- [x] Multiple Render Targets (called Layers)
 - [x] Simple game-loop
 - [x] Simple log system
 - [ ] Entity Component System

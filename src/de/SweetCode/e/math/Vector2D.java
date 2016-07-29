@@ -1,5 +1,7 @@
 package de.SweetCode.e.math;
 
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
+
 public class Vector2D {
 
     private final double x;
@@ -16,6 +18,14 @@ public class Vector2D {
 
     public double getY() {
         return this.y;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.create(this)
+                .append("x", this.x)
+                .append("x", this.y)
+            .build();
     }
 
 }

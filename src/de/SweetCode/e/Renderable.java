@@ -1,13 +1,13 @@
 package de.SweetCode.e;
 
-import java.awt.*;
+import de.SweetCode.e.rendering.layers.Layers;
 
 public interface Renderable extends GameComponent {
 
     /**
      * Called every update.
-     * @param value
+     * @param layers
      */
-    public abstract void render(Graphics2D value);
+    void render(Layers layers);
 
 }

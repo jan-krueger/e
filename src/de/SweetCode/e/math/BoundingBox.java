@@ -1,6 +1,6 @@
 package de.SweetCode.e.math;
 
-import de.SweetCode.e.utils.ToStringBuilder;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 public class BoundingBox {
 
@@ -71,7 +71,10 @@ public class BoundingBox {
 
     @Override
     public String toString() {
-        return ToStringBuilder.create(this).append(this).build();
+        return ToStringBuilder.create(this)
+                .append("min", this.min)
+                .append("max", this.max)
+            .build();
     }
 
 }

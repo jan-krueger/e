@@ -1,7 +1,7 @@
 package de.SweetCode.e.log;
 
 import de.SweetCode.e.utils.Assert;
-import de.SweetCode.e.utils.ToStringBuilder;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.util.Collection;
 import java.util.Iterator;

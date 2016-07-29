@@ -5,6 +5,7 @@ import de.SweetCode.e.Renderable;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.math.Vector2D;
+import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 
 import java.awt.*;
@@ -120,7 +121,9 @@ public class Particle implements Renderable {
 
 
     @Override
-    public void render(Graphics2D value) {
+    public void render(Layers layers) {
+
+        Graphics2D value = layers.first().getGraphics2D();
 
         if(this.fadeInAndOut) {
             value.setComposite(AlphaComposite.SrcOver.derive(this.fadeAlpha));
@@ -150,7 +153,7 @@ public class Particle implements Renderable {
 
             case RANDOM:
                 this.particleType = (E.getE().getRandom(false).nextBoolean() ? ParticleTypes.CIRCLE : ParticleTypes.SQUARE);
-                this.render(value);
+                this.render(layers);
                 break;
 
         }

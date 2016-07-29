@@ -1,55 +1,50 @@
-package de.SweetCode.e.utils;
+package de.SweetCode.e.utils.ToString;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import de.SweetCode.e.utils.StringUtils;
 
 public class ToStringBuilder {
 
     private final StringBuffer buffer;
     private final Object object;
-    private final Map<Object, Integer> previousCheck;
 
-    private ToStringBuilder(Object object, StringBuffer buffer, Map<Object, Integer> previousCheck) {
+    public ToStringBuilder(Object object, StringBuffer buffer) {
         this.buffer = buffer;
         this.object = object;
-        this.previousCheck = previousCheck;
         this.start();
+
     }
 
     public ToStringBuilder(Object object) {
-        this(object, new StringBuffer(), new HashMap<>());
+        this(object, new StringBuffer(100000));
     }
 
     private void start() {
-        String value = (object == null ? "{null" : String.format("{%s -> ", object.getClass().getSimpleName()));
+        String value = String.format("{%s -> ", object.getClass().getSimpleName());
         this.buffer.append(
                 value
         );
     }
 
-    public ToStringBuilder append(Object object) {
-        return this.append(null, object);
+    public ToStringBuilder append(String fieldName, ToStringCallback toStringCallback) {
+        this.buffer.append(fieldName).append(": ").append("{").append(toStringCallback.create()).append("}, ");
+        return this;
     }
 
-    public ToStringBuilder append(String fieldName, Object object) {
+    public ToStringBuilder append(String fieldName, Object value) {
+        this.buffer.append(fieldName).append(": ").append("{").append(value == null ? "null" : value.toString()).append("}, ");
+        return this;
+    }
 
-        if(object == null) {
-            return this;
-        }
+    /*public ToStringBuilder append(Object object) {
 
         StringBuffer buffer = new StringBuffer();
+
         Class clazz = object.getClass();
         Field[] fields = clazz.getDeclaredFields();
 
-        if(fieldName == null) {
-            buffer.append(
-                    String.format("{[%s|%d|$%d] -> ", clazz.getSimpleName(), object.hashCode(), this.previousCheck.containsKey(object) ? this.previousCheck.get(object) : -1)
-            );
-        } else {
-            buffer.append(
-                    String.format("%s: {[%s|%d|$%d] -> ", fieldName, clazz.getSimpleName(), object.hashCode(), this.previousCheck.containsKey(object) ? this.previousCheck.get(object) : -1)
-            );
-        }
+        buffer.append(
+                String.format("{[%s|%d] -> ", clazz.getSimpleName(), object.hashCode())
+        );
 
         for(Field field : fields) {
 
@@ -64,9 +59,7 @@ public class ToStringBuilder {
                     valueClazz = value.getClass();
                 }
 
-                if(value == null) {
-                    buffer.append("null");
-                } else if(valueClazz == String.class) {
+                if(valueClazz == String.class) {
                     buffer.append(String.valueOf(value));
                 } else if(valueClazz == String[].class) {
                     buffer.append(StringUtils.join((String[]) value, ", "));
@@ -98,13 +91,9 @@ public class ToStringBuilder {
                     buffer.append(value);
                 } else if(valueClazz == Character[].class) {
                     buffer.append(StringUtils.join((char[]) value, ", "));
-                } else if(valueClazz == Collection.class) {
-                    buffer.append(StringUtils.join((Collection) value, ", "));
-                } else if(!(this.previousCheck.containsKey(value))) {
-                    this.previousCheck.put(value, this.previousCheck.size());
-                    buffer.append(ToStringBuilder.create(value, this.previousCheck).append(field.getName(), value).toString());
-                } else if(this.previousCheck.containsKey(value)) {
-                    buffer.append(String.format("{$%d->%s}", this.previousCheck.get(value), value.getClass().getSimpleName()));
+                } else {
+                    // @TODO improve
+                    buffer.append(Objects.toString(value));
                 }
 
             } catch (IllegalAccessException e) {
@@ -119,10 +108,10 @@ public class ToStringBuilder {
 
         return this;
 
-    }
+    }*/
 
     public ToStringBuilder append(String fieldName, String value) {
-        this.buffer.append(fieldName).append(": ").append(value).append(", ");
+        this.buffer.append(fieldName).append(": ").append(value);
         return this;
     }
 
@@ -227,16 +216,8 @@ public class ToStringBuilder {
         return this;
     }
 
-    public ToStringBuilder append(String fieldName, Collection value) {
-        this.buffer.append(String.format("%s: {%s}, ", fieldName, StringUtils.join(value, ", ")));
-        return this;
-    }
-
     public String build() {
-        if(this.buffer.length() > 5) {
-            this.buffer.replace(this.buffer.length() - 2, this.buffer.length(), "");
-        }
-
+        this.buffer.replace(this.buffer.length() - 2, this.buffer.length(), "");
         this.buffer.append("}");
         return this.buffer.toString();
     }
@@ -244,10 +225,6 @@ public class ToStringBuilder {
     @Override
     public String toString() {
         return this.build();
-    }
-
-    private static ToStringBuilder create(Object object, Map<Object, Integer> previousCheck) {
-        return new ToStringBuilder(object, new StringBuffer(), previousCheck);
     }
 
     public static ToStringBuilder create(Object object) {

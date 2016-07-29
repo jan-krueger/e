@@ -57,6 +57,12 @@ public interface Settings {
     int getLogCapacity();
 
     /**
+     * The amount of layers.
+     * @return
+     */
+    int getAmountOfLayers();
+
+    /**
      * If the screen is decorated.
      * @return
      */

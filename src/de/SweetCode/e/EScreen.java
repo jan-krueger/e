@@ -2,7 +2,6 @@ package de.SweetCode.e;
 
 import de.SweetCode.e.log.LogEntry;
 import de.SweetCode.e.rendering.GameScene;
-import de.SweetCode.e.utils.ToStringBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,19 +64,21 @@ public class EScreen extends JFrame {
 
                 g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
                 g.setRenderingHints(E.getE().getSettings().getRenderingHints());
+
                 g.setColor(Color.WHITE);
-                g.fillRect(0, 0, 1920, 1080);
+                g.fillRect(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
 
-                this.current.render(g);
+                this.current.render(E.getE().getLayers());
 
-                Graphics2D finalG = g;
                 E.getE().getGameComponents().forEach(e -> {
 
                     if(e instanceof Renderable && e.isActive()) {
-                        ((Renderable) e).render(finalG);
+                        ((Renderable) e).render(E.getE().getLayers());
                     }
 
                 });
+
+                g.drawImage(E.getE().getLayers().combine(), 0, 0, null);
             } finally {
                 if (g != null) {
                     g.dispose();

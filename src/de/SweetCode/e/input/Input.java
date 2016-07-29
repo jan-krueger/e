@@ -1,7 +1,7 @@
 package de.SweetCode.e.input;
 
 import de.SweetCode.e.E;
-import de.SweetCode.e.utils.ToStringBuilder;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
