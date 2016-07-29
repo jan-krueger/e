@@ -84,8 +84,14 @@ public class EScreen extends JFrame {
                     g.dispose();
                 }
             }
-            bufferStrategy.show();
-        } while(bufferStrategy.contentsLost());
+
+            this.bufferStrategy.show();
+
+            E.getE().getLayers().getLayers().forEach(l -> {
+                l.clean();
+            });
+
+        } while(this.bufferStrategy.contentsLost());
 
     }
 

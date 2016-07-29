@@ -6,6 +6,7 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.BoundingBox;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.math.Vector2D;
+import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.rendering.particle.Particle;
 import de.SweetCode.e.rendering.particle.ParticleTypes;
@@ -20,8 +21,7 @@ public class ParticleArea implements Renderable {
 
     private final List<Particle> particles = new ArrayList<>();
 
-
-    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, Color color, boolean mixType, long lifeSpan, int width, int amount) {
+    public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, Color color, boolean mixType, long lifeSpan, int width, int amount) {
 
         Assert.assertNotNull(boundingBox);
         Assert.assertNotNull(particleType);
@@ -31,6 +31,7 @@ public class ParticleArea implements Renderable {
         for(int i = 0; i < amount; i++) {
 
             Particle particle = Particle.Builder.create()
+                                    .layer(layer)
                                     .location(ParticleArea.getRandomLocation(boundingBox))
                                     .vector2D(vector2D)
                                     .particleType(particleType)
@@ -48,20 +49,20 @@ public class ParticleArea implements Renderable {
 
     }
 
-    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, Color color, int width, int amount) {
-        this(boundingBox, vector2D, particleType, color, false, -1, width, amount);
+    public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, Color color, int width, int amount) {
+        this(layer, boundingBox, vector2D, particleType, color, false, -1, width, amount);
     }
 
-    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, int width, int amount) {
-        this(boundingBox, vector2D, particleType, null, false, -1, width, amount);
+    public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, int width, int amount) {
+        this(layer, boundingBox, vector2D, particleType, null, false, -1, width, amount);
     }
 
-    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, Color color, boolean mixType, int width, int amount) {
-        this(boundingBox, vector2D, ParticleTypes.RANDOM, color, mixType, -1, width, amount);
+    public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, Color color, boolean mixType, int width, int amount) {
+        this(layer, boundingBox, vector2D, ParticleTypes.RANDOM, color, mixType, -1, width, amount);
     }
 
-    public ParticleArea(BoundingBox boundingBox, Vector2D vector2D, boolean mixType, int width, int amount) {
-        this(boundingBox, vector2D, ParticleTypes.RANDOM, null, mixType, -1, width, amount);
+    public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, boolean mixType, int width, int amount) {
+        this(layer, boundingBox, vector2D, ParticleTypes.RANDOM, null, mixType, -1, width, amount);
     }
 
 

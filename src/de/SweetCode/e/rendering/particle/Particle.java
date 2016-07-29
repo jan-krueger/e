@@ -5,6 +5,7 @@ import de.SweetCode.e.Renderable;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.math.Vector2D;
+import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 
@@ -12,6 +13,7 @@ import java.awt.*;
 
 public class Particle implements Renderable {
 
+    private final Layer layer;
     private final Location location;
     private final Color color;
     private final int width;
@@ -33,6 +35,8 @@ public class Particle implements Renderable {
 
     /**
      * The constructor to create a new particle.
+     *
+     * @param layer The layer to render on the particle.
      * @param location The location where the particle should appear.
      * @param vector2D The direction of the particle.
      * @param particleType The type of the particle.
@@ -43,8 +47,9 @@ public class Particle implements Renderable {
      * @param lifeSpan The amount of time the particle should exist.
      * @param width The width of the particle.
      */
-    public Particle(Location location, Vector2D vector2D, ParticleTypes particleType, Color color, boolean fadeInAndOut, boolean destroyItself, boolean mixType, long lifeSpan, int width) {
+    public Particle(Layer layer, Location location, Vector2D vector2D, ParticleTypes particleType, Color color, boolean fadeInAndOut, boolean destroyItself, boolean mixType, long lifeSpan, int width) {
 
+        Assert.assertNotNull(layer);
         Assert.assertNotNull(location);
         Assert.assertNotNull(vector2D);
         Assert.assertNotNull(particleType);
@@ -52,6 +57,7 @@ public class Particle implements Renderable {
         Assert.assertTrue("The lifeSpan of an particle cannot be less than 1 if the fadeInAndOut mode is in use.", (fadeInAndOut ? lifeSpan > 0 : true));
         Assert.assertTrue("The width of a particle cannot be less than 1.", width > 0);
 
+        this.layer = layer;
         this.location = location;
         this.vector2D = vector2D;
         this.particleType = particleType;
@@ -67,6 +73,10 @@ public class Particle implements Renderable {
 
         this.lifeSpan = lifeSpan;
         this.endless = (lifeSpan == -1);
+    }
+
+    public Layer getLayer() {
+        return this.layer;
     }
 
     public Location getLocation() {
@@ -123,7 +133,7 @@ public class Particle implements Renderable {
     @Override
     public void render(Layers layers) {
 
-        Graphics2D value = layers.first().getGraphics2D();
+        Graphics2D value = this.layer.getGraphics2D();
 
         if(this.fadeInAndOut) {
             value.setComposite(AlphaComposite.SrcOver.derive(this.fadeAlpha));
@@ -170,6 +180,7 @@ public class Particle implements Renderable {
 
     public static class Builder {
 
+        private Layer layer;
         private Location location;
         private Vector2D vector2D;
         private ParticleTypes particleType;
@@ -186,6 +197,11 @@ public class Particle implements Renderable {
 
         public static Builder create() {
             return new Builder();
+        }
+
+        public Builder layer(Layer layer) {
+            this.layer = layer;
+            return this;
         }
 
         public Builder location(Location location) {
@@ -234,7 +250,7 @@ public class Particle implements Renderable {
         }
 
         public Particle build() {
-            return new Particle(this.location, this.vector2D, this.particleType, this.color, this.fadeInAndOut, this.destroyItself, this.mixType, this.lifeSpan, this.width);
+            return new Particle(this.layer, this.location, this.vector2D, this.particleType, this.color, this.fadeInAndOut, this.destroyItself, this.mixType, this.lifeSpan, this.width);
         }
 
     }

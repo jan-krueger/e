@@ -14,21 +14,49 @@ public class Layer {
 
     public Layer() {}
 
+    /**
+     * Gets the used BufferedImage.
+     *
+     * @return
+     */
     public BufferedImage getBufferedImage() {
         return bufferedImage;
     }
 
+    /**
+     * Gets the Graphics2D object.
+     *
+     * @return
+     */
     public Graphics2D getGraphics2D() {
         return this.graphics2D;
     }
 
+    /**
+     * Gets the used alpha value to render the layers.
+     *
+     * @return
+     */
     public float getAlpha() {
         return alpha;
     }
 
+    /**
+     * Sets the alpha value.
+     *
+     * @param alpha
+     */
     public void setAlpha(float alpha) {
         Assert.assertTrue("The alpha value must be => 0 and <= 1.", (alpha >= 0 && alpha <= 1));
 
         this.alpha = alpha;
+    }
+
+    /**
+     * Cleans the layer.
+     */
+    public void clean() {
+        this.graphics2D.setColor(Color.WHITE);
+        this.graphics2D.fillRect(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
     }
 }
