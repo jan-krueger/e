@@ -65,9 +65,6 @@ public class EScreen extends JFrame {
                 g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
                 g.setRenderingHints(E.getE().getSettings().getRenderingHints());
 
-                g.setColor(Color.WHITE);
-                g.fillRect(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
-
                 this.current.render(E.getE().getLayers());
 
                 E.getE().getGameComponents().forEach(e -> {
@@ -87,9 +84,7 @@ public class EScreen extends JFrame {
 
             this.bufferStrategy.show();
 
-            E.getE().getLayers().getLayers().forEach(l -> {
-                l.clean();
-            });
+            E.getE().getLayers().getLayers().forEach(l -> l.clean());
 
         } while(this.bufferStrategy.contentsLost());
 

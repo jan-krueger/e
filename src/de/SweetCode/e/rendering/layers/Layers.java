@@ -70,8 +70,6 @@ public class Layers {
         this.layers.forEach(l -> {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, l.getAlpha()));
             g2.drawImage(l.getBufferedImage(), 0, 0, null);
-
-
         });
 
         g2.dispose();

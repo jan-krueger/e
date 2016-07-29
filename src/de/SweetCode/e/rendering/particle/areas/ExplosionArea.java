@@ -6,6 +6,7 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.CircleBox;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.math.Vector2D;
+import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.rendering.particle.Particle;
 import de.SweetCode.e.rendering.particle.ParticleTypes;
@@ -21,6 +22,7 @@ public class ExplosionArea implements Renderable {
 
     private final List<Particle> particles = new ArrayList<>();
 
+    private Layer layer;
     private CircleBox circleBox;
     private final boolean evenDistribution;
     private final int stepDelay;
@@ -34,18 +36,22 @@ public class ExplosionArea implements Renderable {
 
     /**
      * The constructor to create a new explosion area.
+     *
+     * @param layer The layer to render the explosion on.
      * @param circleBox The area of the explosion.
      * @param amount The amount of particles used in the explosion.
      * @param steps The amount of steps to spawn all particles.
      * @param stepDelay The delay between each step.
      */
-    public ExplosionArea(CircleBox circleBox, boolean evenDistribution, int amount, int steps, int stepDelay) {
+    public ExplosionArea(Layer layer, CircleBox circleBox, boolean evenDistribution, int amount, int steps, int stepDelay) {
 
+        Assert.assertNotNull("The layer cannot be null.", layer);
         Assert.assertNotNull("The circle box cannot be null.", circleBox);
         Assert.assertTrue("The amount of particles cannot be lass than 2.", amount > 1);
         Assert.assertTrue("The amount of steps cannot be less than 1.", amount > 0);
         Assert.assertTrue("The step delay cannot be less than 1.", stepDelay > 0);
 
+        this.layer = layer;
         this.circleBox = circleBox;
         this.evenDistribution = evenDistribution;
         this.amount = amount;
@@ -62,6 +68,7 @@ public class ExplosionArea implements Renderable {
 
             this.particles.add(
                     Particle.Builder.create()
+                            .layer(this.layer)
                             .location(ExplosionArea.getRandomLocation(this.circleBox, this.evenDistribution))
                             .vector2D(new Vector2D(0, 0))
                             .particleType(ParticleTypes.RANDOM)
