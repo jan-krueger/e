@@ -2,10 +2,17 @@ package de.SweetCode.e.math;
 
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
+import java.awt.*;
+
 public class Location {
 
     private double x;
     private double y;
+
+    public Location(Point point) {
+        this.x = point.getX();
+        this.y = point.getY();
+    }
 
     public Location(double x, double y) {
         this.x = x;

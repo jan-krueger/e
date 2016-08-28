@@ -52,7 +52,7 @@ public class Layer {
     }
 
     /**
-     * Gets the used alpha value to render the layers.
+     * Gets the used alpha value to setScene the layers.
      *
      * @return
      */

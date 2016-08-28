@@ -1,4 +1,4 @@
-package de.SweetCode.e.input;
+package de.SweetCode.e.input.entries;
 
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 

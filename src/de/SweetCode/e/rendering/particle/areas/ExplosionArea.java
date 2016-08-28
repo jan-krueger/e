@@ -37,7 +37,7 @@ public class ExplosionArea implements Renderable {
     /**
      * The constructor to create a new explosion area.
      *
-     * @param layer The layer to render the explosion on.
+     * @param layer The layer to setScene the explosion on.
      * @param circleBox The area of the explosion.
      * @param amount The amount of particles used in the explosion.
      * @param steps The amount of steps to spawn all particles.

@@ -120,17 +120,16 @@ public class E {
 
         this.scenes.put(gameScene.getClass(), gameScene);
 
+
     }
 
     /**
-     * Starts to render this scene at the front.
+     * Starts to setScene this scene at the front.
      * @param scene
      */
-    public void show(Class<? extends GameScene> scene) {
-
+    public void show(Class<?> scene) {
         Assert.assertTrue("The scene doesn't exist.", this.scenes.containsKey(scene));
-        this.screen.render(this.scenes.get(scene));
-
+        this.screen.setScene(this.scenes.get(scene));
     }
 
     /**
@@ -160,7 +159,7 @@ public class E {
             }
 
             // get the input
-            InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries());
+            InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries(), this.input.getMouseWheelEntries(), this.input.getMouseDraggedEntries());
 
             long delta = Math.max(this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (this.settings.roundDelta() ? 1 : 0));
 
@@ -176,7 +175,8 @@ public class E {
 
                 if(v.isActive()) {
                     v.update(input, delta);
-                    this.screen.render(v);
+                    this.screen.invalidate();
+                    this.screen.repaint();
                 }
 
             });

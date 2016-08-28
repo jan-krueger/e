@@ -29,7 +29,7 @@ public class HelixArea implements Renderable {
     /**
      * The constructor to create a new helix area.
      *
-     * @param layer The layer to render the helix on.
+     * @param layer The layer to setScene the helix on.
      * @param location The start point of the helix.
      * @param height The height of the helix.
      * @param width The width of the helix.

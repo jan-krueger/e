@@ -36,7 +36,7 @@ public class Particle implements Renderable {
     /**
      * The constructor to create a new particle.
      *
-     * @param layer The layer to render on the particle.
+     * @param layer The layer to setScene on the particle.
      * @param location The location where the particle should appear.
      * @param vector2D The direction of the particle.
      * @param particleType The type of the particle.

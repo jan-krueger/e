@@ -28,7 +28,7 @@ public class SpiralArea implements Renderable {
     /**
      * Constructor to create a new SpiralArea.
      *
-     * @param layer The layer to render the spiral on.
+     * @param layer The layer to setScene the spiral on.
      * @param circleBox The circle box to determine the area of the spiral.
      * @param particleType The particle type of each particle.
      * @param color The color of the particles.

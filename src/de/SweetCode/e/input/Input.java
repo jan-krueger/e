@@ -1,14 +1,15 @@
 package de.SweetCode.e.input;
 
 import de.SweetCode.e.E;
+import de.SweetCode.e.input.entries.KeyEntry;
+import de.SweetCode.e.input.entries.MouseEntry;
+import de.SweetCode.e.input.entries.MouseWheelEntry;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.*;
+import java.awt.event.*;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.stream.Stream;
 
@@ -16,6 +17,8 @@ public class Input extends KeyAdapter {
 
     private final Queue<KeyEntry> keyQueue = new LinkedTransferQueue<>();
     private final Queue<MouseEntry> mouseQueue = new LinkedTransferQueue<>();
+    private final Queue<MouseWheelEntry> mouseScrollQueue = new LinkedTransferQueue<>();
+    private final Queue<MouseEntry> mouseDraggedEntries = new LinkedTransferQueue<>();
 
     public Input() {
         this.register();
@@ -49,6 +52,7 @@ public class Input extends KeyAdapter {
         });
 
         E.getE().getScreen().addMouseListener(new MouseAdapter() {
+
             @Override
             public void mousePressed(MouseEvent e) {
                 Input.this.mouseQueue.add(
@@ -67,6 +71,45 @@ public class Input extends KeyAdapter {
                 );
 
             }
+
+        });
+
+        E.getE().getScreen().addMouseWheelListener(e -> Input.this.mouseScrollQueue.add(
+            MouseWheelEntry.Builder.create()
+                .preciseWheelRotation(e.getPreciseWheelRotation())
+                .scrollAmount(e.getScrollAmount())
+                .unitsToScroll(e.getUnitsToScroll())
+                .wheelRotation(e.getWheelRotation())
+                .isAltDown(e.isAltDown())
+                .isAltGraphDown(e.isAltGraphDown())
+                .isControlDown(e.isControlDown())
+                .isMetaDown(e.isMetaDown())
+                .isShiftDown(e.isShiftDown())
+            .build()
+        ));
+
+        E.getE().getScreen().addMouseMotionListener(new MouseMotionAdapter() {
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+                Input.this.mouseDraggedEntries.add(
+                    MouseEntry.Builder.create()
+                        .button(e.getButton())
+                        .clickCount(e.getClickCount())
+                        .isPopupTrigger(e.isPopupTrigger())
+                        .locationOnScreen(e.getLocationOnScreen())
+                        .point(e.getPoint())
+                        .isAltDown(e.isAltDown())
+                        .isAltGraphDown(e.isAltGraphDown())
+                        .isControlDown(e.isControlDown())
+                        .isMetaDown(e.isMetaDown())
+                        .isShiftDown(e.isShiftDown())
+                    .build()
+                );
+
+            }
+
         });
 
     }
@@ -95,11 +138,37 @@ public class Input extends KeyAdapter {
         return stream;
     }
 
+    /**
+     * Returns all mouse scrolls since the last method call in the wrong order.
+     *
+     * The first element in the stream is the oldest mouse button.
+     * @return
+     */
+    public Stream<MouseWheelEntry> getMouseWheelEntries() {
+        Stream<MouseWheelEntry> stream = new LinkedList<>(this.mouseScrollQueue).stream();
+        this.mouseScrollQueue.clear();
+        return stream;
+    }
+
+    /**
+     * Returns all mouse scrolls since the last method call in the wrong order.
+     *
+     * The first element in the stream is the oldest mouse button.
+     * @return
+     */
+    public Stream<MouseEntry> getMouseDraggedEntries() {
+        Stream<MouseEntry> stream = new LinkedList<>(this.mouseDraggedEntries).stream();
+        this.mouseDraggedEntries.clear();
+        return stream;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.create(this)
                 .append("keyQueue", this.keyQueue)
                 .append("mouseQueue", this.mouseQueue)
+                .append("mouseScrollQueue", this.mouseScrollQueue)
+                .append("mouseDraggedEntries", this.mouseDraggedEntries)
                 .build();
     }
 

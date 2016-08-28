@@ -23,8 +23,8 @@ public class AspectRatio {
                 -1
         );
 
-        /*int optimalWindowWidth = (int) (window.getHeight() * (render.getWidth() / render.getHeight()));
-        int optimalWindowHeight = (int) (window.getWidth() * (render.getHeight() / render.getWidth()));
+        /*int optimalWindowWidth = (int) (window.getHeight() * (setScene.getWidth() / setScene.getHeight()));
+        int optimalWindowHeight = (int) (window.getWidth() * (setScene.getHeight() / setScene.getWidth()));
 
         if(optimalWindowWidth > window.getWidth()) {
 

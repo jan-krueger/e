@@ -1,10 +1,10 @@
-package de.SweetCode.e.input;
+package de.SweetCode.e.input.entries;
 
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
 
-public class MouseEntry {
+public class MouseMoveEntry {
 
     private final Point locationOnScreen;
     private final Point point;
@@ -19,7 +19,7 @@ public class MouseEntry {
     private final boolean isMetaDown;
     private final boolean isShiftDown;
 
-    public MouseEntry(Point locationOnScreen, Point point, int button, int clickCount, boolean isPopupTrigger, boolean isAltDown, boolean isAltGraphDown, boolean isControlDown, boolean isMetaDown, boolean isShiftDown) {
+    public MouseMoveEntry(Point locationOnScreen, Point point, int button, int clickCount, boolean isPopupTrigger, boolean isAltDown, boolean isAltGraphDown, boolean isControlDown, boolean isMetaDown, boolean isShiftDown) {
         this.locationOnScreen = locationOnScreen;
         this.point = point;
         this.button = button;
@@ -86,7 +86,7 @@ public class MouseEntry {
                 .append("isControlDown", this.isControlDown())
                 .append("isMetaDown", this.isMetaDown())
                 .append("isShiftDown", this.isShiftDown())
-            .build();
+                .build();
     }
 
     public static class Builder {
@@ -106,62 +106,62 @@ public class MouseEntry {
 
         public Builder() {}
 
-        public static Builder create() {
-            return new Builder();
+        public static MouseMoveEntry.Builder create() {
+            return new MouseMoveEntry.Builder();
         }
 
-        public Builder locationOnScreen(Point locationOnScreen) {
+        public MouseMoveEntry.Builder locationOnScreen(Point locationOnScreen) {
             this.locationOnScreen = locationOnScreen;
             return this;
         }
 
-        public Builder point(Point point) {
+        public MouseMoveEntry.Builder point(Point point) {
             this.point = point;
             return this;
         }
 
-        public Builder button(int button) {
+        public MouseMoveEntry.Builder button(int button) {
             this.button = button;
             return this;
         }
 
-        public Builder clickCount(int clickCount) {
+        public MouseMoveEntry.Builder clickCount(int clickCount) {
             this.clickCount = clickCount;
             return this;
         }
 
-        public Builder isPopupTrigger(boolean isPopupTrigger) {
+        public MouseMoveEntry.Builder isPopupTrigger(boolean isPopupTrigger) {
             this.isPopupTrigger = isPopupTrigger;
             return this;
         }
 
-        public Builder isAltDown(boolean isAltDown) {
+        public MouseMoveEntry.Builder isAltDown(boolean isAltDown) {
             this.isAltDown = isAltDown;
             return this;
         }
 
-        public Builder isAltGraphDown(boolean isAltGraphDown) {
+        public MouseMoveEntry.Builder isAltGraphDown(boolean isAltGraphDown) {
             this.isAltGraphDown = isAltGraphDown;
             return this;
         }
 
-        public Builder isControlDown(boolean isControlDown) {
+        public MouseMoveEntry.Builder isControlDown(boolean isControlDown) {
             this.isControlDown = isControlDown;
             return this;
         }
 
-        public Builder isMetaDown(boolean isMetaDown) {
+        public MouseMoveEntry.Builder isMetaDown(boolean isMetaDown) {
             this.isMetaDown = isMetaDown;
             return this;
         }
 
-        public Builder isShiftDown(boolean isShiftDown) {
+        public MouseMoveEntry.Builder isShiftDown(boolean isShiftDown) {
             this.isShiftDown = isShiftDown;
             return this;
         }
 
-        public MouseEntry build() {
-            return new MouseEntry(
+        public MouseMoveEntry build() {
+            return new MouseMoveEntry(
                     this.locationOnScreen,
                     this.point,
                     this.button,

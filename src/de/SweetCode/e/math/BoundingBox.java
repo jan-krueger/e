@@ -69,6 +69,15 @@ public class BoundingBox {
         );
     }
 
+    public boolean contains(Location location) {
+        return (
+                 location.getX() >= this.min.getX() &&
+                 location.getX() <= this.max.getX() &&
+                 location.getY() >= this.min.getY() &&
+                 location.getY() <= this.max.getY()
+                );
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.create(this)

@@ -13,6 +13,7 @@ public class EScreen extends JFrame {
 
     private final BufferStrategy bufferStrategy;
     private GameScene current = null;
+    private GameScene tmp = null;
 
     public EScreen() {
 
@@ -46,8 +47,12 @@ public class EScreen extends JFrame {
 
     }
 
-    public void render(GameScene gameScene) {
+    public GameScene getCurrent() {
+        return this.current;
+    }
 
+    public void setScene(GameScene gameScene) {
+        this.tmp = current;
         this.current = gameScene;
         this.invalidate();
         this.repaint();

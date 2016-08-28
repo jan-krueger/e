@@ -59,7 +59,7 @@ public class Layers {
     }
 
     /**
-     * Combines all layers to render them.
+     * Combines all layers to setScene them.
      *
      * @return
      */
@@ -75,7 +75,7 @@ public class Layers {
             this.layers.forEach(l -> {
 
                 // If the Alpha-Value is equals to 0 we don't have to
-                // render the layer at all.
+                // setScene the layer at all.
                 if (l.getAlpha() > 0) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, l.getAlpha()));
                     g2.drawImage(l.getBufferedImage(), 0, 0, null);
