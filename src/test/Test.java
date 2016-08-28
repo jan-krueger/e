@@ -16,12 +16,12 @@ public class Test {
         E e = new E(new Settings() {
             @Override
             public String getName() {
-                return "E - Test Application";
+                return "Test";
             }
 
             @Override
             public Version getVersion() {
-                return new Version(1, 0, 0, Version.ReleaseTag.ALPHA);
+                return new Version(1, 0, 0, 0, Version.ReleaseTag.ALPHA);
             }
 
             @Override
@@ -36,7 +36,7 @@ public class Test {
 
             @Override
             public int getWidth() {
-                return 1080;
+                return 1280;
             }
 
             @Override
@@ -56,7 +56,7 @@ public class Test {
 
             @Override
             public int getAmountOfLayers() {
-                return 2;
+                return 1;
             }
 
             @Override
@@ -66,20 +66,23 @@ public class Test {
 
             @Override
             public boolean isResizable() {
-                return false;
+                return true;
+            }
+
+            @Override
+            public boolean fixAspectRatio() {
+                return true;
             }
 
             @Override
             public Map<RenderingHints.Key, Object> getRenderingHints() {
-                return new HashMap<RenderingHints.Key, Object>() {{
-                    this.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                }};
+                return new HashMap<>();
             }
         });
 
         e.addScene(new TestScene());
-        e.show(TestScene.class);
         e.run();
+
 
     }
 

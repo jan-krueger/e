@@ -1,6 +1,8 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.log.LogEntry;
+import de.SweetCode.e.math.BoundingBox;
+import de.SweetCode.e.rendering.AspectRatio;
 import de.SweetCode.e.rendering.GameScene;
 
 import javax.swing.*;
@@ -19,6 +21,7 @@ public class EScreen extends JFrame {
         this.setUndecorated(!settings.isDecorated());
         this.setResizable(settings.isResizable());
         this.setPreferredSize(new Dimension(settings.getWidth(), settings.getHeight()));
+        this.setMinimumSize(new Dimension(settings.getWidth(), settings.getHeight()));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
@@ -75,7 +78,20 @@ public class EScreen extends JFrame {
 
                 });
 
-                g.drawImage(E.getE().getLayers().combine(), 0, 0, null);
+                int x = 0;
+                int y = 0;
+
+                if(E.getE().getSettings().fixAspectRatio()) {
+                    AspectRatio aspectRatio = new AspectRatio(new Dimension(1280, 720), new Dimension(this.getWidth(), this.getHeight()));
+                    BoundingBox optimal = aspectRatio.getOptimal();
+
+                    x = (int) optimal.getMin().getX();
+                    y = (int) optimal.getMin().getY();
+                }
+
+                g.drawImage(E.getE().getLayers().combine(), x, y, null);
+
+                E.getE().getLayers().getLayers().forEach(l -> l.clean());
             } finally {
                 if (g != null) {
                     g.dispose();
@@ -84,7 +100,6 @@ public class EScreen extends JFrame {
 
             this.bufferStrategy.show();
 
-            E.getE().getLayers().getLayers().forEach(l -> l.clean());
 
         } while(this.bufferStrategy.contentsLost());
 

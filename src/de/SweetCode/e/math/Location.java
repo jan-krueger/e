@@ -20,6 +20,11 @@ public class Location {
         return this.y;
     }
 
+    public void set(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public void add(double x, double y) {
         this.x += x;
         this.y += y;

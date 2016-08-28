@@ -23,12 +23,31 @@ public class Layer {
         return bufferedImage;
     }
 
+
+    /**
+     * Gets the used BufferedImage.
+     *
+     * @return
+     */
+    public BufferedImage b() {
+        return this.bufferedImage;
+    }
+
     /**
      * Gets the Graphics2D object.
      *
      * @return
      */
     public Graphics2D getGraphics2D() {
+        return this.graphics2D;
+    }
+
+    /**
+     * Gets the Graphics2D object.
+     *
+     * @return
+     */
+    public Graphics2D g() {
         return this.graphics2D;
     }
 
@@ -59,6 +78,7 @@ public class Layer {
         //this.graphics2D.setColor(Color.WHITE);
         //this.graphics2D.fillRect(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
 
+        this.graphics2D.setBackground(new Color(255, 255, 255));
         this.graphics2D.clearRect(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
         //this.graphics2D.setBackground(new Color(255, 255, 255, 0));
         //this.graphics2D.clearRect(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());

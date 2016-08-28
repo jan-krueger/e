@@ -74,7 +74,7 @@ public class SpiralArea implements Renderable {
                     Particle.Builder.create()
                         .layer(this.layer)
                         .location(location)
-                        .vector2D(new Vector2D(0, 0))
+                        .vector2D(new Vector2D(0, -1))
                         .particleType(this.particleType)
                         .color(this.color)
                         .fadeInAndOut(false)

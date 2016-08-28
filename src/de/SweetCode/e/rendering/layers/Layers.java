@@ -42,6 +42,8 @@ public class Layers {
      * @return
      */
     public Layer get(int index) {
+        Assert.assertTrue("index is not a valid layer index.", (index >= 0 && index < this.layers.size()));
+
         return this.layers.get(index);
     }
 
@@ -51,7 +53,7 @@ public class Layers {
      * @param layer
      */
     public void add(Layer layer) {
-        Assert.assertNotNull(layer);
+        Assert.assertNotNull("The layer cannot be null.", layer);
 
         this.layers.add(layer);
     }
@@ -67,12 +69,23 @@ public class Layers {
         Graphics2D g2 = img.createGraphics();
         g2.setRenderingHints(E.getE().getSettings().getRenderingHints());
 
-        this.layers.forEach(l -> {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, l.getAlpha()));
-            g2.drawImage(l.getBufferedImage(), 0, 0, null);
-        });
+        if(this.last().getAlpha() == 1) {
+            g2.drawImage(this.last().getBufferedImage(), 0, 0, null);
+        } else {
+            this.layers.forEach(l -> {
+
+                // If the Alpha-Value is equals to 0 we don't have to
+                // render the layer at all.
+                if (l.getAlpha() > 0) {
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, l.getAlpha()));
+                    g2.drawImage(l.getBufferedImage(), 0, 0, null);
+                }
+
+            });
+        }
 
         g2.dispose();
+
         return img;
 
     }

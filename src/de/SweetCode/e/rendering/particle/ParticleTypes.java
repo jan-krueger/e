@@ -15,6 +15,6 @@ public enum ParticleTypes {
     /**
      * Will choose on of the other normal types.
      */
-    RANDOM
+    RANDOM;
 
 }

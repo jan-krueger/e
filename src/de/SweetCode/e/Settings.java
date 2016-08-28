@@ -75,6 +75,12 @@ public interface Settings {
     boolean isResizable();
 
     /**
+     * If the renderer should fix the aspect ratio on its own.
+     * @return
+     */
+    boolean fixAspectRatio();
+
+    /**
      * Hints to be used while rendering.
      * @return
      */
