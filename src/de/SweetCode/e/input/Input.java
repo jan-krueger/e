@@ -11,7 +11,6 @@ import java.awt.event.*;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.LinkedTransferQueue;
-import java.util.stream.Stream;
 
 public class Input extends KeyAdapter {
 
@@ -120,8 +119,8 @@ public class Input extends KeyAdapter {
      * The first element in the stream is the oldest key.
      * @return
      */
-    public Stream<KeyEntry> getKeyboardEntries() {
-        Stream<KeyEntry> stream = new LinkedList<>(this.keyQueue).stream();
+    public LinkedList<KeyEntry> getKeyboardEntries() {
+        LinkedList<KeyEntry> stream = new LinkedList<>(this.keyQueue);
         this.keyQueue.clear();
         return stream;
     }
@@ -132,8 +131,8 @@ public class Input extends KeyAdapter {
      * The first element in the stream is the oldest mouse button.
      * @return
      */
-    public Stream<MouseEntry> getMouseEntries() {
-        Stream<MouseEntry> stream = new LinkedList<>(this.mouseQueue).stream();
+    public LinkedList<MouseEntry> getMouseEntries() {
+        LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseQueue);
         this.mouseQueue.clear();
         return stream;
     }
@@ -144,8 +143,8 @@ public class Input extends KeyAdapter {
      * The first element in the stream is the oldest mouse button.
      * @return
      */
-    public Stream<MouseWheelEntry> getMouseWheelEntries() {
-        Stream<MouseWheelEntry> stream = new LinkedList<>(this.mouseScrollQueue).stream();
+    public LinkedList<MouseWheelEntry> getMouseWheelEntries() {
+        LinkedList<MouseWheelEntry> stream = new LinkedList<>(this.mouseScrollQueue);
         this.mouseScrollQueue.clear();
         return stream;
     }
@@ -156,8 +155,8 @@ public class Input extends KeyAdapter {
      * The first element in the stream is the oldest mouse button.
      * @return
      */
-    public Stream<MouseEntry> getMouseDraggedEntries() {
-        Stream<MouseEntry> stream = new LinkedList<>(this.mouseDraggedEntries).stream();
+    public LinkedList<MouseEntry> getMouseDraggedEntries() {
+        LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseDraggedEntries);
         this.mouseDraggedEntries.clear();
         return stream;
     }

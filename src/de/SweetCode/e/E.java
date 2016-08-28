@@ -181,7 +181,6 @@ public class E {
 
             });
 
-
             try{
                 long delay = TimeUnit.NANOSECONDS.toMillis(this.optimalTime - (System.nanoTime() - now));
                 if(delay > 0) {

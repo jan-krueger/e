@@ -4,6 +4,7 @@ import de.SweetCode.e.log.LogEntry;
 import de.SweetCode.e.math.BoundingBox;
 import de.SweetCode.e.rendering.AspectRatio;
 import de.SweetCode.e.rendering.GameScene;
+import de.SweetCode.e.rendering.layers.Layer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,55 +57,48 @@ public class EScreen extends JFrame {
         this.current = gameScene;
         this.invalidate();
         this.repaint();
-
     }
 
     @Override
     public void paint(Graphics graphics) {
-        Graphics2D g = null;
+        Graphics2D g;
 
         if (this.current == null) {
             return;
         }
 
         do {
-            try {
+            g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
+            g.setRenderingHints(E.getE().getSettings().getRenderingHints());
 
-                g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
-                g.setRenderingHints(E.getE().getSettings().getRenderingHints());
+            this.current.render(E.getE().getLayers());
 
-                this.current.render(E.getE().getLayers());
+            E.getE().getGameComponents().forEach(e -> {
 
-                E.getE().getGameComponents().forEach(e -> {
-
-                    if(e instanceof Renderable && e.isActive()) {
-                        ((Renderable) e).render(E.getE().getLayers());
-                    }
-
-                });
-
-                int x = 0;
-                int y = 0;
-
-                if(E.getE().getSettings().fixAspectRatio()) {
-                    AspectRatio aspectRatio = new AspectRatio(new Dimension(1280, 720), new Dimension(this.getWidth(), this.getHeight()));
-                    BoundingBox optimal = aspectRatio.getOptimal();
-
-                    x = (int) optimal.getMin().getX();
-                    y = (int) optimal.getMin().getY();
+                if(e instanceof Renderable && e.isActive()) {
+                    ((Renderable) e).render(E.getE().getLayers());
                 }
 
-                g.drawImage(E.getE().getLayers().combine(), x, y, null);
+            });
 
-                E.getE().getLayers().getLayers().forEach(l -> l.clean());
-            } finally {
-                if (g != null) {
-                    g.dispose();
-                }
+            int x = 0;
+            int y = 0;
+
+            if(E.getE().getSettings().fixAspectRatio()) {
+                AspectRatio aspectRatio = new AspectRatio(new Dimension(1280, 720), new Dimension(this.getWidth(), this.getHeight()));
+                BoundingBox optimal = aspectRatio.getOptimal();
+
+                x = (int) optimal.getMin().getX();
+                y = (int) optimal.getMin().getY();
             }
 
-            this.bufferStrategy.show();
+            g.drawImage(E.getE().getLayers().combine(), x, y, null);
 
+            E.getE().getLayers().getLayers().forEach(Layer::clean);
+
+            g.dispose();
+
+            this.bufferStrategy.show();
 
         } while(this.bufferStrategy.contentsLost());
 

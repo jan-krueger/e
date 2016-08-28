@@ -6,35 +6,35 @@ import de.SweetCode.e.input.entries.MouseWheelEntry;
 import de.SweetCode.e.utils.StringUtils;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
-import java.util.stream.Stream;
+import java.util.LinkedList;
 
 public class InputEntry {
 
-    private final Stream<KeyEntry> keyEntries;
-    private final Stream<MouseEntry> mouseEntries;
-    private final Stream<MouseEntry> mouseDraggedEntries;
-    private final Stream<MouseWheelEntry> mouseWheelEntries;
+    private final LinkedList<KeyEntry> keyEntries;
+    private final LinkedList<MouseEntry> mouseEntries;
+    private final LinkedList<MouseEntry> mouseDraggedEntries;
+    private final LinkedList<MouseWheelEntry> mouseWheelEntries;
 
-    public InputEntry(Stream<KeyEntry> keyEntries, Stream<MouseEntry> mouseEntries, Stream<MouseWheelEntry> mouseWheelEntries, Stream<MouseEntry> mouseDraggedEntries) {
+    public InputEntry(LinkedList<KeyEntry> keyEntries, LinkedList<MouseEntry> mouseEntries, LinkedList<MouseWheelEntry> mouseWheelEntries, LinkedList<MouseEntry> mouseDraggedEntries) {
         this.keyEntries = keyEntries;
         this.mouseEntries = mouseEntries;
         this.mouseWheelEntries = mouseWheelEntries;
         this.mouseDraggedEntries = mouseDraggedEntries;
     }
 
-    public Stream<KeyEntry> getKeyEntries() {
+    public LinkedList<KeyEntry> getKeyEntries() {
         return this.keyEntries;
     }
 
-    public Stream<MouseEntry> getMouseEntries() {
+    public LinkedList<MouseEntry> getMouseEntries() {
         return this.mouseEntries;
     }
 
-    public Stream<MouseWheelEntry> getMouseWheelEntries() {
+    public LinkedList<MouseWheelEntry> getMouseWheelEntries() {
         return this.mouseWheelEntries;
     }
 
-    public Stream<MouseEntry> getMouseDraggedEntries() {
+    public LinkedList<MouseEntry> getMouseDraggedEntries() {
         return this.mouseDraggedEntries;
     }
 
