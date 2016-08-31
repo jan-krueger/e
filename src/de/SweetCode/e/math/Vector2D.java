@@ -24,7 +24,7 @@ public class Vector2D {
     public String toString() {
         return ToStringBuilder.create(this)
                 .append("x", this.x)
-                .append("x", this.y)
+                .append("y", this.y)
             .build();
     }
 

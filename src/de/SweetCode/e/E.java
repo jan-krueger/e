@@ -159,7 +159,7 @@ public class E {
             }
 
             // get the input
-            InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries(), this.input.getMouseWheelEntries(), this.input.getMouseDraggedEntries());
+            InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries(), this.input.getMouseWheelEntries(), this.input.getMouseDraggedEntries(), this.input.getMouseMovedEntries(), this.input.getMouseReleasedQueue());
 
             long delta = Math.max(this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (this.settings.roundDelta() ? 1 : 0));
 

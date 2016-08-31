@@ -13,7 +13,9 @@ public class Layer {
     private BufferedImage bufferedImage = new BufferedImage(E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight(), BufferedImage.TYPE_INT_ARGB);
     private Graphics2D graphics2D = (Graphics2D) bufferedImage.getGraphics();
 
-    public Layer() {}
+    public Layer() {
+        this.graphics2D.setRenderingHints(E.getE().getSettings().getRenderingHints());
+    }
 
     /**
      * Gets the used BufferedImage.
@@ -78,5 +80,6 @@ public class Layer {
         this.graphics2D.setClip(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
         this.graphics2D.setTransform(new AffineTransform());
         this.graphics2D.clearRect(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
+        this.graphics2D.setRenderingHints(E.getE().getSettings().getRenderingHints());
     }
 }

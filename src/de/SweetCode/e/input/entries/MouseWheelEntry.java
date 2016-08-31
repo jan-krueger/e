@@ -2,8 +2,12 @@ package de.SweetCode.e.input.entries;
 
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
+import java.awt.*;
+
 
 public class MouseWheelEntry {
+
+    private final Point point;
 
     private final double preciseWheelRotation;
     private final int scrollAmount;
@@ -16,7 +20,8 @@ public class MouseWheelEntry {
     private final boolean isAltDown;
     private final boolean isControlDown;
 
-    public MouseWheelEntry(double preciseWheelRotation, int scrollAmount, int unitsToScroll, int wheelRotation, boolean isShiftDown, boolean isMetaDown, boolean isAltGraphDown, boolean isAltDown, boolean isControlDown) {
+    public MouseWheelEntry(Point point, double preciseWheelRotation, int scrollAmount, int unitsToScroll, int wheelRotation, boolean isShiftDown, boolean isMetaDown, boolean isAltGraphDown, boolean isAltDown, boolean isControlDown) {
+        this.point = point;
         this.preciseWheelRotation = preciseWheelRotation;
         this.scrollAmount = scrollAmount;
         this.unitsToScroll = unitsToScroll;
@@ -26,6 +31,10 @@ public class MouseWheelEntry {
         this.isAltGraphDown = isAltGraphDown;
         this.isAltDown = isAltDown;
         this.isControlDown = isControlDown;
+    }
+
+    public Point getPoint() {
+        return this.point;
     }
 
     public double getPreciseWheelRotation() {
@@ -71,6 +80,7 @@ public class MouseWheelEntry {
 
     public static class Builder {
 
+        private Point point;
         private double preciseWheelRotation;
         private int scrollAmount;
         private int unitsToScroll;
@@ -86,6 +96,11 @@ public class MouseWheelEntry {
 
         public static MouseWheelEntry.Builder create() {
             return new MouseWheelEntry.Builder();
+        }
+
+        public MouseWheelEntry.Builder point(Point point) {
+            this.point = point;
+            return this;
         }
 
         public MouseWheelEntry.Builder preciseWheelRotation(double preciseWheelRotation) {
@@ -134,6 +149,7 @@ public class MouseWheelEntry {
 
         public MouseWheelEntry build() {
             return new MouseWheelEntry(
+                    this.point,
                     this.preciseWheelRotation,
                     this.scrollAmount,
                     this.unitsToScroll,

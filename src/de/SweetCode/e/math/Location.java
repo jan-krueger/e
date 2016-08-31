@@ -10,8 +10,11 @@ public class Location {
     private double y;
 
     public Location(Point point) {
-        this.x = point.getX();
-        this.y = point.getY();
+        this(point.getX(), point.getY());
+    }
+
+    public Location(ILocation location) {
+        this(location.getX(), location.getY());
     }
 
     public Location(double x, double y) {
