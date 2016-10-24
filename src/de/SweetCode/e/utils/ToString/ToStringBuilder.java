@@ -2,6 +2,9 @@ package de.SweetCode.e.utils.ToString;
 
 import de.SweetCode.e.utils.StringUtils;
 
+import java.lang.reflect.Field;
+import java.util.Objects;
+
 public class ToStringBuilder {
 
     private final StringBuffer buffer;
@@ -35,7 +38,7 @@ public class ToStringBuilder {
         return this;
     }
 
-    /*public ToStringBuilder append(Object object) {
+    public ToStringBuilder append(Object object) {
 
         StringBuffer buffer = new StringBuffer();
 
@@ -43,7 +46,7 @@ public class ToStringBuilder {
         Field[] fields = clazz.getDeclaredFields();
 
         buffer.append(
-                String.format("{[%s|%d] -> ", clazz.getSimpleName(), object.hashCode())
+                String.format("{%s -> ", clazz.getSimpleName(), object.hashCode())
         );
 
         for(Field field : fields) {
@@ -100,23 +103,25 @@ public class ToStringBuilder {
                 e.printStackTrace();
             }
 
-            buffer.append(String.format(", "));
+            buffer.append(", ");
 
         }
 
+        buffer.setLength(buffer.length() - 2);
+        buffer.append("}, ");
         this.buffer.append(buffer.toString());
 
         return this;
 
-    }*/
+    }
 
     public ToStringBuilder append(String fieldName, String value) {
-        this.buffer.append(fieldName).append(": ").append(value);
+        this.buffer.append(fieldName).append(": ").append(value).append(", ");
         return this;
     }
 
     public ToStringBuilder append(String fieldName, String[] value) {
-        this.buffer.append(fieldName).append(": ").append("{").append(StringUtils.join(value, ", ")).append("}");
+        this.buffer.append(fieldName).append(": ").append("{").append(StringUtils.join(value, ", ")).append("}, ");
         return this;
     }
 
@@ -126,7 +131,7 @@ public class ToStringBuilder {
     }
 
     public ToStringBuilder append(String fieldName, boolean[] value) {
-        this.buffer.append(String.format("%s: {%s}, ", fieldName, StringUtils.join(value, ", ")));
+        this.buffer.append(String.format("%s: [%s], ", fieldName, StringUtils.join(value, ", ")));
         return this;
     }
 
@@ -136,7 +141,7 @@ public class ToStringBuilder {
     }
 
     public ToStringBuilder append(String fieldName, byte[] value) {
-        this.buffer.append(String.format("%s: {%s}, ", fieldName, StringUtils.join(value, ", ")));
+        this.buffer.append(String.format("%s: [%s], ", fieldName, StringUtils.join(value, ", ")));
         return this;
     }
 
@@ -146,7 +151,7 @@ public class ToStringBuilder {
     }
 
     public ToStringBuilder append(String fieldName, short[] value) {
-        this.buffer.append(String.format("%s: {%s}, ", fieldName, StringUtils.join(value, ", ")));
+        this.buffer.append(String.format("%s: [%s], ", fieldName, StringUtils.join(value, ", ")));
         return this;
     }
 
@@ -156,7 +161,7 @@ public class ToStringBuilder {
     }
 
     public ToStringBuilder append(String fieldName, int[] value) {
-        this.buffer.append(String.format("%s: {%s}, ", fieldName, StringUtils.join(value, ", ")));
+        this.buffer.append(String.format("%s: [%s], ", fieldName, StringUtils.join(value, ", ")));
         return this;
     }
 
@@ -170,7 +175,7 @@ public class ToStringBuilder {
     }
 
     public ToStringBuilder append(String fieldName, double[] value, int precision) {
-        this.buffer.append(String.format("%s: {%s}, ", fieldName, StringUtils.join(value, ", ", precision)));
+        this.buffer.append(String.format("%s: [%s], ", fieldName, StringUtils.join(value, ", ", precision)));
         return this;
     }
 
@@ -188,7 +193,7 @@ public class ToStringBuilder {
     }
 
     public ToStringBuilder append(String fieldName, float[] value, int precision) {
-        this.buffer.append(String.format("%s: {%s}, ", fieldName, StringUtils.join(value, ", ", precision)));
+        this.buffer.append(String.format("%s: [%s], ", fieldName, StringUtils.join(value, ", ", precision)));
         return this;
     }
 
@@ -202,7 +207,7 @@ public class ToStringBuilder {
     }
 
     public ToStringBuilder append(String fieldName, long[] value) {
-        this.buffer.append(String.format("%s: {%s}, ", fieldName, StringUtils.join(value, ", ")));
+        this.buffer.append(String.format("%s: [%s], ", fieldName, StringUtils.join(value, ", ")));
         return this;
     }
 
@@ -212,7 +217,7 @@ public class ToStringBuilder {
     }
 
     public ToStringBuilder append(String fieldName, char[] value) {
-        this.buffer.append(String.format("%s: {%s}, ", fieldName, StringUtils.join(value, ", ")));
+        this.buffer.append(String.format("%s: [%s], ", fieldName, StringUtils.join(value, ", ")));
         return this;
     }
 

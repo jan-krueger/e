@@ -73,8 +73,9 @@ public class EScreen extends JFrame {
 
             this.current.render(E.getE().getLayers());
 
-            E.getE().getGameComponents().forEach(e -> {
 
+            E.getE().getGameComponents().forEach(k -> {
+                GameComponent e = k.getGameComponent();
                 if(e instanceof Renderable && e.isActive()) {
                     ((Renderable) e).render(E.getE().getLayers());
                 }

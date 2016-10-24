@@ -12,10 +12,9 @@ import de.SweetCode.e.rendering.particle.Particle;
 import de.SweetCode.e.rendering.particle.ParticleTypes;
 import de.SweetCode.e.utils.Assert;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.awt.*;
 
 public class ParticleArea implements Renderable {
 
@@ -43,7 +42,7 @@ public class ParticleArea implements Renderable {
                                     .width(width)
                                 .build();
             this.particles.add(particle);
-            E.getE().getGameComponents().add(particle);
+            E.getE().addComponent(particle);
 
         }
 

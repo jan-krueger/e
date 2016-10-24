@@ -1,5 +1,7 @@
 package de.SweetCode.e.math;
 
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
+
 import java.awt.*;
 
 /**
@@ -48,6 +50,14 @@ public class ILocation {
 
     public double distanceTo(ILocation other) {
         return Math.sqrt(Math.pow(other.getX() - this.getX(), 2) + Math.pow(other.getY() - this.getY(), 2));
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.create(this)
+                .append("x", this.x)
+                .append("y", this.y)
+            .build();
     }
 
 }

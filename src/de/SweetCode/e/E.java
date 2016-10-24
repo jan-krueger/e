@@ -4,10 +4,12 @@ import de.SweetCode.e.input.Input;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.log.Log;
 import de.SweetCode.e.rendering.GameScene;
+import de.SweetCode.e.rendering.Priority;
 import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -29,8 +31,8 @@ public class E {
 
     private final Settings settings;
 
-    private final List<GameComponent> gameComponents = new CopyOnWriteArrayList<>();
-    private final Map<Class<? extends GameScene>, GameScene> scenes = new HashMap<>();
+    private final List<ComponentEntry> gameComponents = new CopyOnWriteArrayList<>();
+    private final Map<Class<? extends GameScene>, SceneEntry> scenes = new LinkedHashMap<>();
 
     private final long optimalTime;
 
@@ -98,7 +100,7 @@ public class E {
         return this.currentFPS;
     }
 
-    public List<GameComponent> getGameComponents() {
+    public List<ComponentEntry> getGameComponents() {
         return this.gameComponents;
     }
 
@@ -108,7 +110,33 @@ public class E {
      */
     public void addComponent(GameComponent gameComponent) {
 
-        this.gameComponents.add(gameComponent);
+        this.addComponent(gameComponent, Priority.NORMAL);
+
+    }
+
+    /**
+     * Add a new GameComponent.
+     * @param gameComponent
+     * @param priority
+     */
+    public void addComponent(GameComponent gameComponent, Priority priority) {
+
+        this.gameComponents.add(new ComponentEntry(gameComponent, priority));
+
+        // Sort
+        Collections.sort(this.gameComponents, (o1, o2) -> {
+
+            if(o1.getValue().getPriority() == o2.getValue().getPriority()) {
+                return 0;
+            }
+
+            if(o1.getValue().getPriority() < o2.getValue().getPriority()) {
+                return 1;
+            }
+
+            return -1;
+
+        });
 
     }
 
@@ -118,8 +146,36 @@ public class E {
      */
     public void addScene(GameScene gameScene) {
 
-        this.scenes.put(gameScene.getClass(), gameScene);
+        this.addScene(gameScene, Priority.NORMAL);
 
+    }
+
+    /**
+     * Add a new scene to the engine.
+     * @param gameScene
+     * @param priority
+     */
+    public void addScene(GameScene gameScene, Priority priority) {
+
+        this.scenes.put(gameScene.getClass(), new SceneEntry(gameScene, priority));
+
+        // Sort
+        List<Map.Entry<Class<? extends GameScene>, SceneEntry>> list = new LinkedList<>(this.scenes.entrySet());
+        Collections.sort(list, (o1, o2) -> {
+
+            if(o1.getValue().getValue().getPriority() == o2.getValue().getValue().getPriority()) {
+                return 0;
+            }
+
+            if(o1.getValue().getValue().getPriority() < o2.getValue().getValue().getPriority()) {
+                return 1;
+            }
+
+            return -1;
+
+        });
+        this.scenes.clear();
+        list.forEach(e -> this.scenes.put(e.getKey(), e.getValue()));
 
     }
 
@@ -129,7 +185,7 @@ public class E {
      */
     public void show(Class<?> scene) {
         Assert.assertTrue("The scene doesn't exist.", this.scenes.containsKey(scene));
-        this.screen.setScene(this.scenes.get(scene));
+        this.screen.setScene(this.scenes.get(scene).getGameScene());
     }
 
     /**
@@ -163,18 +219,18 @@ public class E {
 
             long delta = Math.max(this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (this.settings.roundDelta() ? 1 : 0));
 
-            this.gameComponents.forEach(e -> {
+            this.gameComponents.forEach(k -> {
 
-                if(e.isActive()) {
-                    e.update(input, delta);
+                if(k.getGameComponent().isActive()) {
+                    k.getGameComponent().update(input, delta);
                 }
 
             });
 
             this.scenes.forEach((k, v) -> {
 
-                if(v.isActive()) {
-                    v.update(input, delta);
+                if(v.getGameScene().isActive()) {
+                    v.getGameScene().update(input, delta);
                     this.screen.invalidate();
                     this.screen.repaint();
                 }
@@ -244,6 +300,34 @@ public class E {
         }
 
         return invalids;
+
+    }
+
+    private class SceneEntry {
+
+        private GameScene gameScene;
+        private Priority priority;
+
+        public SceneEntry(GameScene gameScene, Priority priority) {
+            this.gameScene = gameScene;
+            this.priority = priority;
+        }
+
+        public GameScene getGameScene() {
+            return this.gameScene;
+        }
+
+        public Priority getValue() {
+            return this.priority;
+        }
+
+        @Override
+        public String toString() {
+            return ToStringBuilder.create(this)
+                    .append("gameScene", this.gameScene)
+                    .append("priority", this.priority)
+                .build();
+        }
 
     }
 
