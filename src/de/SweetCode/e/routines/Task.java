@@ -231,6 +231,7 @@ public abstract class Task<T> {
                 .append("name", this.name)
                 .append("taskStatus", this.taskStatus.name())
                 .append("parent", (this.parent == null ? null : this.parent.getName()))
+                .append("filters", this.predicates)
                 .append("children", this.children)
             .build();
     }

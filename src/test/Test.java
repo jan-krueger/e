@@ -1,7 +1,6 @@
 package test;
 
 import de.SweetCode.e.routines.Task;
-import de.SweetCode.e.routines.TaskStatus;
 import de.SweetCode.e.routines.TaskTreeBuilder;
 import de.SweetCode.e.routines.composite.TaskRandomSelector;
 
@@ -32,7 +31,7 @@ public class Test {
                 .child(new EchoTask("Go to the store"))
                 .randomSelector() // Go home
                     .sequence() // do homework
-                        .filter(e -> random.nextBoolean() && e.is(TaskStatus.FRESH))
+                        .filter(e -> random.nextBoolean())
                         .child(new EchoTask("Open & read books"))
                         .child(new EchoTask("Create some valuable notices"))
                         .child(new EchoTask("Done with homeworks"))
