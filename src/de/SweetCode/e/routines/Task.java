@@ -1,12 +1,12 @@
 package de.SweetCode.e.routines;
 
-import de.SweetCode.e.RunComponent;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
-public abstract class Task<T> implements RunComponent {
+public abstract class Task<T> {
 
     /**
      * The name of the task.
@@ -27,6 +27,11 @@ public abstract class Task<T> implements RunComponent {
      * This list keeps track of all children.
      */
     private List<Task<T>> children = new LinkedList<>();
+
+    /**
+     * This list keeps track of all predicates.
+     */
+    private List<Predicate<Task<T>>> predicates = new LinkedList<>();
 
     public Task() {
         this(null);
@@ -84,6 +89,16 @@ public abstract class Task<T> implements RunComponent {
     }
 
     /**
+     * Adds a predicate.
+     *
+     * @param predicate
+     * @param <E>
+     */
+    public void addFilter(Predicate<Task<T>> predicate) {
+        this.predicates.add(predicate);
+    }
+
+    /**
      * Returns its children.
      * @return
      */
@@ -113,8 +128,9 @@ public abstract class Task<T> implements RunComponent {
      */
     public final void running() {
 
+        this.taskStatus = TaskStatus.RUNNING;
+
         if(!(this.parent == null)) {
-            this.taskStatus = TaskStatus.RUNNING;
             this.parent.child(this.taskStatus, this);
         }
 
@@ -175,7 +191,10 @@ public abstract class Task<T> implements RunComponent {
             this.reset();
         }
 
-        this.run();
+        // If all predicates succeed, we can run it
+        if(!(this.predicates.stream().filter(e -> !e.test(this)).findFirst().isPresent())) {
+            this.run();
+        }
 
     }
 
@@ -203,6 +222,8 @@ public abstract class Task<T> implements RunComponent {
      * @param task The task that called this method.
      */
     public void child(TaskStatus taskStatus, Task<T> task) {}
+
+    public abstract void run();
 
     @Override
     public String toString() {
