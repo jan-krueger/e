@@ -3,6 +3,7 @@ package de.SweetCode.e.routines.composite;
 import de.SweetCode.e.routines.Task;
 import de.SweetCode.e.routines.TaskStatus;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,7 +21,13 @@ public class TaskSelector<T> extends Task<T> {
 
     public TaskSelector() {}
 
-    public TaskSelector(List<Task<T>> tasks) {
+    public TaskSelector(String name) {
+        this(name, Arrays.asList());
+    }
+
+    public TaskSelector(String name, List<Task<T>> tasks) {
+        super(name);
+
         tasks.forEach(this::addChild);
     }
 

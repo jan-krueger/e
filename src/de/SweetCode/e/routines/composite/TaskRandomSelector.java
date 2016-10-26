@@ -18,8 +18,12 @@ public class TaskRandomSelector<T> extends TaskSelector<T> {
 
     public TaskRandomSelector() {}
 
-    public TaskRandomSelector(List<Task<T>> tasks) {
-        super(tasks);
+    public TaskRandomSelector(String name) {
+        this(name, Collections.emptyList());
+    }
+
+    public TaskRandomSelector(String name, List<Task<T>> tasks) {
+        super(name, tasks);
     }
 
     /**

@@ -2,9 +2,7 @@ package test;
 
 import de.SweetCode.e.routines.Task;
 import de.SweetCode.e.routines.TaskTreeBuilder;
-import de.SweetCode.e.routines.composite.TaskRandomSelector;
-
-import java.util.Random;
+import de.SweetCode.e.routines.composite.TaskUntilFails;
 
 public class Test {
 
@@ -24,30 +22,35 @@ public class Test {
         taskSelector.start();
         */
 
-        Random random = new Random();
+        /*Random random = new Random();
 
-        Task b = TaskTreeBuilder.create(new TaskRandomSelector<>())
+        Task b = TaskTreeBuilder.create(new TaskRandomSelector<>("start"))
                 .filter(e -> (5 > 3))
                 .child(new EchoTask("Go to the store"))
-                .randomSelector() // Go home
-                    .sequence() // do homework
+                .randomSelector("GoHomeSelector") // Go home
+                    .sequence("DoHomeworkSequence") // do homework
                         .filter(e -> random.nextBoolean())
                         .child(new EchoTask("Open & read books"))
                         .child(new EchoTask("Create some valuable notices"))
                         .child(new EchoTask("Done with homeworks"))
-                        .back()
+                    .end()
                     .child(new EchoTask("Take a shower"))
-                    .randomSelector() // Watch TV
+                    .randomSelector("WatchTVSelector") // Watch TV
                          .child(new EchoTask("Watch old TV shows"))
                          .child(new EchoTask("Watch Netflix"))
                          .child(new EchoTask("Watch Amazon Prime"))
                          .child(new EchoTask("Watch Twitch"))
-                         .back()
-                    .back()
-                .build();
+                     .end()
+                .end()
+            .build();
 
         System.out.println(b);
-        b.start();
+        b.start();*/
+
+        Task c = TaskTreeBuilder.create(new TaskUntilFails<>("start"))
+                    .child(new EchoTask("Task"))
+                .build();
+        c.start();
 
     }
 

@@ -15,8 +15,12 @@ public class TaskSequence<T> extends TaskSelector<T> {
 
     public TaskSequence() {}
 
-    public TaskSequence(LinkedList<Task<T>> tasks) {
-        super(tasks);
+    public TaskSequence(String name) {
+        this(name, new LinkedList<>());
+    }
+
+    public TaskSequence(String name, LinkedList<Task<T>> tasks) {
+        super(name, tasks);
     }
 
     @Override

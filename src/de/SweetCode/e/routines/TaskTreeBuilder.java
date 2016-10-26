@@ -24,8 +24,8 @@ public class TaskTreeBuilder<T> {
      * Adds a random selector.
      * @return
      */
-    public TaskTreeBuilder<T> randomSelector() {
-        this.addChild(new TaskRandomSelector<>());
+    public TaskTreeBuilder<T> randomSelector(String name) {
+        this.addChild(new TaskRandomSelector<>(name));
         return this;
     }
 
@@ -33,8 +33,8 @@ public class TaskTreeBuilder<T> {
      * Adds a random sequence.
      * @return
      */
-    public TaskTreeBuilder<T> randomSequenece() {
-        this.addChild(new TaskRandomSequence<>());
+    public TaskTreeBuilder<T> randomSequenece(String name) {
+        this.addChild(new TaskRandomSequence<>(name));
         return this;
     }
 
@@ -42,8 +42,8 @@ public class TaskTreeBuilder<T> {
      * Adds a selector.
      * @return
      */
-    public TaskTreeBuilder<T> selector() {
-        this.addChild(new TaskSelector<>());
+    public TaskTreeBuilder<T> selector(String name) {
+        this.addChild(new TaskSelector<>(name));
         return this;
     }
 
@@ -51,8 +51,8 @@ public class TaskTreeBuilder<T> {
      * Adds a sequence.
      * @return
      */
-    public TaskTreeBuilder<T> sequence() {
-        this.addChild(new TaskSequence<>());
+    public TaskTreeBuilder<T> sequence(String name) {
+        this.addChild(new TaskSequence<>(name));
         return this;
     }
 
@@ -62,6 +62,7 @@ public class TaskTreeBuilder<T> {
      */
     public TaskTreeBuilder<T> child(Task<T> child) {
         this.currentNode.addChild(child);
+        child.setParent(this.currentNode);
         return this;
     }
 
@@ -76,12 +77,12 @@ public class TaskTreeBuilder<T> {
     }
 
     /**
-     * Goes one step back in the tree.
+     * Goes one step end in the tree.
      * @return
      */
-    public TaskTreeBuilder<T> back() {
+    public TaskTreeBuilder<T> end() {
 
-        Assert.assertNotNull("You can't go further back.", this.currentNode.getParent());
+        Assert.assertNotNull("You can't go further end.", this.currentNode.getParent());
         this.currentNode = this.currentNode.getParent();
 
         return this;

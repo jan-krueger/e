@@ -13,8 +13,12 @@ public class TaskRandomSequence<T> extends TaskRandomSelector<T> {
 
     public TaskRandomSequence() {}
 
-    public TaskRandomSequence(LinkedList<Task<T>> tasks) {
-        super(tasks);
+    public TaskRandomSequence(String name) {
+        this(name, new LinkedList<>());
+    }
+
+    public TaskRandomSequence(String name, LinkedList<Task<T>> tasks) {
+        super(name, tasks);
     }
 
     @Override

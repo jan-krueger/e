@@ -76,6 +76,14 @@ public abstract class Task<T> {
     }
 
     /**
+     * Returns the number of children of the task.
+     * @return
+     */
+    public int getChildAmount() {
+        return this.children.size();
+    }
+
+    /**
      * This method will add a child to the list of this task's children.
      *
      * @param child
@@ -92,7 +100,6 @@ public abstract class Task<T> {
      * Adds a predicate.
      *
      * @param predicate
-     * @param <E>
      */
     public void addFilter(Predicate<Task<T>> predicate) {
         this.predicates.add(predicate);
@@ -194,6 +201,8 @@ public abstract class Task<T> {
         // If all predicates succeed, we can run it
         if(!(this.predicates.stream().filter(e -> !e.test(this)).findFirst().isPresent())) {
             this.run();
+        } else {
+            this.fail();
         }
 
     }
@@ -214,7 +223,7 @@ public abstract class Task<T> {
 
     /**
      * This metod will be called if the task:
-     *  - RUNNING when one of the ancestors of this task needs to run again.
+     *  - RUNNING when one of the children of this task needs to run again.
      *  - SUCCEEDED when one of the children of this task succeeds.
      *  - FAILED when one of the children of this task fails.
      *
@@ -228,7 +237,7 @@ public abstract class Task<T> {
     @Override
     public String toString() {
         return ToStringBuilder.create(this)
-                .append("name", this.name)
+                .append("name", (this.name == null ? this.getClass().getSimpleName() : this.name))
                 .append("taskStatus", this.taskStatus.name())
                 .append("parent", (this.parent == null ? null : this.parent.getName()))
                 .append("filters", this.predicates)
