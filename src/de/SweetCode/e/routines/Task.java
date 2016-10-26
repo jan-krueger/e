@@ -72,6 +72,11 @@ public abstract class Task<T> {
      * @return
      */
     public Task<T> getChild(int index) {
+
+        if(this.children.isEmpty() || index < 0 || index >= this.children.size()) {
+            throw new IndexOutOfBoundsException("A child with this index does not exist.");
+        }
+
         return this.children.get(index);
     }
 

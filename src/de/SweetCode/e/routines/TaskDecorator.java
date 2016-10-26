@@ -27,8 +27,12 @@ public abstract class TaskDecorator<T> extends Task<T> {
     @Override
     public Task<T> getChild(int index) {
 
-        if(this.child == null || !(index == 0)) {
-            new IndexOutOfBoundsException("Indexx must be 0.");
+        if(this.child == null) {
+            throw new IndexOutOfBoundsException("The task has no child.");
+        }
+
+        if(!(index == 0)) {
+            throw new IndexOutOfBoundsException("Index must be 0.");
         }
 
         return this.child;
