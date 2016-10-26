@@ -2,7 +2,7 @@ package test;
 
 import de.SweetCode.e.routines.Task;
 import de.SweetCode.e.routines.TaskTreeBuilder;
-import de.SweetCode.e.routines.composite.TaskUntilFails;
+import de.SweetCode.e.routines.composite.TaskLoop;
 
 public class Test {
 
@@ -47,7 +47,7 @@ public class Test {
         System.out.println(b);
         b.start();*/
 
-        Task c = TaskTreeBuilder.create(new TaskUntilFails<>("start"))
+        Task c = TaskTreeBuilder.create(new TaskLoop<>("start", 5))
                     .child(new EchoTask("Task"))
                 .build();
         c.start();

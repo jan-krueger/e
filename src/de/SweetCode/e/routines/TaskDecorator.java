@@ -51,9 +51,7 @@ public abstract class TaskDecorator<T> extends Task<T> {
         if(this.child.is(TaskStatus.RUNNING)) {
             this.child.run();
         } else {
-
             this.child.start();
-
         }
 
     }

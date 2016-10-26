@@ -1,9 +1,6 @@
 package de.SweetCode.e.routines;
 
-import de.SweetCode.e.routines.composite.TaskRandomSelector;
-import de.SweetCode.e.routines.composite.TaskRandomSequence;
-import de.SweetCode.e.routines.composite.TaskSelector;
-import de.SweetCode.e.routines.composite.TaskSequence;
+import de.SweetCode.e.routines.composite.*;
 import de.SweetCode.e.utils.Assert;
 
 import java.util.function.Predicate;
@@ -53,6 +50,42 @@ public class TaskTreeBuilder<T> {
      */
     public TaskTreeBuilder<T> sequence(String name) {
         this.addChild(new TaskSequence<>(name));
+        return this;
+    }
+
+    /**
+     * Adds a always fail task.
+     * @return
+     */
+    public TaskTreeBuilder<T> alwaysFail(String name) {
+        this.addChild(new TaskAlwaysFail<>(name));
+        return this;
+    }
+
+    /**
+     * Adds a always succeed task.
+     * @return
+     */
+    public TaskTreeBuilder<T> alwaysSucceed(String name) {
+        this.addChild(new TaskAlwaysSucceeds<>(name));
+        return this;
+    }
+
+    /**
+     * Adds a until fails task.
+     * @return
+     */
+    public TaskTreeBuilder<T> untilFails(String name) {
+        this.addChild(new TaskUntilFails<>(name));
+        return this;
+    }
+
+    /**
+     * Adds a until succeeds task.
+     * @return
+     */
+    public TaskTreeBuilder<T> untilSucceeds(String name) {
+        this.addChild(new TaskUntilSucceeds<>(name));
         return this;
     }
 

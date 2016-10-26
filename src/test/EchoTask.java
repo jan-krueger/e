@@ -17,13 +17,6 @@ public class EchoTask extends Task {
     @Override
     public void run() {
 
-        if(random.nextDouble() < 0.99D) {
-            success();
-        } else {
-            fail();
-        }
-
-
     }
 
 }
