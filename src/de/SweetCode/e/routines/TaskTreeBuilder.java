@@ -90,6 +90,15 @@ public class TaskTreeBuilder<T> {
     }
 
     /**
+     * Adds a loop task.
+     * @return
+     */
+    public TaskTreeBuilder<T> loop(String name, int n) {
+        this.addChild(new TaskLoop<>(name, n));
+        return this;
+    }
+
+    /**
      * Adss a child.
      * @param child
      */
