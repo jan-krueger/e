@@ -5,6 +5,7 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.log.Log;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.Priority;
+import de.SweetCode.e.rendering.camera.Camera;
 import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
@@ -26,6 +27,7 @@ public class E {
     private final Input input;
     private final Log log;
 
+    private final Camera camera;
     private final EScreen screen;
     private final Layers layers = new Layers();
 
@@ -66,6 +68,10 @@ public class E {
             this.layers.add(new Layer());
         }
 
+        this.camera = settings.getCamera();
+        this.addComponent(this.camera);
+
+
     }
 
     public Random getRandom(boolean secure) {
@@ -74,6 +80,10 @@ public class E {
 
     public Log getLog() {
         return this.log;
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 
     public EScreen getScreen() {

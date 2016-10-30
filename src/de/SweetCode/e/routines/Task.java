@@ -179,11 +179,11 @@ public abstract class Task<T> {
      */
     public final void cancel() {
 
-        this.taskStatus = TaskStatus.CANCELLED;
-
         if(this.is(TaskStatus.RUNNING)) {
             this.children.stream().forEach(Task::cancel);
         }
+
+        this.taskStatus = TaskStatus.CANCELLED;
 
     }
 

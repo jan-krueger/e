@@ -31,15 +31,18 @@ public class EScreen extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
+        /*
+        //@TODO Fix flickering
         int i = 4;
         for(; i > 1; i--) {
             try {
                 this.createBufferStrategy(i);
                 break;
             } catch(Exception e) {}
-        }
-        E.getE().getLog().log(LogEntry.Builder.create().message("Created BufferStrategy %d-buffering strategy.", i).build());
+        }*/
+        //E.getE().getLog().log(LogEntry.Builder.create().message("Created BufferStrategy %d-buffering strategy.", i).build());
 
+        this.createBufferStrategy(2);
         this.bufferStrategy = this.getBufferStrategy();
 
         if(!(this.bufferStrategy == null)) {
@@ -61,18 +64,22 @@ public class EScreen extends JFrame {
 
     @Override
     public void paint(Graphics graphics) {
-        Graphics2D g;
 
         if (this.current == null) {
             return;
         }
 
+        //@TODO Work on camera.
+        //Camera camera = E.getE().getCamera();
+
         do {
+            Graphics2D g;
+
             g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
+
             g.setRenderingHints(E.getE().getSettings().getRenderingHints());
 
             this.current.render(E.getE().getLayers());
-
 
             E.getE().getGameComponents().forEach(k -> {
                 GameComponent e = k.getGameComponent();

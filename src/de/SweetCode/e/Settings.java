@@ -1,5 +1,6 @@
 package de.SweetCode.e;
 
+import de.SweetCode.e.rendering.camera.Camera;
 import de.SweetCode.e.utils.Version;
 
 import java.awt.*;
@@ -25,6 +26,8 @@ public interface Settings {
      * @return
      */
     TimeUnit getDeltaUnit();
+
+    Camera getCamera();
 
     /**
      * If this is set to true, the delta time will always be 1 or higher.
