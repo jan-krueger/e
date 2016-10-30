@@ -8,6 +8,8 @@ e is a really simple 2D game engine (WIP).
 - [x] Simple game-loop
 - [x] Simple log system
 - [x] Particle System
+- [x] Behaviour Trees
+- [ ] (Perlin) Noise Map Generation
 - [ ] Entity Component System
 - [ ] Light mapping
 - [ ] Image manipulation
