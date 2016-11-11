@@ -209,8 +209,10 @@ public class E {
     public void run() {
 
         // set default game scene if the developer hasn't added any scene yet...
-        this.addScene(new DefaultGameScene());
-        this.show(DefaultGameScene.class);
+        if(this.scenes.isEmpty()) {
+            this.addScene(new DefaultGameScene());
+            this.show(DefaultGameScene.class);
+        }
         //
 
         long lastIteration = System.nanoTime();
