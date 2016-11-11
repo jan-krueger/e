@@ -1,8 +1,6 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.log.LogEntry;
-import de.SweetCode.e.math.BoundingBox;
-import de.SweetCode.e.rendering.AspectRatio;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
 
@@ -92,13 +90,15 @@ public class EScreen extends JFrame {
             int x = 0;
             int y = 0;
 
-            if(E.getE().getSettings().fixAspectRatio()) {
+            /**
+             @TODO
+             if(E.getE().getSettings().fixAspectRatio()) {
                 AspectRatio aspectRatio = new AspectRatio(new Dimension(1280, 720), new Dimension(this.getWidth(), this.getHeight()));
                 BoundingBox optimal = aspectRatio.getOptimal();
 
                 x = (int) optimal.getMin().getX();
                 y = (int) optimal.getMin().getY();
-            }
+            }**/
 
             g.drawImage(E.getE().getLayers().combine(), x, y, null);
 

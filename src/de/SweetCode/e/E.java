@@ -3,17 +3,19 @@ package de.SweetCode.e;
 import de.SweetCode.e.input.Input;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.log.Log;
+import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.Priority;
-import de.SweetCode.e.rendering.camera.Camera;
 import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
+import java.awt.*;
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +29,7 @@ public class E {
     private final Input input;
     private final Log log;
 
-    private final Camera camera;
+    //private final Camera camera;
     private final EScreen screen;
     private final Layers layers = new Layers();
 
@@ -41,6 +43,10 @@ public class E {
     private int currentFPS = 0;
 
     private boolean isRunning = true;
+
+    public E() {
+        this(new Settings() {});
+    }
 
     /**
      * Creates a new game.
@@ -68,9 +74,8 @@ public class E {
             this.layers.add(new Layer());
         }
 
-        this.camera = settings.getCamera();
-        this.addComponent(this.camera);
-
+        //this.camera = settings.getCamera();
+        //this.addComponent(this.camera);
 
     }
 
@@ -82,9 +87,9 @@ public class E {
         return this.log;
     }
 
-    public Camera getCamera() {
+    /*public Camera getCamera() {
         return camera;
-    }
+    }*/
 
     public EScreen getScreen() {
         return this.screen;
@@ -202,6 +207,11 @@ public class E {
      * Starts the engine.
      */
     public void run() {
+
+        // set default game scene if the developer hasn't added any scene yet...
+        this.addScene(new DefaultGameScene());
+        this.show(DefaultGameScene.class);
+        //
 
         long lastIteration = System.nanoTime();
         long lastFrameTime = 0;
@@ -337,6 +347,49 @@ public class E {
                     .append("gameScene", this.gameScene)
                     .append("priority", this.priority)
                 .build();
+        }
+
+    }
+
+    private class DefaultGameScene extends GameScene {
+
+        public DefaultGameScene() {}
+
+        @Override
+        public void render(Layers layers) {
+
+            Settings settings = E.getE().getSettings();
+            ILocation location = new ILocation(settings.getWidth() / 2, settings.getHeight() / 2);
+
+            Graphics2D g = layers.first().g();
+
+            String headline = "Welcome to e.";
+            String sub = "1.6021E−19";
+
+
+            g.setBackground(Color.WHITE);
+            g.setColor(Color.BLACK);
+
+            g.drawString(
+                    headline,
+                    location.getX() - g.getFontMetrics().stringWidth(headline) / 2,
+                    location.getY() - g.getFontMetrics().getHeight() / 2
+            );
+
+            g.drawString(
+                    sub,
+                    location.getX() - g.getFontMetrics().stringWidth(sub) / 2,
+                    location.getY() + g.getFontMetrics().getHeight() / 2
+            );
+
+        }
+
+        @Override
+        public void update(InputEntry input, long delta) {}
+
+        @Override
+        public boolean isActive() {
+            return true;
         }
 
     }

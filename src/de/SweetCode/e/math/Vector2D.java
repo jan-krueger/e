@@ -37,6 +37,10 @@ public class Vector2D {
 
     }
 
+    public Vector2D sub(Vector2D vector) {
+        return new Vector2D(this.getX() - vector.getX(), this.getY() - this.getY());
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.create(this)

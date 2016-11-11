@@ -33,7 +33,7 @@ public class Version implements Comparable<Version> {
         if(this.build == 0) {
             this.readable = String.format("%d.%d.%d%s", this.major, this.minor, this.patch, this.releaseTag.getTag());
         } else {
-            this.readable = String.format("%d.%d.%d-%d%s", this.major, this.minor, this.patch, this.releaseTag.getTag());
+            this.readable = String.format("%d.%d.%d-%d%s", this.major, this.minor, this.patch, this.build, this.releaseTag.getTag());
         }
     }
 
