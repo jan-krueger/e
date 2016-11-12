@@ -1,0 +1,220 @@
+package de.SweetCode.e.resources.textures;
+
+import de.SweetCode.e.E;
+import de.SweetCode.e.input.InputEntry;
+import de.SweetCode.e.log.LogEntry;
+import de.SweetCode.e.math.IBoundingBox;
+import de.SweetCode.e.math.ILocation;
+import de.SweetCode.e.utils.Assert;
+import me.lemire.integercompression.differential.IntegratedIntCompressor;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+/**
+ * The DynamicTextureLoader keeps only actively used textures uncompressed (!) in memory as BufferedImage, all other
+ * parts of the sprite sheet will be stored as compressed (!) image, if the program requests a image that is not in-cache
+ * the TextureLoader will uncompress the requested part and create a new BufferedImage.
+ *
+ * The DynamicTextureLoader is useful if you are dealing with large sprite sheets, but you are only using parts of it
+ * while rendering, if you are using huge parts of the sprite sheet at the same time, than you should use the
+ * StaticTextureLoader.
+ */
+public class DynamicTextureLoader implements TextureLoader {
+
+    private final File file;
+    private IntegratedIntCompressor compressor = new IntegratedIntCompressor();
+
+    private Map<Integer, ImageCacheEntry> cache = new WeakHashMap<>();
+
+    private IBoundingBox boundingBox;
+    private final int tileWidth;
+    private final int tileHeight;
+
+    private int rows;
+    private int columns;
+
+    private long lastRun = System.currentTimeMillis();
+    private final long cacheTime;
+
+    private int[] compressedImage = null;
+
+    /**
+     * Constructor.
+     * @param file The sprite sheet file.
+     * @param tileWidth The width of one tile.
+     * @param tileHeight The height of one tile.
+     * @param cacheTime The time in milliseconds to stay in cache.
+     */
+    public DynamicTextureLoader(File file, int tileWidth, int tileHeight, int cacheTime) {
+
+        Assert.assertNotNull("The file cannot be null.", file);
+        Assert.assertTrue("tileWidth cannot be less than 1.", tileWidth > 0);
+        Assert.assertTrue("tileHeight cannot be less than 1.", tileHeight > 0);
+        Assert.assertTrue("cacheTime cannot be less than 1.", cacheTime > 0);
+
+        this.file = file;
+        this.tileHeight = tileHeight;
+        this.tileWidth = tileWidth;
+        this.cacheTime = cacheTime;
+
+    }
+
+
+    public void load() {
+
+        try {
+            BufferedImage bufferedImage = ImageIO.read(this.file);
+
+            // compress image
+            // @TODO :) - The results are currently ok-ish, I get around 15% compression.
+            int[] data = bufferedImage.getRGB(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null, 0, bufferedImage.getWidth());
+            this.compressedImage = compressor.compress(data);
+            E.getE().getLog().log(
+                LogEntry.Builder.create()
+                    .message(
+                        String.format(
+                            "DynamicTextureLoader compressed the image (%s) and could save %.2f%% in-memory space.",
+                            this.file.getAbsolutePath(),
+                            ((1 - this.compressedImage.length / (double) data.length) * 100)
+                        )
+                    )
+                .build()
+            );
+
+            // load all images into the cache
+            this.boundingBox = new IBoundingBox(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
+
+            this.rows = bufferedImage.getHeight() / this.tileHeight;
+            this.columns = bufferedImage.getWidth() / this.tileWidth;
+
+            int index = 0;
+            for(int y = 0; y < this.rows; y++) {
+                for(int x = 0; x < this.columns; x++) {
+                    this.cache.put(
+                        index,
+                        new ImageCacheEntry(
+                            System.currentTimeMillis() + this.cacheTime,
+                            bufferedImage.getSubimage(x * this.tileWidth, y * this.tileHeight, this.tileWidth, this.tileHeight)
+                        )
+                    );
+                    index++;
+                }
+            }
+
+
+        } catch (IOException e) {
+            E.getE().getLog().log(
+                LogEntry.Builder.create()
+                    .message(String.format("DynamicTextureLoader failed to load the image (%s).", this.file.getAbsolutePath()))
+                .build()
+            );
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public Image get(int index) {
+
+        // bounding check :)
+        int x = (index % this.columns) * this.tileWidth;
+        int y = (index / this.columns) * this.tileHeight;
+
+        if(!(this.boundingBox.contains(new ILocation(x + this.tileWidth, y + this.tileHeight)))) {
+            throw new IndexOutOfBoundsException(String.format("%d out of texture.", index));
+        }
+
+        ImageCacheEntry entry = null;
+
+        // is the index currently in cache?
+        if(this.cache.containsKey(index)) {
+
+            entry = this.cache.get(index);
+
+        }
+        // Image currently not in cache
+        else {
+
+            /*int[] uncompressed = compressor.uncompress(this.compressedImage);
+
+            BufferedImage bufferedImage = new BufferedImage(this.tileWidth, this.tileHeight, BufferedImage.TYPE_INT_ARGB);
+            bufferedImage.setRGB(0, 0, this.tileWidth, this.tileHeight, uncompressed, x * y, this.boundingBox.getWidth());
+
+            entry = new ImageCacheEntry(
+                    System.currentTimeMillis() + this.cacheTime,
+                    bufferedImage
+            );*/
+
+            int[]   uncompressed = compressor.uncompress(this.compressedImage);
+            BufferedImage bufferedImage = new BufferedImage(this.boundingBox.getWidth(), this.boundingBox.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            bufferedImage.setRGB(0, 0, this.boundingBox.getWidth(), this.boundingBox.getHeight(), uncompressed,0, this.boundingBox.getWidth());
+
+            entry = new ImageCacheEntry(
+                    System.currentTimeMillis() + this.cacheTime,
+                    bufferedImage.getSubimage(x, y, this.tileWidth, tileHeight)
+            );
+
+            this.cache.put(index, entry);
+
+        }
+
+        entry.accessed(this.cacheTime);
+        return entry.getImage();
+    }
+
+    @Override
+    public void update(InputEntry input, long delta) {
+
+        if(System.currentTimeMillis() >= this.lastRun + this.cacheTime) {
+
+            Iterator<ImageCacheEntry> iterator = this.cache.values().iterator();
+            iterator.forEachRemaining(e -> {
+
+                if(e.hasExpired()) {
+                    iterator.remove();
+                }
+
+            });
+
+            this.lastRun = System.currentTimeMillis();
+
+        }
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
+    }
+
+    private class ImageCacheEntry {
+
+        private long expired;
+        private BufferedImage image;
+
+        public ImageCacheEntry(long expired, BufferedImage image) {
+            this.expired = expired;
+            this.image = image;
+        }
+
+        public BufferedImage getImage() {
+            return image;
+        }
+
+        public boolean hasExpired() {
+            return this.expired <= System.currentTimeMillis();
+        }
+
+        public void accessed(long expireTime) {
+            this.expired = System.currentTimeMillis() + expireTime;
+        }
+    }
+
+}

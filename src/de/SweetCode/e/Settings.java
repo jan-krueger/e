@@ -119,4 +119,12 @@ public interface Settings {
         return new HashMap<>();
     }
 
+    /**
+     * Rendering debugging information.
+     * @return
+     */
+    default boolean isDebugging() {
+        return true;
+    }
+
 }

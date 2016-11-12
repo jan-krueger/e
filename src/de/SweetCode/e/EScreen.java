@@ -7,12 +7,12 @@ import de.SweetCode.e.rendering.layers.Layer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
 public class EScreen extends JFrame {
 
     private final BufferStrategy bufferStrategy;
     private GameScene current = null;
-    private GameScene tmp = null;
 
     public EScreen() {
 
@@ -43,7 +43,7 @@ public class EScreen extends JFrame {
         this.createBufferStrategy(2);
         this.bufferStrategy = this.getBufferStrategy();
 
-        if(!(this.bufferStrategy == null)) {
+        if(this.bufferStrategy == null) {
             E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
         }
 
@@ -54,7 +54,6 @@ public class EScreen extends JFrame {
     }
 
     public void setScene(GameScene gameScene) {
-        this.tmp = current;
         this.current = gameScene;
         this.invalidate();
         this.repaint();
@@ -100,9 +99,14 @@ public class EScreen extends JFrame {
                 y = (int) optimal.getMin().getY();
             }**/
 
-            g.drawImage(E.getE().getLayers().combine(), x, y, null);
-
+            BufferedImage frame = E.getE().getLayers().combine();
+            g.drawImage(frame, x, y, null);
             E.getE().getLayers().getLayers().forEach(Layer::clean);
+
+            if(E.getE().getSettings().isDebugging()) {
+                g.setColor(Color.MAGENTA);
+                g.drawString(String.format("FPS: %s (%d in %s)",  E.getE().getCurrentFPS(), E.getE().getCurrentDelta(), E.getE().getSettings().getDeltaUnit().name()), frame.getWidth() - 200, 10);
+            }
 
             g.dispose();
 

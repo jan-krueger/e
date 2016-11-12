@@ -41,6 +41,7 @@ public class E {
     private final long optimalTime;
 
     private int currentFPS = 0;
+    private long currentDelta = 0;
 
     private boolean isRunning = true;
 
@@ -113,6 +114,14 @@ public class E {
      */
     public int getCurrentFPS() {
         return this.currentFPS;
+    }
+
+    /**
+     * The last delta passed to the GameComponents.
+     * @return
+     */
+    public long getCurrentDelta() {
+        return this.currentDelta;
     }
 
     public List<ComponentEntry> getGameComponents() {
@@ -240,6 +249,7 @@ public class E {
             InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries(), this.input.getMouseWheelEntries(), this.input.getMouseDraggedEntries(), this.input.getMouseMovedEntries(), this.input.getMouseReleasedQueue());
 
             long delta = Math.max(this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (this.settings.roundDelta() ? 1 : 0));
+            this.currentDelta = delta;
 
             this.gameComponents.forEach(k -> {
 
