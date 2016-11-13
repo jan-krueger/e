@@ -15,7 +15,7 @@ public class Test {
         E e = new E(new Settings() {
             @Override
             public int getTargetFPS() {
-                return 200;
+                return 250;
             }
         });
         e.addComponent(loader);

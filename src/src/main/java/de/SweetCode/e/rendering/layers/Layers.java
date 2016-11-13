@@ -67,6 +67,7 @@ public class Layers {
 
         BufferedImage img = new BufferedImage(E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = img.createGraphics();
+
         g2.setRenderingHints(E.getE().getSettings().getRenderingHints());
 
         if(this.last().getAlpha() == 1) {

@@ -1,6 +1,7 @@
 package de.SweetCode.e.resources.textures;
 
 import de.SweetCode.e.E;
+import de.SweetCode.e.EScreen;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.log.LogEntry;
 import de.SweetCode.e.math.IBoundingBox;
@@ -11,6 +12,7 @@ import me.lemire.integercompression.differential.IntegratedIntCompressor;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -66,7 +68,7 @@ public class DynamicTextureLoader implements TextureLoader {
 
     }
 
-
+    @Override
     public void load() {
 
         try {
@@ -74,8 +76,10 @@ public class DynamicTextureLoader implements TextureLoader {
 
             // compress image
             // @TODO :) - The results are currently ok-ish, I get around 15% compression.
+
             int[] data = bufferedImage.getRGB(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null, 0, bufferedImage.getWidth());
             this.compressedImage = compressor.compress(data);
+
             E.getE().getLog().log(
                 LogEntry.Builder.create()
                     .message(
@@ -142,7 +146,9 @@ public class DynamicTextureLoader implements TextureLoader {
         // Image currently not in cache
         else {
 
-            /*int[] uncompressed = compressor.uncompress(this.compressedImage);
+            /*
+            @TODO: Fix the array offset is wrong.
+            int[] uncompressed = compressor.uncompress(this.compressedImage);
 
             BufferedImage bufferedImage = new BufferedImage(this.tileWidth, this.tileHeight, BufferedImage.TYPE_INT_ARGB);
             bufferedImage.setRGB(0, 0, this.tileWidth, this.tileHeight, uncompressed, x * y, this.boundingBox.getWidth());
@@ -194,18 +200,18 @@ public class DynamicTextureLoader implements TextureLoader {
         return true;
     }
 
-    private class ImageCacheEntry {
+    private static class ImageCacheEntry {
 
         private long expired;
-        private BufferedImage image;
+        private Image image;
 
         public ImageCacheEntry(long expired, BufferedImage image) {
             this.expired = expired;
-            this.image = image;
+            this.image = (EScreen.USE_VRAM ? toVolatile(image) : image);
         }
 
-        public BufferedImage getImage() {
-            return image;
+        public Image getImage() {
+            return this.image;
         }
 
         public boolean hasExpired() {
@@ -215,6 +221,28 @@ public class DynamicTextureLoader implements TextureLoader {
         public void accessed(long expireTime) {
             this.expired = System.currentTimeMillis() + expireTime;
         }
+
+        private static final VolatileImage toVolatile(BufferedImage bufferedImage) {
+            int width = bufferedImage.getWidth();
+            int height = bufferedImage.getHeight();
+
+            VolatileImage volatileImage = EScreen.getGraphicConfiguration().createCompatibleVolatileImage(width, height);
+            volatileImage.setAccelerationPriority(1);
+
+            //@TODO: Remove background
+            Graphics2D g = volatileImage.createGraphics();
+
+            //g.setBackground(new Color(255, 255, 255, 0));
+            g.clearRect(0, 0, width, height);
+
+
+            g.setRenderingHints(E.getE().getSettings().getRenderingHints());
+            g.drawImage(bufferedImage, 0, 0, null);
+            g.dispose();
+
+            return volatileImage;
+        }
+
     }
 
 }

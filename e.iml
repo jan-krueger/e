@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="JavaFastPFOR-0.1.10" level="project" />
+    <orderEntry type="library" name="glg2d-0.3-20130222.215441-2" level="project" />
   </component>
 </module>

@@ -15,7 +15,7 @@ public class LifeCycleQueue<E> implements Queue<E> {
 
     public LifeCycleQueue(Class<E[]> type, int capacity) {
 
-        Assert.assertTrue("The size cannot be less than one.", (capacity > 0));
+        Assert.assertTrue("The capacity cannot be less than one.", (capacity > 0));
         this.capacity = capacity;
 
     }
@@ -103,7 +103,7 @@ public class LifeCycleQueue<E> implements Queue<E> {
 
     @Override
     public E poll() {
-        return this.items.peek();
+        return this.items.poll();
     }
 
     @Override

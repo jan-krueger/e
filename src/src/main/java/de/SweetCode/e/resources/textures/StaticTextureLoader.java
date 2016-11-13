@@ -22,7 +22,6 @@ public class StaticTextureLoader implements TextureLoader {
     private final int tileWidth;
     private final int tileHeight;
 
-    private int rows;
     private int columns;
 
     /**
@@ -51,7 +50,6 @@ public class StaticTextureLoader implements TextureLoader {
             this.bufferedImage = ImageIO.read(this.file);
 
             this.boundingBox = new IBoundingBox(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
-            this.rows = bufferedImage.getHeight() / this.tileHeight;
             this.columns = bufferedImage.getWidth() / this.tileWidth;
 
         } catch (IOException e) {

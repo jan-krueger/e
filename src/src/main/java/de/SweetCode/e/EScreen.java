@@ -8,11 +8,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
+import java.util.concurrent.TimeUnit;
 
 public class EScreen extends JFrame {
 
-    private final BufferStrategy bufferStrategy;
+    /**
+     * @TODO:
+     * Experimental Feature - it will allocate VRAM instead of RAM
+     * to store and draw frames. This will also be used for the DynamicTextureLoader
+     * to reduce the used RAM.
+     *
+     * I am currently working on some bugs and on the implementation itself to ensure its
+     * performance.
+     */
+    public static final boolean USE_VRAM = false;
+
+    private BufferStrategy bufferStrategy;
     private GameScene current = null;
+
+    private VolatileImage volatileImage = null;
+
+    private static GraphicsConfiguration graphicConfiguration;
 
     public EScreen() {
 
@@ -24,27 +41,21 @@ public class EScreen extends JFrame {
         this.setMinimumSize(new Dimension(settings.getWidth(), settings.getHeight()));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-        /*
-        //@TODO Fix flickering
-        int i = 4;
-        for(; i > 1; i--) {
-            try {
-                this.createBufferStrategy(i);
-                break;
-            } catch(Exception e) {}
-        }*/
-        //E.getE().getLog().log(LogEntry.Builder.create().message("Created BufferStrategy %d-buffering strategy.", i).build());
+        EScreen.graphicConfiguration = this.getGraphicsConfiguration();
 
-        this.createBufferStrategy(2);
-        this.bufferStrategy = this.getBufferStrategy();
+        if(!(EScreen.USE_VRAM)) {
 
-        if(this.bufferStrategy == null) {
-            E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
+            this.createBufferStrategy(2);
+            this.bufferStrategy = this.getBufferStrategy();
+
+            if (this.bufferStrategy == null) {
+                E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
+            }
+
         }
 
     }
@@ -66,16 +77,33 @@ public class EScreen extends JFrame {
             return;
         }
 
+        Settings s = E.getE().getSettings();
+
         //@TODO Work on camera.
         //Camera camera = E.getE().getCamera();
 
         do {
+
             Graphics2D g;
 
-            g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
+            if(USE_VRAM) {
+                if(
+                    this.volatileImage == null ||
+                    (
+                        this.volatileImage != null &&
+                        this.volatileImage.validate(super.getGraphicsConfiguration()) == VolatileImage.IMAGE_INCOMPATIBLE
+                    )
+                ) {
+                    this.volatileImage = super.createVolatileImage(s.getWidth(), s.getHeight());
+                }
+
+                g = this.volatileImage.createGraphics();
+            } else {
+                g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
+            }
+
 
             g.setRenderingHints(E.getE().getSettings().getRenderingHints());
-
             this.current.render(E.getE().getLayers());
 
             E.getE().getGameComponents().forEach(k -> {
@@ -101,19 +129,28 @@ public class EScreen extends JFrame {
 
             BufferedImage frame = E.getE().getLayers().combine();
             g.drawImage(frame, x, y, null);
-            E.getE().getLayers().getLayers().forEach(Layer::clean);
 
             if(E.getE().getSettings().isDebugging()) {
                 g.setColor(Color.MAGENTA);
-                g.drawString(String.format("FPS: %s (%d in %s)",  E.getE().getCurrentFPS(), E.getE().getCurrentDelta(), E.getE().getSettings().getDeltaUnit().name()), frame.getWidth() - 200, 10);
+                g.drawString(String.format("FPS: %s (in %d %s)",  E.getE().getCurrentFPS(), s.getDeltaUnit().convert(E.getE().getCurrentDelta(), TimeUnit.NANOSECONDS), s.getDeltaUnit().name()), frame.getWidth() - 200, 10);
+            }
+
+            if(EScreen.USE_VRAM) {
+                graphics.drawImage(this.volatileImage, 0, 0, null);
+            } else {
+                this.bufferStrategy.show();
             }
 
             g.dispose();
 
-            this.bufferStrategy.show();
+            E.getE().getLayers().getLayers().forEach(Layer::clean);
 
-        } while(this.bufferStrategy.contentsLost());
+        } while(USE_VRAM ? this.volatileImage.contentsLost() : this.bufferStrategy.contentsLost());
 
+    }
+
+    public static GraphicsConfiguration getGraphicConfiguration() {
+        return graphicConfiguration;
     }
 
 }

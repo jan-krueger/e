@@ -3,6 +3,7 @@ import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.resources.textures.TextureLoader;
 
+import java.awt.*;
 import java.util.Random;
 
 public class TestScene extends GameScene {
@@ -18,7 +19,11 @@ public class TestScene extends GameScene {
 
     @Override
     public void render(Layers layers) {
-        layers.first().g().drawImage(loader.get(delta > 10000 ? 35 : random.nextInt(30)), 100, 100, null);
+
+        layers.first().g().setColor(Color.YELLOW);
+        layers.first().g().fillRect(50, 50, 500, 500);
+
+        for(int i = 0; i < 100; i++) layers.first().g().drawImage(loader.get(delta > 10000 ? 35 : random.nextInt(30)), 100, 100, null);
     }
 
     @Override

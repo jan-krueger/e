@@ -233,6 +233,7 @@ public class E {
 
             long now = System.nanoTime();
             long updateLength = now - lastIteration;
+            this.currentDelta = updateLength;
             lastIteration = now;
 
             // update the frame counter
@@ -249,7 +250,6 @@ public class E {
             InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries(), this.input.getMouseWheelEntries(), this.input.getMouseDraggedEntries(), this.input.getMouseMovedEntries(), this.input.getMouseReleasedQueue());
 
             long delta = Math.max(this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (this.settings.roundDelta() ? 1 : 0));
-            this.currentDelta = delta;
 
             this.gameComponents.forEach(k -> {
 
