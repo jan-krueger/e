@@ -10,12 +10,12 @@ public class Test {
     public static void main(String[] args) {
 
 
-        TextureLoader loader = new DynamicTextureLoader(new File("C:\\Users\\Yonas\\Downloads\\test.png"), 481, 446, 5000);
+        TextureLoader loader = new DynamicTextureLoader(new File("C:\\Users\\Yonas\\Downloads\\test.png"), 481, 464, 10000);
 
         E e = new E(new Settings() {
             @Override
             public int getTargetFPS() {
-                return 250;
+                return 25;
             }
         });
         e.addComponent(loader);

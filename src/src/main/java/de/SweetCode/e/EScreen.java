@@ -22,13 +22,12 @@ public class EScreen extends JFrame {
      * I am currently working on some bugs and on the implementation itself to ensure its
      * performance.
      */
-    public static final boolean USE_VRAM = false;
+    public static final boolean USE_VRAM = true;
 
     private BufferStrategy bufferStrategy;
     private GameScene current = null;
 
     private VolatileImage volatileImage = null;
-
     private static GraphicsConfiguration graphicConfiguration;
 
     public EScreen() {
@@ -56,6 +55,12 @@ public class EScreen extends JFrame {
                 E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
             }
 
+        } else {
+            E.getE().getLog().log(
+                LogEntry.Builder.create()
+                    .message("Using images stored in VRAM to render the frames.")
+                .build()
+            );
         }
 
     }

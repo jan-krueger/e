@@ -146,25 +146,25 @@ public class DynamicTextureLoader implements TextureLoader {
         // Image currently not in cache
         else {
 
-            /*
-            @TODO: Fix the array offset is wrong.
             int[] uncompressed = compressor.uncompress(this.compressedImage);
 
             BufferedImage bufferedImage = new BufferedImage(this.tileWidth, this.tileHeight, BufferedImage.TYPE_INT_ARGB);
-            bufferedImage.setRGB(0, 0, this.tileWidth, this.tileHeight, uncompressed, x * y, this.boundingBox.getWidth());
+            /**
+             * The array offset. Explained.
+             * i = offset + (y-startY)*scansize + (x-startX)
+             *
+             * offset   = 0, because we had no offset in our original RGB array.
+             * y        = y, the y coordinate we calculated from the index.
+             * startY   = 0, because the new BufferdImage has the same size as the array, no startY-offset required.
+             * scansize = with of the original spritesheet, because this is the scansize used in the original RGB array.
+             * x        = x, the x coordinate we calculated from the index.
+             * startX   = 0, because the new BufferdImage has the same size as the array, no startX-offset required.
+             */
+            bufferedImage.setRGB(0, 0, this.tileWidth, this.tileHeight, uncompressed, (y * this.boundingBox.getWidth() + x), this.boundingBox.getWidth());
 
             entry = new ImageCacheEntry(
                     System.currentTimeMillis() + this.cacheTime,
                     bufferedImage
-            );*/
-
-            int[]   uncompressed = compressor.uncompress(this.compressedImage);
-            BufferedImage bufferedImage = new BufferedImage(this.boundingBox.getWidth(), this.boundingBox.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            bufferedImage.setRGB(0, 0, this.boundingBox.getWidth(), this.boundingBox.getHeight(), uncompressed,0, this.boundingBox.getWidth());
-
-            entry = new ImageCacheEntry(
-                    System.currentTimeMillis() + this.cacheTime,
-                    bufferedImage.getSubimage(x, y, this.tileWidth, tileHeight)
             );
 
             this.cache.put(index, entry);
@@ -207,6 +207,8 @@ public class DynamicTextureLoader implements TextureLoader {
 
         public ImageCacheEntry(long expired, BufferedImage image) {
             this.expired = expired;
+
+            // Storing images in VRAM if we are supposed to... :) otherwise just plain BufferdImage in normal RAM
             this.image = (EScreen.USE_VRAM ? toVolatile(image) : image);
         }
 
@@ -222,7 +224,7 @@ public class DynamicTextureLoader implements TextureLoader {
             this.expired = System.currentTimeMillis() + expireTime;
         }
 
-        private static final VolatileImage toVolatile(BufferedImage bufferedImage) {
+        private static Image toVolatile(BufferedImage bufferedImage) {
             int width = bufferedImage.getWidth();
             int height = bufferedImage.getHeight();
 
@@ -232,9 +234,9 @@ public class DynamicTextureLoader implements TextureLoader {
             //@TODO: Remove background
             Graphics2D g = volatileImage.createGraphics();
 
-            //g.setBackground(new Color(255, 255, 255, 0));
-            g.clearRect(0, 0, width, height);
-
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+            g.setBackground(new Color(255, 255, 255, 0));
+            g.fillRect(0, 0, width, height);
 
             g.setRenderingHints(E.getE().getSettings().getRenderingHints());
             g.drawImage(bufferedImage, 0, 0, null);
