@@ -1,5 +1,8 @@
 package de.SweetCode.e.rendering.particle;
 
+/**
+ * All currently implemented particle types.
+ */
 public enum ParticleTypes {
 
     /**

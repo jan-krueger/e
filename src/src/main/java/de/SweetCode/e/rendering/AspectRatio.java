@@ -4,6 +4,12 @@ import de.SweetCode.e.math.BoundingBox;
 
 import java.awt.*;
 
+/**
+ * The AspectRatio is a simple calculation class that is work in progress.
+ * It is supposed to take in to Dimension. The Dimension of the screen and the Dimension
+ * of the game window. Based on these two values the class can calculate the best AspectRatio
+ * for the game window.
+ */
 public class AspectRatio {
 
     private Dimension render;

@@ -13,6 +13,11 @@ public class DialogueNode<T> {
     private String dialogueText;
     private List<DialogueOptionPointer<DialogueNode>> optionPointers = new LinkedList<>();
 
+    /**
+     * @param identifier The identifier of the node.
+     * @param dialogueText The dialogue text.
+     * @param optionPointers All related options.
+     */
     public DialogueNode(T identifier, String dialogueText, List<DialogueOptionPointer<DialogueNode>> optionPointers) {
         this.identifier = identifier;
         this.dialogueText = dialogueText;

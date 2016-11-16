@@ -30,12 +30,13 @@ public class YarnJsonParser implements DialogueParser<String, JsonElement, Strin
 
     private Map<DialogueNode<String>, List<DialogueOptionPointer<String>>> dialogueNodes = new HashMap<>();
 
-    public YarnJsonParser() {}
+    public YarnJsonParser() {
+    }
 
     @Override
     public boolean isValidNode(JsonElement node) {
 
-        if(node == null || !(node.isJsonObject())) {
+        if (node == null || !(node.isJsonObject())) {
             return false;
         }
 
@@ -44,10 +45,15 @@ public class YarnJsonParser implements DialogueParser<String, JsonElement, Strin
         //@TODO Validate that the node id (title) doesn't exist yet
         return (
                 object.has("title") && object.get("title").isJsonPrimitive() &&
-                object.has("body") && object.get("body").isJsonPrimitive() &&
-                !(this.dialogueNodes.containsKey(DialogueNode.dummy(object.get("title").getAsString())))
-            );
+                        object.has("body") && object.get("body").isJsonPrimitive() &&
+                        !(this.dialogueNodes.containsKey(DialogueNode.dummy(object.get("title").getAsString())))
+        );
 
+    }
+
+    @Override
+    public Dialogue parse(String startIdentifier, String input) {
+        return this.parse(startIdentifier, input, null);
     }
 
     @Override

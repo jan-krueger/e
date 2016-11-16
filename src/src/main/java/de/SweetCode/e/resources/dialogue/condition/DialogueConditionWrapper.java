@@ -4,6 +4,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A class to wrap all dialogue conditions.
+ */
 public class DialogueConditionWrapper {
 
     private final DialogueConditions instance;
@@ -13,7 +16,13 @@ public class DialogueConditionWrapper {
 
     private final List<String> fieldNames;
 
-    public DialogueConditionWrapper(DialogueConditions instance, String id, Method method, Class<?>[] parameters, List<String> fields) {
+    /**
+     * @param instance The instance of the dialogue conditions.
+     * @param id The unique id of the condition.
+     * @param method The method of the condition to invoke.
+     * @param fields The fields the method expects.
+     */
+    public DialogueConditionWrapper(DialogueConditions instance, String id, Method method, List<String> fields) {
         this.instance = instance;
 
         this.id = id;
@@ -22,6 +31,11 @@ public class DialogueConditionWrapper {
         this.fieldNames = fields;
     }
 
+    /**
+     * Checks if the condition is fulfilled.
+     * @param fields A map with all fields and their current values to pass them to condition method.
+     * @return
+     */
     public boolean isFulfilled(Map<String, Object> fields) {
 
         // build arguments

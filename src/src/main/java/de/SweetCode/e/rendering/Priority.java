@@ -2,6 +2,11 @@ package de.SweetCode.e.rendering;
 
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
+/**
+ * Priority is a general class used in all
+ * cases where the developer can or should
+ * provide a priority value.
+ */
 public enum Priority {
 
     LOW(-1),

@@ -7,6 +7,11 @@ public class IBoundingBox {
     private final ILocation min;
     private final ILocation max;
 
+    /**
+     * Casting double locations to int.
+     * @param a One corner of the bounding box.
+     * @param b Another corner of the bounding box.
+     */
     public IBoundingBox(Location a, Location b) {
         this(
                 Math.min((int) a.getX(), (int) b.getX()),
@@ -16,45 +21,93 @@ public class IBoundingBox {
         );
     }
 
+    /**
+     * @param a One corner of the square.
+     * @param b Another corner of the square.
+     */
     public IBoundingBox(ILocation a, ILocation b) {
         this(new Location(a), new Location(b));
     }
 
+    /**
+     * @param minX The minimum x coordinate of the box.
+     * @param minY The minimum y coordinate of the box.
+     * @param maxX The maximum x coordinate of the box.
+     * @param maxY The maximum y coordinate of the box.
+     */
     public IBoundingBox(int minX, int minY, int maxX, int maxY) {
         this.min = new ILocation(minX, minY);
         this.max = new ILocation(maxX, maxY);
     }
 
+    /**
+     * Moves the box by x and y.
+     * @param x The units to move on the x axis.
+     * @param y The units to move on the y axis.
+     */
     public void move(int x, int y) {
         this.getMax().add(x, y);
         this.getCenter().add(x, y);
         this.getMin().add(x, y);
     }
 
+    /**
+     * Returns the max location.
+     * @return
+     */
     public ILocation getMax() {
         return this.max;
     }
 
+    /**
+     * Returns the center of the bounding box.
+     * @return
+     */
     public Location getCenter() {
         return new Location(((this.getMin().getX() + this.getMax().getX()) / 2.0D), ((this.getMin().getY() + this.getMax().getY()) / 2.0D));
     }
 
+    /**
+     * Returns the min location.
+     * @return
+     */
     public ILocation getMin() {
         return this.min;
     }
 
+    /**
+     * Returns the height of the bounding box.
+     * @return
+     */
     public int getHeight() {
         return Math.abs(this.getMax().getY() - this.getMin().getY());
     }
 
+    /**
+     * Returns the with of the bounding box.
+     * @return
+     */
     public int getWidth() {
         return Math.abs(this.getMax().getX() - this.getMin().getX());
     }
 
+    /**
+     * Checks if a square is intersecting this bounding box.
+     * @param minX The minimum x coordinate of the box.
+     * @param minY The minimum y coordinate of the box.
+     * @param maxX The maximum x coordinate of the box.
+     * @param maxY The maximum y coordinate of the box.
+     * @return
+     */
     public boolean intersects(double minX, double minY, double maxX, double maxY) {
         return this.intersects(new BoundingBox(minX, minY, maxX, maxY));
     }
 
+    /**
+     * Checks if a square is intersecting this bounding box.
+     * @param other The bounding box to check against.
+     * @return
+     */
     public boolean intersects(BoundingBox other) {
         return (
                 this.getMin().getX() < other.getMax().getX() &&
@@ -64,6 +117,11 @@ public class IBoundingBox {
         );
     }
 
+    /**
+     * Checks if the bounding box contains another bounding box.
+     * @param other The bounding box to check against.
+     * @return
+     */
     public boolean contains(BoundingBox other) {
         return (
                 this.getMin().getX() <= other.getMin().getX() &&
@@ -73,6 +131,11 @@ public class IBoundingBox {
         );
     }
 
+    /**
+     * Checks if the bounding box contains a location.
+     * @param location The location to check against.
+     * @return
+     */
     public boolean contains(Location location) {
         return (
                 location.getX() >= this.min.getX() &&
@@ -82,6 +145,11 @@ public class IBoundingBox {
         );
     }
 
+    /**
+     * Checks if the bounding box contains a location.
+     * @param location The location to check against.
+     * @return
+     */
     public boolean contains(ILocation location) {
         return this.contains(new Location(location));
     }

@@ -9,11 +9,18 @@ import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.util.UUID;
 
+/**
+ * An Entity is going to represent the most abstract type of entity in a game.
+ */
 public abstract class Entity implements GameComponent {
 
     private final UUID identifier;
     private BoundingBox boundingBox;
 
+    /**
+     * @param identifier The unique identifier for the Entity.
+     * @param boundingBox The bounding box acting as collision box.
+     */
     public Entity(UUID identifier, BoundingBox boundingBox) {
 
         Assert.assertNotNull("The identifier cannot be null.", identifier);
@@ -23,6 +30,10 @@ public abstract class Entity implements GameComponent {
         this.boundingBox = boundingBox;
     }
 
+    /**
+     * The constructor generating a UUID.
+     * @param boundingBox The bounding box acting as collision box.
+     */
     public Entity(BoundingBox boundingBox) {
         this(UUID.randomUUID(), boundingBox);
     }

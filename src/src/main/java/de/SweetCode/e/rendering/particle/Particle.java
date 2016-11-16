@@ -11,6 +11,9 @@ import de.SweetCode.e.utils.Assert;
 
 import java.awt.*;
 
+/**
+ * Representing one particle
+ */
 public class Particle implements Renderable {
 
     private final Layer layer;
@@ -75,14 +78,26 @@ public class Particle implements Renderable {
         this.endless = (lifeSpan == -1);
     }
 
+    /**
+     * The layer the particle is rendered on.
+     * @return
+     */
     public Layer getLayer() {
         return this.layer;
     }
 
+    /**
+     * The location of the layer.
+     * @return
+     */
     public Location getLocation() {
         return this.location;
     }
 
+    /**
+     * Destroys the particle if the value is true.
+     * @param destroy Should the particle be destroyed?
+     */
     public void setDestroy(boolean destroy) {
         this.destroy = destroy;
         this.lifeSpan = -1;
@@ -174,6 +189,10 @@ public class Particle implements Renderable {
 
     }
 
+    /**
+     * Sets the vector of the particle.
+     * @param vector2D The vector.
+     */
     public void setVector2D(Vector2D vector2D) {
         this.vector2D = vector2D;
     }

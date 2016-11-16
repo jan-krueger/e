@@ -20,6 +20,11 @@ public class DialogueOptionPointer<T> {
 
     private List<DialogueConditionWrapper> dialogueConditionWrappers;
 
+    /**
+     * @param optionText The option text.
+     * @param pointer The pointer the option is pointing at.
+     * @param dialogueConditionWrappers The list of all wrapped conditions.
+     */
     public DialogueOptionPointer(String optionText, T pointer, List<DialogueConditionWrapper> dialogueConditionWrappers) {
         this.optionText = optionText;
         this.pointer = pointer;

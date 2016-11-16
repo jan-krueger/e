@@ -27,4 +27,11 @@ public interface DialogueParser<P, N, I> {
      */
     Dialogue parse(I startIdentifier, P input, @Nullable DialogueConditions conditions);
 
+    /**
+     * Is parsing the input.
+     * @param input
+     * @return
+     */
+    Dialogue parse(I startIdentifier, P input);
+
 }

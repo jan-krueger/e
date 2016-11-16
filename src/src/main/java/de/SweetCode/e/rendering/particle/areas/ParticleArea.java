@@ -20,6 +20,17 @@ public class ParticleArea implements Renderable {
 
     private final List<Particle> particles = new ArrayList<>();
 
+    /**
+     * @param layer The layer the area should be rendered on.
+     * @param boundingBox The bounding box to defeine the size of the area.
+     * @param vector2D The vector for all particles.
+     * @param particleType The particle type.
+     * @param color The color of all particles.
+     * @param mixType If it is set to true than it iterates through all different particle types.
+     * @param lifeSpan The amount of time the particle should exist.
+     * @param width The width of a particle
+     * @param amount The amount of particles spawned in the area.
+     */
     public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, Color color, boolean mixType, long lifeSpan, int width, int amount) {
 
         Assert.assertNotNull(boundingBox);
@@ -48,23 +59,58 @@ public class ParticleArea implements Renderable {
 
     }
 
+    /**
+     * @param layer The layer the area should be rendered on.
+     * @param boundingBox The bounding box to defeine the size of the area.
+     * @param vector2D The vector for all particles.
+     * @param particleType The particle type.
+     * @param color The color of all particles.
+     * @param width The width of a particle
+     * @param amount The amount of particles spawned in the area.
+     */
     public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, Color color, int width, int amount) {
         this(layer, boundingBox, vector2D, particleType, color, false, -1, width, amount);
     }
 
+    /**
+     * @param layer The layer the area should be rendered on.
+     * @param boundingBox The bounding box to defeine the size of the area.
+     * @param vector2D The vector for all particles.
+     * @param particleType The particle type.
+     * @param width The width of a particle
+     * @param amount The amount of particles spawned in the area.
+     */
     public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, ParticleTypes particleType, int width, int amount) {
         this(layer, boundingBox, vector2D, particleType, null, false, -1, width, amount);
     }
 
+    /**
+     * @param layer The layer the area should be rendered on.
+     * @param boundingBox The bounding box to defeine the size of the area.
+     * @param vector2D The vector for all particles.
+     * @param width The width of a particle
+     * @param amount The amount of particles spawned in the area.
+     */
     public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, Color color, boolean mixType, int width, int amount) {
         this(layer, boundingBox, vector2D, ParticleTypes.RANDOM, color, mixType, -1, width, amount);
     }
 
+    /**
+     * @param layer The layer the area should be rendered on.
+     * @param boundingBox The bounding box to defeine the size of the area.
+     * @param vector2D The vector for all particles.
+     * @param width The width of a particle
+     * @param amount The amount of particles spawned in the area.
+     */
     public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, boolean mixType, int width, int amount) {
         this(layer, boundingBox, vector2D, ParticleTypes.RANDOM, null, mixType, -1, width, amount);
     }
 
 
+    /**
+     * Desroys all particles
+     * @param destroy Should the particle be destroyed?
+     */
     public void setDestroy(boolean destroy) {
         this.particles.forEach(e -> e.setDestroy(destroy));
     }

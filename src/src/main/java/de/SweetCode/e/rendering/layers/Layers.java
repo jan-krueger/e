@@ -8,6 +8,9 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Managing and combining all layers.
+ */
 public class Layers {
 
     private final List<Layer> layers = new LinkedList<>();
@@ -59,7 +62,7 @@ public class Layers {
     }
 
     /**
-     * Combines all layers to setScene them.
+     * Combines all layers them.
      *
      * @return
      */

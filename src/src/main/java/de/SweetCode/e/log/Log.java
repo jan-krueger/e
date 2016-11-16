@@ -5,6 +5,9 @@ import de.SweetCode.e.utils.ToString.ToStringBuilder;
 import java.util.Queue;
 import java.util.stream.Stream;
 
+/**
+ * Log allows you to keep track of various events.
+ */
 public class Log {
 
     private final Queue<LogEntry> entries;
@@ -15,7 +18,7 @@ public class Log {
      * @param capacity
      */
     public Log(int capacity) {
-        this.entries = new LifeCycleQueue<>(LogEntry[].class, capacity);
+        this.entries = new LifeCycleQueue<>(capacity);
     }
 
     /**

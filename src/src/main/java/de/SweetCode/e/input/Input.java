@@ -12,7 +12,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.LinkedTransferQueue;
 
-public class Input extends KeyAdapter {
+/**
+ * The Input class is registering all relevant input provided by the user.
+ */
+public final class Input extends KeyAdapter {
 
     private final Queue<KeyEntry> keyQueue = new LinkedTransferQueue<>();
     private final Queue<MouseEntry> mouseQueue = new LinkedTransferQueue<>();

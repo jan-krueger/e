@@ -8,12 +8,18 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.LinkedTransferQueue;
 
+/**
+ * A LifeCycleQueue keeps only n items in its queue, if
+ * new items are added than the queue will remove its head
+ * and append the new item.
+ * @param <E>
+ */
 public class LifeCycleQueue<E> implements Queue<E> {
 
     private final Queue<E> items = new LinkedTransferQueue<>();
     private final int capacity;
 
-    public LifeCycleQueue(Class<E[]> type, int capacity) {
+    public LifeCycleQueue(int capacity) {
 
         Assert.assertTrue("The capacity cannot be less than one.", (capacity > 0));
         this.capacity = capacity;

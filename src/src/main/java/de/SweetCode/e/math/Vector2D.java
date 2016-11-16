@@ -8,6 +8,10 @@ public class Vector2D {
     private double y;
     private double magnitude;
 
+    /**
+     * @param x The x direction of the vector.
+     * @param y The y direction of the vector.
+     */
     public Vector2D(double x, double y) {
         this.x = x;
         this.y = y;
@@ -17,18 +21,33 @@ public class Vector2D {
         );
     }
 
+    /**
+     * Returns the x direction of the vector.
+     * @return
+     */
     public double getX() {
         return this.x;
     }
 
+    /**
+     * Returns the y direction of the vector.
+     * @return
+     */
     public double getY() {
         return this.y;
     }
 
+    /**
+     * Returns the magnitude of the vector.
+     * @return
+     */
     public double getMagnitude() {
         return this.magnitude;
     }
 
+    /**
+     * Normalizes this vector.
+     */
     public void normalize() {
 
         this.x /= this.magnitude;
@@ -37,6 +56,11 @@ public class Vector2D {
 
     }
 
+    /**
+     * Subtract a vector from this vector and returns the result in a new vector.
+     * @param vector The vector to substract.
+     * @return
+     */
     public Vector2D sub(Vector2D vector) {
         return new Vector2D(this.getX() - vector.getX(), this.getY() - this.getY());
     }

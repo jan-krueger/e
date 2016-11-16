@@ -7,6 +7,11 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+/**
+ * This class represents one rendering layer. The engine
+ * allows you to have multiple layers at once will be combined
+ * and then rendered on the screen.
+ */
 public class Layer {
 
     private float alpha = 1F;
