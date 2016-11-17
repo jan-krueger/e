@@ -32,6 +32,8 @@ public interface DialogueParser<P, N, I> {
      * @param input
      * @return
      */
-    Dialogue parse(I startIdentifier, P input);
+    default Dialogue parse(I startIdentifier, P input)  {
+        return this.parse(startIdentifier, input, null);
+    }
 
 }

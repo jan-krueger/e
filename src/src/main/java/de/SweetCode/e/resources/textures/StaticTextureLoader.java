@@ -2,7 +2,7 @@ package de.SweetCode.e.resources.textures;
 
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.log.LogEntry;
+import de.SweetCode.e.utils.log.LogEntry;
 import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.utils.Assert;

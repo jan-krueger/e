@@ -1,4 +1,4 @@
-package de.SweetCode.e.log;
+package de.SweetCode.e.utils.log;
 
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;

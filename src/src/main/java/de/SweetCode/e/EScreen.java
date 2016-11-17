@@ -1,6 +1,6 @@
 package de.SweetCode.e;
 
-import de.SweetCode.e.log.LogEntry;
+import de.SweetCode.e.utils.log.LogEntry;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
 

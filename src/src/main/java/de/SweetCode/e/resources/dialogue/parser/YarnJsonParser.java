@@ -4,21 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import de.SweetCode.e.E;
-import de.SweetCode.e.log.LogEntry;
 import de.SweetCode.e.resources.dialogue.Dialogue;
 import de.SweetCode.e.resources.dialogue.DialogueNode;
 import de.SweetCode.e.resources.dialogue.DialogueOptionPointer;
 import de.SweetCode.e.resources.dialogue.DialogueParser;
-import de.SweetCode.e.resources.dialogue.condition.DialogueCondition;
-import de.SweetCode.e.resources.dialogue.condition.DialogueConditionOption;
 import de.SweetCode.e.resources.dialogue.condition.DialogueConditionWrapper;
 import de.SweetCode.e.resources.dialogue.condition.DialogueConditions;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.exceptions.ParserException;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,11 +46,6 @@ public class YarnJsonParser implements DialogueParser<String, JsonElement, Strin
     }
 
     @Override
-    public Dialogue parse(String startIdentifier, String input) {
-        return this.parse(startIdentifier, input, null);
-    }
-
-    @Override
     public Dialogue parse(String startIdentifier, String input, DialogueConditions dialogueConditions) {
 
         Assert.assertNotNull("The input cannot be null.", input);
@@ -69,55 +58,7 @@ public class YarnJsonParser implements DialogueParser<String, JsonElement, Strin
         JsonArray array = this.jsonParser.parse(input).getAsJsonArray();
 
         // parsing conditions
-        Map<String, DialogueConditionWrapper> conditionWrapper = new HashMap<>();
-
-        Method[] methods = dialogueConditions.getClass().getMethods();
-        Arrays.stream(methods)
-            .filter(m -> m.isAnnotationPresent(DialogueCondition.class))
-            .forEach(m -> {
-
-                //well... the method is supposed to return a boolean
-                if(!(m.getReturnType().isAssignableFrom(boolean.class))) {
-                    System.out.println(m.getReturnType().getName());
-                    E.getE().getLog().log(
-                        LogEntry.Builder.create()
-                            .message("The DialogueConditions method %s does not return a boolean.", m.getName())
-                        .build()
-                    );
-                    return;
-                }
-
-                DialogueCondition idAnnotation = m.getAnnotation(DialogueCondition.class);
-                List<String> fields = new LinkedList<>();
-
-                for(Annotation[] aArray : m.getParameterAnnotations()) {
-                    for(Annotation annotation : aArray) {
-
-                        //is DialogueConditionOption?
-                        if(annotation.annotationType().equals(DialogueConditionOption.class)) {
-                            fields.add(((DialogueConditionOption) annotation).fieldName());
-                        }
-
-                    }
-                }
-
-                // if the length is not equal, than we didn't get for all parameters a field type
-                if(!(m.getParameterTypes().length == fields.size())) {
-                    E.getE().getLog().log(
-                        LogEntry.Builder.create()
-                            .message("The DialogueConditions method %s has not enough annotations.", m.getName())
-                        .build()
-                    );
-                    return;
-                }
-
-                // Condition name storted with an @ - to make the lookup easier
-                conditionWrapper.put(
-                        ("@" + idAnnotation.id()),
-                        new DialogueConditionWrapper(dialogueConditions, idAnnotation.id(), m, m.getParameterTypes(), fields)
-                );
-
-            });
+        Map<String, DialogueConditionWrapper> conditionWrapper = DialogueConditionWrapper.getConditionWrappers(dialogueConditions);
 
         final DialogueNode[] startNode = {null};
 
