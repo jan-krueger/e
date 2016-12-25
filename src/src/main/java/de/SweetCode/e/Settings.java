@@ -1,5 +1,6 @@
 package de.SweetCode.e;
 
+import de.SweetCode.e.rendering.RenderingMode;
 import de.SweetCode.e.utils.Version;
 
 import java.awt.*;
@@ -31,6 +32,14 @@ public interface Settings {
      */
     default TimeUnit getDeltaUnit() {
         return TimeUnit.MILLISECONDS;
+    }
+
+    /**
+     * The rendering mode used to render GameScenes.
+     * @return
+     */
+    default RenderingMode getRenderingMode() {
+        return RenderingMode.JAVA_BACKEND;
     }
 
     /** @TODO

@@ -1,13 +1,9 @@
 import de.SweetCode.e.E;
 import de.SweetCode.e.Settings;
-import de.SweetCode.e.resources.dialogue.Dialogue;
-import de.SweetCode.e.resources.dialogue.DialogueNode;
-import de.SweetCode.e.resources.dialogue.parser.YarnJsonParser;
-import de.SweetCode.e.utils.StringUtils;
+import de.SweetCode.e.resources.textures.DynamicTextureLoader;
+import de.SweetCode.e.resources.textures.TextureLoader;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 public class Test {
 
@@ -19,7 +15,7 @@ public class Test {
                 return 25;
             }
         });
-
+        /*
         YarnJsonParser parser = new YarnJsonParser();
         Dialogue<String> dialogue = null;
         try {
@@ -28,10 +24,9 @@ public class Test {
             e1.printStackTrace();
         }
         DialogueNode<String> start = dialogue.getStartNode();
-        System.out.println(start.getOptionPointers());
+        System.out.println(start.getOptionPointers());*/
 
-        /*TextureLoader loader = new DynamicTextureLoader(new File("C:\\Users\\Yonas\\Downloads\\test.png"), 481, 464, 10000);
-
+        TextureLoader loader = new DynamicTextureLoader(new File("C:\\Users\\Yonas\\Downloads\\test.png"), 481, 464, 10000);
 
         e.addComponent(loader);
         loader.load();
@@ -39,7 +34,7 @@ public class Test {
         e.addScene(new TestScene(loader));
         e.show(TestScene.class);
 
-        e.run();*/
+        e.run();
 
     }
 

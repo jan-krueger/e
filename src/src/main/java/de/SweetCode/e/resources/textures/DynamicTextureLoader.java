@@ -57,6 +57,7 @@ public class DynamicTextureLoader implements TextureLoader {
     public DynamicTextureLoader(File file, int tileWidth, int tileHeight, int cacheTime) {
 
         Assert.assertNotNull("The file cannot be null.", file);
+        Assert.assertTrue("The file does not exist.", file.exists());
         Assert.assertTrue("tileWidth cannot be less than 1.", tileWidth > 0);
         Assert.assertTrue("tileHeight cannot be less than 1.", tileHeight > 0);
         Assert.assertTrue("cacheTime cannot be less than 1.", cacheTime > 0);
