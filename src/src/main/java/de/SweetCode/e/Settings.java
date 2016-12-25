@@ -1,6 +1,5 @@
 package de.SweetCode.e;
 
-import de.SweetCode.e.rendering.RenderingMode;
 import de.SweetCode.e.utils.Version;
 
 import java.awt.*;
