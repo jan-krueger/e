@@ -1,6 +1,7 @@
 package de.SweetCode.e.resources.dialogue.parser;
 
 import com.sun.istack.internal.Nullable;
+import de.SweetCode.e.E;
 import de.SweetCode.e.resources.dialogue.Dialogue;
 import de.SweetCode.e.resources.dialogue.DialogueNode;
 import de.SweetCode.e.resources.dialogue.DialogueOptionPointer;
@@ -8,6 +9,7 @@ import de.SweetCode.e.resources.dialogue.DialogueParser;
 import de.SweetCode.e.resources.dialogue.condition.DialogueConditionWrapper;
 import de.SweetCode.e.resources.dialogue.condition.DialogueConditions;
 import de.SweetCode.e.utils.Assert;
+import de.SweetCode.e.utils.log.LogEntry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -59,10 +61,12 @@ public class YarnXmlParser implements DialogueParser<File, Node, String> {
 
         try {
             document = this.documentBuilder.parse(input);
-        } catch (SAXException e) {
-            // @TODO: handle
-        } catch (IOException e) {
-            // @TODO: Handle
+        } catch (SAXException | IOException e) {
+            E.getE().getLog().log(
+                LogEntry.Builder.create()
+                    .message("Failed to parse the provided file (%s). Error: %s", input, e.getMessage())
+                .build()
+            );
         }
 
         Map<String, DialogueConditionWrapper> conditionWrapper = DialogueConditionWrapper.getConditionWrappers(conditions);
