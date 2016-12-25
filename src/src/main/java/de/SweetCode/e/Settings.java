@@ -34,14 +34,6 @@ public interface Settings {
         return TimeUnit.MILLISECONDS;
     }
 
-    /**
-     * The rendering mode used to render GameScenes.
-     * @return
-     */
-    default RenderingMode getRenderingMode() {
-        return RenderingMode.JAVA_BACKEND;
-    }
-
     /** @TODO
     default Camera getCamera() {
         return new Camera(new Location(0, 0), new BoundingBox(new Location(0, 0), new Location(this.getWidth(), this.getHeight())));
