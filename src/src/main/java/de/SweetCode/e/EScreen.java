@@ -1,17 +1,25 @@
 package de.SweetCode.e;
 
-import de.SweetCode.e.utils.log.LogEntry;
+import com.jogamp.opengl.*;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
+import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureData;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
+import de.SweetCode.e.utils.log.LogEntry;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.awt.image.VolatileImage;
+import java.nio.IntBuffer;
 import java.util.concurrent.TimeUnit;
 
-public class EScreen extends JFrame {
+public class EScreen extends JFrame implements GLEventListener {
 
     /**
      * @TODO:
@@ -22,13 +30,22 @@ public class EScreen extends JFrame {
      * I am currently working on some bugs and on the implementation itself to ensure its
      * performance.
      */
-    public static final boolean USE_VRAM = true;
+    public static final boolean USE_VRAM = false;
+
+    /**
+     * @TODO:
+     * Experimental Feature: using OpenGL to render the frame.
+     */
+    public static final boolean USE_JOGL = false;
 
     private BufferStrategy bufferStrategy;
     private GameScene current = null;
 
     private VolatileImage volatileImage = null;
     private static GraphicsConfiguration graphicConfiguration;
+
+    // OpenGL
+    private GLProfile glProfile = null;
 
     public EScreen() {
 
@@ -40,28 +57,44 @@ public class EScreen extends JFrame {
         this.setMinimumSize(new Dimension(settings.getWidth(), settings.getHeight()));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        EScreen.graphicConfiguration = this.getGraphicsConfiguration();
+
+        if(USE_JOGL) {
+
+            this.glProfile = GLProfile.get(GLProfile.GL2);
+            GLCapabilities glCapabilities = new GLCapabilities(glProfile);
+
+            GLCanvas canvas = new GLCanvas(glCapabilities);
+            canvas.addGLEventListener(this);
+            canvas.setSize(400, 400);
+
+            FPSAnimator animator = new FPSAnimator(canvas, 60);
+            animator.start();
+
+            this.add(canvas);
+
+        } else {
+            if (!(EScreen.USE_VRAM)) {
+
+                this.createBufferStrategy(1);
+                this.bufferStrategy = this.getBufferStrategy();
+
+                if (this.bufferStrategy == null) {
+                    E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
+                }
+
+            } else {
+                E.getE().getLog().log(
+                        LogEntry.Builder.create()
+                                .message("Using images stored in VRAM to render the frames.")
+                                .build()
+                );
+            }
+        }
+
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-
-        EScreen.graphicConfiguration = this.getGraphicsConfiguration();
-
-        if(!(EScreen.USE_VRAM)) {
-
-            this.createBufferStrategy(2);
-            this.bufferStrategy = this.getBufferStrategy();
-
-            if (this.bufferStrategy == null) {
-                E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
-            }
-
-        } else {
-            E.getE().getLog().log(
-                LogEntry.Builder.create()
-                    .message("Using images stored in VRAM to render the frames.")
-                .build()
-            );
-        }
 
     }
 
@@ -77,6 +110,11 @@ public class EScreen extends JFrame {
 
     @Override
     public void paint(Graphics graphics) {
+
+        if(USE_JOGL) {
+            super.paint(graphics);
+            return;
+        }
 
         if (this.current == null) {
             return;
@@ -109,36 +147,22 @@ public class EScreen extends JFrame {
 
 
             g.setRenderingHints(E.getE().getSettings().getRenderingHints());
-            this.current.render(E.getE().getLayers());
-
-            E.getE().getGameComponents().forEach(k -> {
-                GameComponent e = k.getGameComponent();
-                if(e instanceof Renderable && e.isActive()) {
-                    ((Renderable) e).render(E.getE().getLayers());
-                }
-
-            });
 
             int x = 0;
             int y = 0;
-
             /**
              @TODO
              if(E.getE().getSettings().fixAspectRatio()) {
-                AspectRatio aspectRatio = new AspectRatio(new Dimension(1280, 720), new Dimension(this.getWidth(), this.getHeight()));
-                BoundingBox optimal = aspectRatio.getOptimal();
+             AspectRatio aspectRatio = new AspectRatio(new Dimension(1280, 720), new Dimension(this.getWidth(), this.getHeight()));
+             BoundingBox optimal = aspectRatio.getOptimal();
 
-                x = (int) optimal.getMin().getX();
-                y = (int) optimal.getMin().getY();
-            }**/
+             x = (int) optimal.getMin().getX();
+             y = (int) optimal.getMin().getY();
+             }**/
 
-            BufferedImage frame = E.getE().getLayers().combine();
+            BufferedImage frame = this.frame();
+
             g.drawImage(frame, x, y, null);
-
-            if(E.getE().getSettings().isDebugging()) {
-                g.setColor(Color.MAGENTA);
-                g.drawString(String.format("FPS: %s (in %d %s)",  E.getE().getCurrentFPS(), s.getDeltaUnit().convert(E.getE().getCurrentDelta(), TimeUnit.NANOSECONDS), s.getDeltaUnit().name()), frame.getWidth() - 200, 10);
-            }
 
             if(EScreen.USE_VRAM) {
                 graphics.drawImage(this.volatileImage, 0, 0, null);
@@ -158,4 +182,86 @@ public class EScreen extends JFrame {
         return graphicConfiguration;
     }
 
+    private BufferedImage frame() {
+
+        this.current.render(E.getE().getLayers());
+
+        E.getE().getGameComponents().forEach(k -> {
+            GameComponent e = k.getGameComponent();
+            if(e instanceof Renderable && e.isActive()) {
+                ((Renderable) e).render(E.getE().getLayers());
+            }
+
+        });
+
+        if(E.getE().getSettings().isDebugging()) {
+            Layer layer = E.getE().getLayers().first();
+            layer.g().setColor(Color.MAGENTA);
+            layer.g().drawString(String.format("FPS: %s (in %d %s)",  E.getE().getCurrentFPS(), E.getE().getSettings().getDeltaUnit().convert(E.getE().getCurrentDelta(), TimeUnit.NANOSECONDS), E.getE().getSettings().getDeltaUnit().name()), E.getE().getSettings().getWidth() - 200, 10);
+        }
+
+        return E.getE().getLayers().combine();
+    }
+
+    @Override
+    public void init(GLAutoDrawable glAutoDrawable) {}
+
+    @Override
+    public void dispose(GLAutoDrawable glAutoDrawable) {}
+
+    @Override
+    public void display(GLAutoDrawable drawable) {
+
+        BufferedImage frame = this.frame();
+
+        IntBuffer buffer = IntBuffer.allocate(frame.getWidth() * frame.getHeight() * 4);
+        buffer.put(((DataBufferInt) frame.getRaster().getDataBuffer()).getData());
+        buffer.flip();
+
+        GL2 gl = drawable.getGL().getGL2();
+
+        TextureData textureData = new TextureData(this.glProfile, GL.GL_RGBA, frame.getWidth(), frame.getHeight(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, false, false, false, buffer, null);
+        Texture texture = new Texture(gl, textureData);
+        texture.enable(gl);
+        texture.bind(gl);
+
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+        System.out.println(frame.getWidth() +  "x" + frame.getHeight());
+
+        // GL4 ---
+
+        gl.glViewport(0, 0, frame.getWidth(), frame.getHeight());
+
+        //
+        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+        gl.glLoadIdentity();
+        gl.glOrtho(0, frame.getWidth(), frame.getHeight(), 0, 0, 1);
+
+        //
+        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+        gl.glLoadIdentity();
+
+        gl.glBegin(GL2.GL_QUADS);
+
+        gl.glTexCoord2f(0, 0);
+        gl.glVertex2f(0, 0);
+
+        gl.glTexCoord2f(1, 0);
+        gl.glVertex2f(frame.getWidth(), 0);
+
+        gl.glTexCoord2f(1, 1);
+        gl.glVertex2f(frame.getWidth(), frame.getHeight());
+
+        gl.glTexCoord2f(0, 1);
+        gl.glVertex2f(0, frame.getHeight());
+
+        gl.glEnd();
+        gl.glFlush();
+
+    }
+
+    @Override
+    public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {}
 }

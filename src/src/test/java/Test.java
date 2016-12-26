@@ -1,13 +1,12 @@
 import de.SweetCode.e.E;
 import de.SweetCode.e.Settings;
-import de.SweetCode.e.resources.textures.DynamicTextureLoader;
-import de.SweetCode.e.resources.textures.TextureLoader;
-
-import java.io.File;
+import de.SweetCode.e.utils.Platform;
 
 public class Test {
 
     public static void main(String[] args) {
+
+        System.out.println(Platform.getPlatform().name());
 
         E e = new E(new Settings() {
             @Override
@@ -26,12 +25,7 @@ public class Test {
         DialogueNode<String> start = dialogue.getStartNode();
         System.out.println(start.getOptionPointers());*/
 
-        TextureLoader loader = new DynamicTextureLoader(new File("C:\\Users\\Yonas\\Downloads\\test.png"), 481, 464, 10000);
-
-        e.addComponent(loader);
-        loader.load();
-
-        e.addScene(new TestScene(loader));
+        e.addScene(new TestScene());
         e.show(TestScene.class);
 
         e.run();
