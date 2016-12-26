@@ -11,7 +11,7 @@ public class Test {
         E e = new E(new Settings() {
             @Override
             public int getTargetFPS() {
-                return 25;
+                return 200;
             }
         });
         /*

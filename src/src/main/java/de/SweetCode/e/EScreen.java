@@ -36,7 +36,7 @@ public class EScreen extends JFrame implements GLEventListener {
      * @TODO:
      * Experimental Feature: using OpenGL to render the frame.
      */
-    public static final boolean USE_JOGL = false;
+    public static final boolean USE_JOGL = true;
 
     private BufferStrategy bufferStrategy;
     private GameScene current = null;
@@ -63,12 +63,13 @@ public class EScreen extends JFrame implements GLEventListener {
 
             this.glProfile = GLProfile.get(GLProfile.GL2);
             GLCapabilities glCapabilities = new GLCapabilities(glProfile);
+            glCapabilities.setDoubleBuffered(false);
 
             GLCanvas canvas = new GLCanvas(glCapabilities);
             canvas.addGLEventListener(this);
             canvas.setSize(400, 400);
 
-            FPSAnimator animator = new FPSAnimator(canvas, 60);
+            FPSAnimator animator = new FPSAnimator(canvas, 200);
             animator.start();
 
             this.add(canvas);
@@ -204,7 +205,7 @@ public class EScreen extends JFrame implements GLEventListener {
     }
 
     @Override
-    public void init(GLAutoDrawable glAutoDrawable) {}
+    public void init(GLAutoDrawable drawable) {}
 
     @Override
     public void dispose(GLAutoDrawable glAutoDrawable) {}
@@ -212,50 +213,51 @@ public class EScreen extends JFrame implements GLEventListener {
     @Override
     public void display(GLAutoDrawable drawable) {
 
+        // getting the new frame
         BufferedImage frame = this.frame();
 
+        // Frame to Buffer
         IntBuffer buffer = IntBuffer.allocate(frame.getWidth() * frame.getHeight() * 4);
         buffer.put(((DataBufferInt) frame.getRaster().getDataBuffer()).getData());
         buffer.flip();
 
         GL2 gl = drawable.getGL().getGL2();
 
+        // clear
+        gl.glClearColor(0F, 0F, 0F, 0F);
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        gl.glLoadIdentity();
+
+        // generating & binding texture
         TextureData textureData = new TextureData(this.glProfile, GL.GL_RGBA, frame.getWidth(), frame.getHeight(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, false, false, false, buffer, null);
         Texture texture = new Texture(gl, textureData);
         texture.enable(gl);
         texture.bind(gl);
 
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        System.out.println(frame.getWidth() +  "x" + frame.getHeight());
-
-        // GL4 ---
-
+        // viewport
         gl.glViewport(0, 0, frame.getWidth(), frame.getHeight());
 
-        //
         gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glLoadIdentity();
         gl.glOrtho(0, frame.getWidth(), frame.getHeight(), 0, 0, 1);
 
-        //
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glLoadIdentity();
 
+
         gl.glBegin(GL2.GL_QUADS);
 
-        gl.glTexCoord2f(0, 0);
-        gl.glVertex2f(0, 0);
+            gl.glTexCoord2f(0, 0);
+            gl.glVertex2f(0, 0);
 
-        gl.glTexCoord2f(1, 0);
-        gl.glVertex2f(frame.getWidth(), 0);
+            gl.glTexCoord2f(1, 0);
+            gl.glVertex2f(frame.getWidth(), 0);
 
-        gl.glTexCoord2f(1, 1);
-        gl.glVertex2f(frame.getWidth(), frame.getHeight());
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex2f(frame.getWidth(), frame.getHeight());
 
-        gl.glTexCoord2f(0, 1);
-        gl.glVertex2f(0, frame.getHeight());
+            gl.glTexCoord2f(0, 1);
+            gl.glVertex2f(0, frame.getHeight());
 
         gl.glEnd();
         gl.glFlush();
