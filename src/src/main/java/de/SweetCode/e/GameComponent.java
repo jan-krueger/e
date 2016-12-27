@@ -2,17 +2,16 @@ package de.SweetCode.e;
 
 import de.SweetCode.e.input.InputEntry;
 
+
 public interface GameComponent {
 
     /**
-     * Will be called each game loop iteration.
-     * @param input The keyboard input since the last call.
+     * Call to update the component.
      */
-    void update(InputEntry input, long delta);
+    void update(InputEntry inputEntry, long delta);
 
     /**
-     * If the method returns true the loop will call the update method otherwise
-     * it won't call the update method in the iteration.
+     * If the method is marked as active (true) then the component expects updates.
      * @return
      */
     boolean isActive();

@@ -2,7 +2,6 @@ package de.SweetCode.e;
 
 import de.SweetCode.e.input.Input;
 import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.utils.log.Log;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.Priority;
@@ -11,6 +10,7 @@ import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
+import de.SweetCode.e.utils.log.Log;
 
 import java.awt.*;
 import java.security.SecureRandom;

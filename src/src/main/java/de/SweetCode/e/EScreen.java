@@ -244,7 +244,6 @@ public class EScreen extends JFrame implements GLEventListener {
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-
         gl.glBegin(GL2.GL_QUADS);
 
             gl.glTexCoord2f(0, 0);
@@ -261,6 +260,13 @@ public class EScreen extends JFrame implements GLEventListener {
 
         gl.glEnd();
         gl.glFlush();
+
+        textureData.destroy();
+        textureData.flush();
+        texture.disable(gl);
+        texture.destroy(gl);
+
+        buffer.clear();
 
     }
 
