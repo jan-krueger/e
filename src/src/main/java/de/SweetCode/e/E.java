@@ -1,57 +1,68 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.input.Input;
-import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.math.ILocation;
+import de.SweetCode.e.loop.RenderLoop;
+import de.SweetCode.e.loop.UpdateLoop;
+import de.SweetCode.e.rendering.DefaultGameScene;
 import de.SweetCode.e.rendering.GameScene;
+import de.SweetCode.e.rendering.GameSceneEntry;
 import de.SweetCode.e.rendering.Priority;
 import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
-import de.SweetCode.e.utils.ToString.ToStringBuilder;
 import de.SweetCode.e.utils.log.Log;
 
-import java.awt.*;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class E {
 
+    //--- Static & Final Variables
     private static E instance;
-    private final static long NANO_SECOND = TimeUnit.SECONDS.toNanos(1);
+    public final static long NANO_SECOND = TimeUnit.SECONDS.toNanos(1);
     private final static Random random = new Random();
     private final static Random secureRandom = new SecureRandom();
+    //---
 
+    //--- User Input
     private final Input input;
-    private final Log log;
+    //---
 
-    //private final Camera camera;
+    //--- Loop & Render Related
     private final EScreen screen;
     private final Layers layers = new Layers();
 
+    private final List<GameComponentEntry> gameComponents = new CopyOnWriteArrayList<>();
+    private final Map<Class<? extends GameScene>, GameSceneEntry> scenes = new LinkedHashMap<>();
+    //---
+
+    //--- Internals
     private final Settings settings;
+    private final Log log;
+    //---
 
-    private final List<ComponentEntry> gameComponents = new CopyOnWriteArrayList<>();
-    private final Map<Class<? extends GameScene>, SceneEntry> scenes = new LinkedHashMap<>();
+    //--- Related To Loops
+    private ExecutorService executor = Executors.newFixedThreadPool(2);
 
-    private final long optimalTime;
+    private RenderLoop renderLoop;
+    private UpdateLoop updateLoop;
+    //---
 
-    private int currentFPS = 0;
-    private long currentDelta = 0;
-
-    private boolean isRunning = true;
-
+    /**
+     * Creates a new game with default settings.
+     */
     public E() {
         this(new Settings() {});
     }
 
     /**
-     * Creates a new game.
-     *
+     * Creates a new game with custom settings.
      */
     public E(Settings settings) {
 
@@ -68,15 +79,13 @@ public class E {
         this.screen = new EScreen();
         this.input = new Input();
 
-
-        this.optimalTime =  E.NANO_SECOND / this.settings.getTargetFPS();
-
         for(int i = 0; i < settings.getAmountOfLayers(); i++) {
             this.layers.add(new Layer());
         }
 
-        //this.camera = settings.getCamera();
-        //this.addComponent(this.camera);
+        this.renderLoop = new RenderLoop(this.screen, (E.NANO_SECOND / this.settings.getTargetFPS()));
+        this.updateLoop = new UpdateLoop(this.input, (E.NANO_SECOND / this.settings.getTargetTicks()));
+
 
     }
 
@@ -88,10 +97,6 @@ public class E {
         return this.log;
     }
 
-    /*public Camera getCamera() {
-        return camera;
-    }*/
-
     public EScreen getScreen() {
         return this.screen;
     }
@@ -100,6 +105,10 @@ public class E {
         return this.layers;
     }
 
+
+    public Map<Class<? extends GameScene>, GameSceneEntry> getScenes() {
+        return this.scenes;
+    }
     /**
      * The settings of the game.
      * @return
@@ -113,18 +122,18 @@ public class E {
      * @return
      */
     public int getCurrentFPS() {
-        return this.currentFPS;
+        return this.renderLoop.getCurrentFPS();
     }
 
     /**
-     * The last delta passed to the GameComponents.
+     * Returns the current tick rate of the update loop.
      * @return
      */
-    public long getCurrentDelta() {
-        return this.currentDelta;
+    public int getCurrentTicks() {
+        return this.updateLoop.getCurrentTicks();
     }
 
-    public List<ComponentEntry> getGameComponents() {
+    public List<GameComponentEntry> getGameComponents() {
         return this.gameComponents;
     }
 
@@ -145,22 +154,10 @@ public class E {
      */
     public void addComponent(GameComponent gameComponent, Priority priority) {
 
-        this.gameComponents.add(new ComponentEntry(gameComponent, priority));
+        this.gameComponents.add(new GameComponentEntry(gameComponent, priority));
 
         // Sort
-        Collections.sort(this.gameComponents, (o1, o2) -> {
-
-            if(o1.getValue().getPriority() == o2.getValue().getPriority()) {
-                return 0;
-            }
-
-            if(o1.getValue().getPriority() < o2.getValue().getPriority()) {
-                return 1;
-            }
-
-            return -1;
-
-        });
+        Collections.sort(this.gameComponents, new GameComponentEntry.EntryComparator());
 
     }
 
@@ -181,23 +178,17 @@ public class E {
      */
     public void addScene(GameScene gameScene, Priority priority) {
 
-        this.scenes.put(gameScene.getClass(), new SceneEntry(gameScene, priority));
+        // also add it as normal game component
+        this.addComponent(gameScene, priority);
+
+        // add to scenes
+        this.scenes.put(gameScene.getClass(), new GameSceneEntry(gameScene, priority));
 
         // Sort
-        List<Map.Entry<Class<? extends GameScene>, SceneEntry>> list = new LinkedList<>(this.scenes.entrySet());
-        Collections.sort(list, (o1, o2) -> {
+        List<Map.Entry<Class<? extends GameScene>, GameSceneEntry>> list = new LinkedList<>(this.scenes.entrySet());
+        Collections.sort(list, new GameSceneEntry.EntryComparator());
 
-            if(o1.getValue().getValue().getPriority() == o2.getValue().getValue().getPriority()) {
-                return 0;
-            }
-
-            if(o1.getValue().getValue().getPriority() < o2.getValue().getValue().getPriority()) {
-                return 1;
-            }
-
-            return -1;
-
-        });
+        // clear scenes to put in "clear" order
         this.scenes.clear();
         list.forEach(e -> this.scenes.put(e.getKey(), e.getValue()));
 
@@ -212,6 +203,7 @@ public class E {
         this.screen.setScene(this.scenes.get(scene).getGameScene());
     }
 
+
     /**
      * Starts the engine.
      */
@@ -224,61 +216,8 @@ public class E {
         }
         //
 
-        long lastIteration = System.nanoTime();
-        long lastFrameTime = 0;
-
-        int tmpFPS = 0;
-
-        while (this.isRunning) {
-
-            long now = System.nanoTime();
-            long updateLength = now - lastIteration;
-            this.currentDelta = updateLength;
-            lastIteration = now;
-
-            // update the frame counter
-            lastFrameTime += updateLength;
-            tmpFPS++;
-
-            if(lastFrameTime >= E.NANO_SECOND) {
-                this.currentFPS = tmpFPS;
-                lastFrameTime = 0;
-                tmpFPS = 0;
-            }
-
-            // get the input
-            InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries(), this.input.getMouseWheelEntries(), this.input.getMouseDraggedEntries(), this.input.getMouseMovedEntries(), this.input.getMouseReleasedQueue());
-
-            long delta = Math.max(this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (this.settings.roundDelta() ? 1 : 0));
-
-            this.gameComponents.forEach(k -> {
-
-                if(k.getGameComponent().isActive()) {
-                    k.getGameComponent().update(input, delta);
-                }
-
-            });
-
-            this.scenes.forEach((k, v) -> {
-
-                if(v.getGameScene().isActive()) {
-                    v.getGameScene().update(input, delta);
-                    this.screen.invalidate();
-                    this.screen.repaint();
-                }
-
-            });
-
-            try{
-                long delay = TimeUnit.NANOSECONDS.toMillis(this.optimalTime - (System.nanoTime() - now));
-                if(delay > 0) {
-                    Thread.sleep(delay);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
+        this.executor.submit(this.renderLoop);
+        this.executor.submit(this.updateLoop);
 
     }
 
@@ -332,77 +271,6 @@ public class E {
         }
 
         return invalids;
-
-    }
-
-    private class SceneEntry {
-
-        private GameScene gameScene;
-        private Priority priority;
-
-        public SceneEntry(GameScene gameScene, Priority priority) {
-            this.gameScene = gameScene;
-            this.priority = priority;
-        }
-
-        public GameScene getGameScene() {
-            return this.gameScene;
-        }
-
-        public Priority getValue() {
-            return this.priority;
-        }
-
-        @Override
-        public String toString() {
-            return ToStringBuilder.create(this)
-                    .append("gameScene", this.gameScene)
-                    .append("priority", this.priority)
-                .build();
-        }
-
-    }
-
-    private class DefaultGameScene extends GameScene {
-
-        public DefaultGameScene() {}
-
-        @Override
-        public void render(Layers layers) {
-
-            Settings settings = E.getE().getSettings();
-            ILocation location = new ILocation(settings.getWidth() / 2, settings.getHeight() / 2);
-
-            Graphics2D g = layers.first().g();
-
-            String headline = "Welcome to e.";
-            String sub = "1.6021E−19";
-
-
-            g.setBackground(Color.WHITE);
-            g.setColor(Color.BLACK);
-
-            g.drawString(
-                    headline,
-                    location.getX() - g.getFontMetrics().stringWidth(headline) / 2,
-                    location.getY() - g.getFontMetrics().getHeight() / 2
-            );
-
-            g.drawString(
-                    sub,
-                    location.getX() - g.getFontMetrics().stringWidth(sub) / 2,
-                    location.getY() + g.getFontMetrics().getHeight() / 2
-            );
-
-        }
-
-        @Override
-        public void update(InputEntry input, long delta) {}
-
-        @Override
-        public boolean isActive() {
-            return true;
-        }
 
     }
 

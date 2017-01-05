@@ -63,12 +63,18 @@ public interface Settings {
     }
 
     /**
-     * The optimal fps target.
+     * The optimal FPS (Frames-Per-Second) target.
      * @return
      */
     default int getTargetFPS() {
         return 100;
     }
+
+    /**
+     * How often should run the update-loop/second.
+      * @return
+     */
+    default int getTargetTicks() { return 64; }
 
     /**
      * The max. amount of log entries.

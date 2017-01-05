@@ -17,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.awt.image.VolatileImage;
 import java.nio.IntBuffer;
-import java.util.concurrent.TimeUnit;
 
 public class EScreen extends JFrame implements GLEventListener {
 
@@ -36,7 +35,7 @@ public class EScreen extends JFrame implements GLEventListener {
      * @TODO:
      * Experimental Feature: using OpenGL to render the frame.
      */
-    public static final boolean USE_JOGL = true;
+    public static final boolean USE_JOGL = false;
 
     private BufferStrategy bufferStrategy;
     private GameScene current = null;
@@ -195,10 +194,12 @@ public class EScreen extends JFrame implements GLEventListener {
 
         });
 
-        if(E.getE().getSettings().isDebugging()) {
+        Settings settings = E.getE().getSettings();
+
+        if(settings.isDebugging()) {
             Layer layer = E.getE().getLayers().first();
             layer.g().setColor(Color.MAGENTA);
-            layer.g().drawString(String.format("FPS: %s (in %d %s)",  E.getE().getCurrentFPS(), E.getE().getSettings().getDeltaUnit().convert(E.getE().getCurrentDelta(), TimeUnit.NANOSECONDS), E.getE().getSettings().getDeltaUnit().name()), E.getE().getSettings().getWidth() - 200, 10);
+            layer.g().drawString(String.format("FPS: %d | Ticks: %d",  E.getE().getCurrentFPS(), E.getE().getCurrentTicks()), settings.getWidth() - 200, 10);
         }
 
         return E.getE().getLayers().combine();

@@ -5,7 +5,7 @@ public enum Platform {
     WINDOWS,
     MAC_OS_X,
     LINUX,
-    UNKNOWN;
+    UNKNOWN, Platform;
 
     private final static String OS_NAME = System.getProperty("os.name");
     private static Platform OS_CACHE = null;
