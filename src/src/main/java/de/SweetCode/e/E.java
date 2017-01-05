@@ -69,7 +69,7 @@ public class E {
         Assert.assertNull("An instance of E already exists.", E.instance);
         Assert.assertNotNull("Settings cannot be null.", settings);
 
-        List<String> validation = E.validateSettings(settings);
+        List<String> validation = Settings.Validator.validate(settings);
         Assert.assertTrue("Failed to validate settings: " + StringUtils.join(validation, ", "), validation.isEmpty());
 
         E.instance = this;
@@ -229,49 +229,5 @@ public class E {
         return E.instance;
     }
 
-    /**
-     * Validates the settings.
-     * @param settings
-     * @return
-     */
-    private static List<String> validateSettings(Settings settings) {
-
-        List<String> invalids = new ArrayList<>();
-
-        if(settings.getName() == null) {
-            invalids.add("name cannot be null");
-        }
-
-        if(settings.getDeltaUnit() == null) {
-            invalids.add("deltaUnit cannot be null");
-        }
-
-        if(settings.getVersion() == null) {
-            invalids.add("version cannot be null");
-        }
-
-        if(settings.getTargetFPS() < 0) {
-            invalids.add("targetFPS cannot be negative");
-        }
-
-        if(settings.getWidth() < 1) {
-            invalids.add("width cannot be negative or 0");
-        }
-
-        if(settings.getHeight() < 1) {
-            invalids.add("height cannot be negative or 0");
-        }
-
-        if(settings.getLogCapacity() < 1) {
-            invalids.add("logCapacity cannot be negative or 0");
-        }
-
-        if(settings.getAmountOfLayers() < 1) {
-            invalids.add("The amount of layers must be at least 1");
-        }
-
-        return invalids;
-
-    }
 
 }

@@ -3,7 +3,9 @@ package de.SweetCode.e;
 import de.SweetCode.e.utils.Version;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -131,6 +133,57 @@ public interface Settings {
      */
     default boolean isDebugging() {
         return true;
+    }
+
+    /**
+     * Validator to validate settings.
+     */
+    final class Validator {
+
+        public static List<String> validate(Settings settings) {
+
+            List<String> invalids = new ArrayList<>();
+
+            if(settings.getName() == null) {
+                invalids.add("name cannot be null");
+            }
+
+            if(settings.getDeltaUnit() == null) {
+                invalids.add("deltaUnit cannot be null");
+            }
+
+            if(settings.getVersion() == null) {
+                invalids.add("version cannot be null");
+            }
+
+            if(settings.getTargetFPS() < 1) {
+                invalids.add("targetFPS cannot be negative 0");
+            }
+
+            if(settings.getTargetTicks() < 1) {
+                invalids.add("targetTicks cannot be negative or 0");
+            }
+
+            if(settings.getWidth() < 1) {
+                invalids.add("width cannot be negative or 0");
+            }
+
+            if(settings.getHeight() < 1) {
+                invalids.add("height cannot be negative or 0");
+            }
+
+            if(settings.getLogCapacity() < 1) {
+                invalids.add("logCapacity cannot be negative or 0");
+            }
+
+            if(settings.getAmountOfLayers() < 1) {
+                invalids.add("The amount of layers must be at least 1");
+            }
+
+            return invalids;
+
+        }
+
     }
 
 }
