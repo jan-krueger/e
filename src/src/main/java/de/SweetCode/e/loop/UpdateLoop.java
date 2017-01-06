@@ -7,7 +7,6 @@ import de.SweetCode.e.input.Input;
 import de.SweetCode.e.input.InputEntry;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class UpdateLoop extends Loop {
@@ -44,7 +43,6 @@ public class UpdateLoop extends Loop {
         );
         stream.forEach(k -> {
 
-            System.out.println(k.getPriority().name());
             if(k.getGameComponent().isActive()) {
                 k.getGameComponent().update(
                         // the input since the last call
