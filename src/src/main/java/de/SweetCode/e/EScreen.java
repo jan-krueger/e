@@ -16,7 +16,9 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.awt.image.VolatileImage;
+import java.lang.management.ManagementFactory;
 import java.nio.IntBuffer;
+import com.sun.management.OperatingSystemMXBean;
 
 public class EScreen extends JFrame implements GLEventListener {
 
@@ -45,6 +47,9 @@ public class EScreen extends JFrame implements GLEventListener {
 
     // OpenGL
     private GLProfile glProfile = null;
+
+    // Debug Stuff
+    private OperatingSystemMXBean bean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
     public EScreen() {
 
@@ -196,20 +201,33 @@ public class EScreen extends JFrame implements GLEventListener {
 
         Settings settings = E.getE().getSettings();
 
+        //--- Debugging
         if(settings.isDebugging()) {
             Layer layer = E.getE().getLayers().first();
             layer.g().setColor(Color.MAGENTA);
             layer.g().drawString(
                     String.format(
-                        "FPS: %d | Ticks: %d | Memory: %.2fMB",
+                        "FPS: %d (%d) | Ticks: %d (%d)",
                             E.getE().getCurrentFPS(),
+                            settings.getTargetFPS(),
                             E.getE().getCurrentTicks(),
-                            (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * Math.pow(10, -6)
+                            settings.getTargetTicks()
                     ),
                     settings.getWidth() - 200,
                     10
             );
+            layer.g().drawString(
+                    String.format(
+                        "CPU: %.2f%% | Memory: %.2fMB",
+                            this.bean.getProcessCpuLoad() * 100,
+                            (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * Math.pow(10, -6)
+                    ),
+                    settings.getWidth() - 200,
+                    20
+            );
+
         }
+        //---
 
         return E.getE().getLayers().combine();
     }
@@ -282,4 +300,5 @@ public class EScreen extends JFrame implements GLEventListener {
 
     @Override
     public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {}
+
 }

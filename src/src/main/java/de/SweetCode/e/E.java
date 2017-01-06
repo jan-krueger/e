@@ -151,13 +151,15 @@ public class E {
      */
     public void addComponent(GameComponent gameComponent, Priority priority) {
 
-        this.getLog().log(
-                LogEntry.Builder.create().message(
-                    "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +
-                    "the GameComponent that is tied to a GameScene, however the priority for the GameScene itself " +
-                    "will be set."
-                ).build()
-        );
+        if(!(priority == Priority.NORMAL)) {
+            this.getLog().log(
+                    LogEntry.Builder.create().message(
+                            "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +
+                                    "the GameComponent that is tied to a GameScene, however the priority for the GameScene itself " +
+                                    "will be set."
+                    ).build()
+            );
+        }
 
         this.gameComponents.add(new GameComponentEntry(gameComponent, priority));
 
