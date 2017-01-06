@@ -35,13 +35,13 @@ public class EScreen extends JFrame implements GLEventListener {
      * I am currently working on some bugs and on the implementation itself to ensure its
      * performance.
      */
-    public static final boolean USE_VRAM = false;
+    public static final boolean USE_VRAM = true;
 
     /**
      * @TODO:
      * Experimental Feature: using OpenGL to render the frame.
      */
-    public static final boolean USE_JOGL = true;
+    public static final boolean USE_JOGL = false;
 
     private BufferStrategy bufferStrategy;
     private GameScene current = null;
