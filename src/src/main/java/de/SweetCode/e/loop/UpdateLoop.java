@@ -15,7 +15,7 @@ public class UpdateLoop extends Loop {
     private final Input input;
 
     public UpdateLoop(Settings settings, Input input, long optimalTime) {
-        super(optimalTime);
+        super("Update Loop", optimalTime);
 
         this.settings = settings;
         this.input = input;

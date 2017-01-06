@@ -1,13 +1,14 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.input.Input;
+import de.SweetCode.e.loop.LoopThreadFactory;
+import de.SweetCode.e.loop.ProfilerLoop;
 import de.SweetCode.e.loop.RenderLoop;
 import de.SweetCode.e.loop.UpdateLoop;
 import de.SweetCode.e.rendering.DefaultGameScene;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.GameSceneEntry;
 import de.SweetCode.e.rendering.Priority;
-import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
@@ -45,10 +46,11 @@ public class E {
     //---
 
     //--- Related To Loops
-    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(2, new LoopThreadFactory());
 
     private RenderLoop renderLoop;
     private UpdateLoop updateLoop;
+    private ProfilerLoop profilerLoop;
     //---
 
     /**
@@ -82,6 +84,10 @@ public class E {
         //--- Setting up loops
         this.renderLoop = new RenderLoop(this.screen, (C.SECOND_AS_NANO / this.settings.getTargetFPS()));
         this.updateLoop = new UpdateLoop(this.settings, this.input, (C.SECOND_AS_NANO / this.settings.getTargetTicks()));
+
+        if(settings.isDebugging()) {
+            this.profilerLoop = new ProfilerLoop();
+        }
         //---
 
     }
@@ -102,6 +108,13 @@ public class E {
         return this.layers;
     }
 
+    /**
+     * Returns the instance of the profiler loop. It returns null if debugging is not enabled.
+     * @return
+     */
+    public ProfilerLoop getProfilerLoop() {
+        return this.profilerLoop;
+    }
 
     public Map<Class<? extends GameScene>, GameSceneEntry> getScenes() {
         return this.scenes;
@@ -151,13 +164,15 @@ public class E {
      */
     public void addComponent(GameComponent gameComponent, Priority priority) {
 
-        this.getLog().log(
-                LogEntry.Builder.create().message(
-                    "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +
-                    "the GameComponent that is tied to a GameScene, however the priority for the GameScene itself " +
-                    "will be set."
-                ).build()
-        );
+        if(!(priority == Priority.NORMAL)) {
+            this.getLog().log(
+                    LogEntry.Builder.create().message(
+                            "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +
+                                    "the GameComponent that is tied to a GameScene, however the priority for the GameScene itself " +
+                                    "will be set."
+                    ).build()
+            );
+        }
 
         this.gameComponents.add(new GameComponentEntry(gameComponent, priority));
 
@@ -235,6 +250,15 @@ public class E {
                 TimeUnit.NANOSECONDS
         );
 
+        if(this.settings.isDebugging()) {
+            this.executor.scheduleAtFixedRate(
+                    this.profilerLoop,
+                    0,
+                    this.profilerLoop.getOptimalIterationTime(),
+                    TimeUnit.NANOSECONDS
+            );
+        }
+
     }
 
     /**
@@ -247,7 +271,15 @@ public class E {
 
     public static class C {
 
+        /**
+         * 1 second as nanoseconds.
+         */
         public final static long SECOND_AS_NANO = TimeUnit.SECONDS.toNanos(1);
+
+        /**
+         * Multiplier to convert bytes to megabytes.
+         */
+        public final static double BYTES_TO_MEGABYTES = Math.pow(10, -6);
 
     }
 
