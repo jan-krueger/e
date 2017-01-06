@@ -23,9 +23,6 @@ import java.nio.IntBuffer;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.function.ToIntFunction;
-import java.util.function.ToLongFunction;
 
 public class EScreen extends JFrame implements GLEventListener {
 
@@ -44,7 +41,7 @@ public class EScreen extends JFrame implements GLEventListener {
      * @TODO:
      * Experimental Feature: using OpenGL to render the frame.
      */
-    public static final boolean USE_JOGL = false;
+    public static final boolean USE_JOGL = true;
 
     private BufferStrategy bufferStrategy;
     private GameScene current = null;
@@ -323,11 +320,11 @@ public class EScreen extends JFrame implements GLEventListener {
                     .forEach(t -> {
                         layer.g().drawString(
                             String.format(
-                                "%d - %s (%s) %d",
+                                "%d - P: %d - %s (%s)",
                                     t.getId(),
+                                    t.getPriority(),
                                     t.getName(),
-                                    t.getState().name(),
-                                    t.getPriority()
+                                    t.getState().name()
                             ),
                             (int) (settings.getWidth() - xOffset * 0.95),
                             yOffset * ((finalXStep + 1) + i[0])
@@ -354,38 +351,40 @@ public class EScreen extends JFrame implements GLEventListener {
     @Override
     public void display(GLAutoDrawable drawable) {
 
-        // getting the new frame
-        BufferedImage frame = this.frame();
+        if(!(this.current == null)) {
 
-        // Frame to Buffer
-        IntBuffer buffer = IntBuffer.allocate(frame.getWidth() * frame.getHeight() * 4);
-        buffer.put(((DataBufferInt) frame.getRaster().getDataBuffer()).getData());
-        buffer.flip();
+            // getting the new frame
+            BufferedImage frame = this.frame();
 
-        GL2 gl = drawable.getGL().getGL2();
+            // Frame to Buffer
+            IntBuffer buffer = IntBuffer.allocate(frame.getWidth() * frame.getHeight() * 4);
+            buffer.put(((DataBufferInt) frame.getRaster().getDataBuffer()).getData());
+            buffer.flip();
 
-        // clear
-        gl.glClearColor(0F, 0F, 0F, 0F);
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        gl.glLoadIdentity();
+            GL2 gl = drawable.getGL().getGL2();
 
-        // generating & binding texture
-        TextureData textureData = new TextureData(this.glProfile, GL.GL_RGBA, frame.getWidth(), frame.getHeight(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, false, false, false, buffer, null);
-        Texture texture = new Texture(gl, textureData);
-        texture.enable(gl);
-        texture.bind(gl);
+            // clear
+            gl.glClearColor(0F, 0F, 0F, 0F);
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+            gl.glLoadIdentity();
 
-        // viewport
-        gl.glViewport(0, 0, frame.getWidth(), frame.getHeight());
+            // generating & binding texture
+            TextureData textureData = new TextureData(this.glProfile, GL.GL_RGBA, frame.getWidth(), frame.getHeight(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, false, false, false, buffer, null);
+            Texture texture = new Texture(gl, textureData);
+            texture.enable(gl);
+            texture.bind(gl);
 
-        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-        gl.glLoadIdentity();
-        gl.glOrtho(0, frame.getWidth(), frame.getHeight(), 0, 0, 1);
+            // viewport
+            gl.glViewport(0, 0, frame.getWidth(), frame.getHeight());
 
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
-        gl.glLoadIdentity();
+            gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+            gl.glLoadIdentity();
+            gl.glOrtho(0, frame.getWidth(), frame.getHeight(), 0, 0, 1);
 
-        gl.glBegin(GL2.GL_QUADS);
+            gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+            gl.glLoadIdentity();
+
+            gl.glBegin(GL2.GL_QUADS);
 
             gl.glTexCoord2f(0, 0);
             gl.glVertex2f(0, 0);
@@ -399,15 +398,16 @@ public class EScreen extends JFrame implements GLEventListener {
             gl.glTexCoord2f(0, 1);
             gl.glVertex2f(0, frame.getHeight());
 
-        gl.glEnd();
-        gl.glFlush();
+            gl.glEnd();
+            gl.glFlush();
 
-        textureData.destroy();
-        textureData.flush();
-        texture.disable(gl);
-        texture.destroy(gl);
+            textureData.destroy();
+            textureData.flush();
+            texture.disable(gl);
+            texture.destroy(gl);
 
-        buffer.clear();
+            buffer.clear();
+        }
 
     }
 
