@@ -7,7 +7,6 @@ import de.SweetCode.e.rendering.DefaultGameScene;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.GameSceneEntry;
 import de.SweetCode.e.rendering.Priority;
-import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
@@ -16,8 +15,10 @@ import de.SweetCode.e.utils.log.LogEntry;
 
 import java.security.SecureRandom;
 import java.util.*;
-import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class E {
 

@@ -2,8 +2,8 @@ package de.SweetCode.e.utils.log;
 
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
-import java.util.Date;
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class LogEntry {
 

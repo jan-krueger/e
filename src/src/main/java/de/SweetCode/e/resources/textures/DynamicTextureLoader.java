@@ -3,10 +3,10 @@ package de.SweetCode.e.resources.textures;
 import de.SweetCode.e.E;
 import de.SweetCode.e.EScreen;
 import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.utils.log.LogEntry;
 import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.utils.Assert;
+import de.SweetCode.e.utils.log.LogEntry;
 import me.lemire.integercompression.differential.IntegratedIntCompressor;
 
 import javax.imageio.ImageIO;
