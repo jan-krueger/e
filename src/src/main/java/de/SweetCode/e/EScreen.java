@@ -20,9 +20,12 @@ import java.awt.image.DataBufferInt;
 import java.awt.image.VolatileImage;
 import java.lang.management.GarbageCollectorMXBean;
 import java.nio.IntBuffer;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 public class EScreen extends JFrame implements GLEventListener {
 
@@ -315,8 +318,10 @@ public class EScreen extends JFrame implements GLEventListener {
 
                 final int[] i = {0};
                 int finalXStep = xStep;
-                threads.forEach(t -> {
-                    layer.g().drawString(
+                threads.stream()
+                    .sorted(Comparator.comparingLong(value -> value.getId()))
+                    .forEach(t -> {
+                        layer.g().drawString(
                             String.format(
                                 "%d - %s (%s) %d",
                                     t.getId(),
@@ -326,8 +331,8 @@ public class EScreen extends JFrame implements GLEventListener {
                             ),
                             (int) (settings.getWidth() - xOffset * 0.95),
                             yOffset * ((finalXStep + 1) + i[0])
-                    );
-                    i[0]++;
+                        );
+                        i[0]++;
                 });
 
                 xStep += threads.size();
