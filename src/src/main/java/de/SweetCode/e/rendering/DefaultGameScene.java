@@ -7,6 +7,7 @@ import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.layers.Layers;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * The default game scene to show the developer if the developer didn't any of his own
@@ -29,7 +30,9 @@ public class DefaultGameScene extends GameScene {
 
 
         g.setBackground(Color.WHITE);
-        g.setColor(Color.BLACK);
+
+        Random random = E.getE().getRandom(false);
+        g.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
 
         g.drawString(
                 headline,

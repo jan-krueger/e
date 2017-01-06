@@ -35,11 +35,6 @@ public interface Settings {
         return TimeUnit.MILLISECONDS;
     }
 
-    /** @TODO
-    default Camera getCamera() {
-        return new Camera(new Location(0, 0), new BoundingBox(new Location(0, 0), new Location(this.getWidth(), this.getHeight())));
-    }**/
-
     /**
      * If this is set to true, the delta time will always be 1 or higher.
      * @return
@@ -69,7 +64,7 @@ public interface Settings {
      * @return
      */
     default int getTargetFPS() {
-        return 100;
+        return 25;
     }
 
     /**
@@ -109,15 +104,6 @@ public interface Settings {
     default boolean isResizable() {
         return false;
     }
-
-    /**
-     * @TODO
-     * If the renderer should fix the aspect ratio on its own.
-     * @return
-     */
-    /**default boolean fixAspectRatio() {
-        return false;
-    }**/
 
     /**
      * Hints to be used while rendering.
