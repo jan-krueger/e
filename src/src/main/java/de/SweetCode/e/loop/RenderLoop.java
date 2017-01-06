@@ -8,7 +8,7 @@ public class RenderLoop extends Loop {
     private final EScreen screen;
 
     public RenderLoop(EScreen screen, long optimalTime) {
-        super(optimalTime);
+        super("Render Loop", optimalTime);
 
         this.screen  = screen;
         this.setRunning(true);

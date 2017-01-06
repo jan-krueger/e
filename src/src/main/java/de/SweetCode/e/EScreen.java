@@ -21,6 +21,7 @@ import java.awt.image.VolatileImage;
 import java.lang.management.GarbageCollectorMXBean;
 import java.nio.IntBuffer;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class EScreen extends JFrame implements GLEventListener {
@@ -282,16 +283,55 @@ public class EScreen extends JFrame implements GLEventListener {
                     GarbageCollectorMXBean gc = gcBeans.get(0);
                     layer.g().drawString(
                             String.format(
-                                    "%s, %d (%dms), %s",
+                                "%s, %d (%dms), %s",
                                     gc.getName(),
                                     gc.getCollectionCount(),
                                     gc.getCollectionTime(),
                                     StringUtils.join(gc.getMemoryPoolNames(), ", ")
                             ),
                             (int) (settings.getWidth() - xOffset * 0.95),
-                            yOffset * ((xStep + 1) + i));
+                            yOffset * ((xStep + 1) + i)
+                    );
 
                 }
+
+                xStep += gcBeans.size();
+                xStep++;
+
+            }
+
+            //--- THREAD_PROFILE
+            if(displays.contains(Settings.DebugDisplay.GC_PROFILE)) {
+                Set<Thread> threads = profilerLoop.getThreads();
+                layer.g().drawString(
+                        String.format(
+                                "Threads: %d",
+                                threads.size(),
+                                StringUtils.join(threads.toArray(new Thread[threads.size()]), ", ")
+                        ),
+                        settings.getWidth() - xOffset,
+                        yOffset * xStep
+                );
+
+                final int[] i = {0};
+                int finalXStep = xStep;
+                threads.forEach(t -> {
+                    layer.g().drawString(
+                            String.format(
+                                "%d - %s (%s) %d",
+                                    t.getId(),
+                                    t.getName(),
+                                    t.getState().name(),
+                                    t.getPriority()
+                            ),
+                            (int) (settings.getWidth() - xOffset * 0.95),
+                            yOffset * ((finalXStep + 1) + i[0])
+                    );
+                    i[0]++;
+                });
+
+                xStep += threads.size();
+                xStep++;
             }
 
         }

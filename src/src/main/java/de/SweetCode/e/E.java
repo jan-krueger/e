@@ -1,6 +1,7 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.input.Input;
+import de.SweetCode.e.loop.LoopThreadFactory;
 import de.SweetCode.e.loop.ProfilerLoop;
 import de.SweetCode.e.loop.RenderLoop;
 import de.SweetCode.e.loop.UpdateLoop;
@@ -8,7 +9,6 @@ import de.SweetCode.e.rendering.DefaultGameScene;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.GameSceneEntry;
 import de.SweetCode.e.rendering.Priority;
-import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
@@ -46,7 +46,7 @@ public class E {
     //---
 
     //--- Related To Loops
-    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(2, new LoopThreadFactory());
 
     private RenderLoop renderLoop;
     private UpdateLoop updateLoop;

@@ -203,7 +203,8 @@ public interface Settings {
         CPU_PROFILE,
         MEMORY_PROFILE,
         LOOP_PROFILE,
-        GC_PROFILE
+        GC_PROFILE,
+        THREAD_PROFILE,
 
     }
 

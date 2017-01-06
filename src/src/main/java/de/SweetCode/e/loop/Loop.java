@@ -2,7 +2,7 @@ package de.SweetCode.e.loop;
 
 import de.SweetCode.e.E;
 
-public abstract class Loop implements Runnable {
+public abstract class Loop extends Thread {
 
     //--- Internals
     private final long optimalIterationTime;
@@ -18,7 +18,8 @@ public abstract class Loop implements Runnable {
     private int TMP_TICKS = 0;
     //---
 
-    public Loop(long optimalIterationTime) {
+    public Loop(String name, long optimalIterationTime) {
+        super(name);
         this.optimalIterationTime = optimalIterationTime;
     }
 
