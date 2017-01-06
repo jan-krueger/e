@@ -17,3 +17,12 @@ e is a really simple 2D game engine (WIP).
 - [ ] Loading Assets
 - [ ] Streaming Music Files
 - [ ] Streaming Video Files
+
+
+### Setup
+```java
+E e = new E();
+e.run();
+```
+
+Done.

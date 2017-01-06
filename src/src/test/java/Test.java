@@ -11,7 +11,7 @@ public class Test {
         E e = new E(new Settings() {
             @Override
             public boolean isParallelizingUpdate() {
-                return true;
+                return false;
             }
         });
 
