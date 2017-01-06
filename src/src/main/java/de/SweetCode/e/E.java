@@ -16,10 +16,7 @@ import de.SweetCode.e.utils.log.Log;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class E {
 
@@ -48,7 +45,7 @@ public class E {
     //---
 
     //--- Related To Loops
-    private ExecutorService executor = Executors.newFixedThreadPool(2);
+    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
 
     private RenderLoop renderLoop;
     private UpdateLoop updateLoop;
@@ -216,8 +213,19 @@ public class E {
         }
         //
 
-        this.executor.submit(this.renderLoop);
-        this.executor.submit(this.updateLoop);
+        //--- Schedule Various Loops (Currently: Rendering & Update Loop)
+        this.executor.scheduleAtFixedRate(
+                this.renderLoop,
+                0,
+                this.renderLoop.getOptimalIterationTime(),
+                TimeUnit.NANOSECONDS
+        );
+        this.executor.scheduleAtFixedRate(
+                this.updateLoop,
+                0,
+                this.updateLoop.getOptimalIterationTime(),
+                TimeUnit.NANOSECONDS
+        );
 
     }
 
@@ -228,6 +236,5 @@ public class E {
     public static E getE() {
         return E.instance;
     }
-
 
 }

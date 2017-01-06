@@ -2,8 +2,6 @@ package de.SweetCode.e.loop;
 
 import de.SweetCode.e.E;
 
-import java.util.concurrent.TimeUnit;
-
 public abstract class Loop implements Runnable {
 
     private final long optimalIterationTime;
@@ -31,41 +29,28 @@ public abstract class Loop implements Runnable {
         this.isRunning = isRunning;
     }
 
+    long lastIteration = System.nanoTime();
+    long lastIterationTime = 0;
+
+    int TMP_TICKS = 0;
+
     @Override
     public void run() {
 
-        long lastIteration = System.nanoTime();
-        long lastIterationTime = 0;
+        long now = System.nanoTime();
+        long updateLength = now - lastIteration;
+        lastIteration = now;
 
-        int TMP_TICKS = 0;
+        lastIterationTime += updateLength;
+        TMP_TICKS++;
 
-        while (this.isRunning()) {
-
-            long now = System.nanoTime();
-            long updateLength = now - lastIteration;
-            lastIteration = now;
-
-            lastIterationTime += updateLength;
-            TMP_TICKS++;
-
-            if(lastIterationTime >= E.NANO_SECOND) {
-                this.currrentTicks = TMP_TICKS;
-                lastIterationTime = 0;
-                TMP_TICKS = 0;
-            }
-
-            this.tick(updateLength);
-
-            try {
-                long delay = TimeUnit.NANOSECONDS.toMillis(this.getOptimalIterationTime() - (System.nanoTime() - now));
-                if (delay > 0) {
-                    Thread.sleep(delay);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+        if(lastIterationTime >= E.NANO_SECOND) {
+            this.currrentTicks = TMP_TICKS;
+            lastIterationTime = 0;
+            TMP_TICKS = 0;
         }
+
+        this.tick(updateLength);
 
     }
 
