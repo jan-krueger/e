@@ -4,17 +4,26 @@ import de.SweetCode.e.E;
 
 public abstract class Loop implements Runnable {
 
+    //--- Internals
     private final long optimalIterationTime;
 
     private boolean isRunning = false;
-    private int currrentTicks = 0;
+    private int currentTicks = 0;
+    //---
+
+    //--- Update Metrics
+    private long lastIteration = System.nanoTime();
+    private long lastIterationTime = 0;
+
+    private int TMP_TICKS = 0;
+    //---
 
     public Loop(long optimalIterationTime) {
         this.optimalIterationTime = optimalIterationTime;
     }
 
-    public int getCurrrentTicks() {
-        return this.currrentTicks;
+    public int getCurrentTicks() {
+        return this.currentTicks;
     }
 
     public long getOptimalIterationTime() {
@@ -29,25 +38,22 @@ public abstract class Loop implements Runnable {
         this.isRunning = isRunning;
     }
 
-    long lastIteration = System.nanoTime();
-    long lastIterationTime = 0;
 
-    int TMP_TICKS = 0;
 
     @Override
     public void run() {
 
         long now = System.nanoTime();
-        long updateLength = now - lastIteration;
-        lastIteration = now;
+        long updateLength = now - this.lastIteration;
+        this.lastIteration = now;
 
-        lastIterationTime += updateLength;
-        TMP_TICKS++;
+        this.lastIterationTime += updateLength;
+        this.TMP_TICKS++;
 
-        if(lastIterationTime >= E.NANO_SECOND) {
-            this.currrentTicks = TMP_TICKS;
-            lastIterationTime = 0;
-            TMP_TICKS = 0;
+        if(this.lastIterationTime >= E.NANO_SECOND) {
+            this.currentTicks = this.TMP_TICKS;
+            this.lastIterationTime = 0;
+            this.TMP_TICKS = 0;
         }
 
         this.tick(updateLength);

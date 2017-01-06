@@ -119,7 +119,7 @@ public class E {
      * @return
      */
     public int getCurrentFPS() {
-        return this.renderLoop.getCurrrentTicks();
+        return this.renderLoop.getCurrentTicks();
     }
 
     /**
@@ -127,7 +127,7 @@ public class E {
      * @return
      */
     public int getCurrentTicks() {
-        return this.updateLoop.getCurrrentTicks();
+        return this.updateLoop.getCurrentTicks();
     }
 
     public List<GameComponentEntry> getGameComponents() {
