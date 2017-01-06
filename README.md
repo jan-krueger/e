@@ -9,12 +9,12 @@ e is a really simple 2D game engine (WIP).
 - [x] Simple log system
 - [x] Particle System
 - [x] Behaviour Trees
-- [ ] (Perlin) Noise Map Generation
+- [x] Multithreading
+- [x] Loading Assets
+- [ ] Noise Map Generation
 - [ ] Entity Component System
 - [ ] Light mapping
 - [ ] Image manipulation
-- [ ] Multithreading
-- [ ] Loading Assets
 - [ ] Streaming Music Files
 - [ ] Streaming Video Files
 
