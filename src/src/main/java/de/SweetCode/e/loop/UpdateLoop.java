@@ -56,8 +56,6 @@ public class UpdateLoop extends Loop {
 
         });
 
-        System.out.println("Delta Update: " + (System.currentTimeMillis() - now));
-
     }
 
 }
