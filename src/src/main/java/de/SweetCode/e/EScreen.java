@@ -9,6 +9,7 @@ import com.jogamp.opengl.util.texture.TextureData;
 import de.SweetCode.e.loop.ProfilerLoop;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
+import de.SweetCode.e.utils.StringUtils;
 import de.SweetCode.e.utils.log.LogEntry;
 
 import javax.swing.*;
@@ -17,7 +18,10 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.awt.image.VolatileImage;
+import java.lang.management.GarbageCollectorMXBean;
 import java.nio.IntBuffer;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class EScreen extends JFrame implements GLEventListener {
 
@@ -201,9 +205,13 @@ public class EScreen extends JFrame implements GLEventListener {
         if(settings.isDebugging()) {
 
             ProfilerLoop profilerLoop = E.getE().getProfilerLoop();
+            List<Settings.DebugDisplay> displays = settings.getDebugInformation();
 
-            int xOffset = 200;
-            int yOffset = 10;
+            //--- Offsets
+            int xOffset = 360;
+            int yOffset = 12;
+
+            int xStep = 1;
 
             Layer layer = E.getE().getLayers().first();
             layer.g().setColor(
@@ -211,26 +219,80 @@ public class EScreen extends JFrame implements GLEventListener {
                         new Color(layer.b().getRGB(settings.getWidth() - xOffset / 2, (int) (yOffset * 1.5D)))
                     )
             );
-            layer.g().drawString(
-                    String.format(
-                        "FPS: %d (%d) | Ticks: %d (%d)",
-                            E.getE().getCurrentFPS(),
-                            settings.getTargetFPS(),
-                            E.getE().getCurrentTicks(),
-                            settings.getTargetTicks()
-                    ),
-                    settings.getWidth() - xOffset,
-                    yOffset
-            );
-            layer.g().drawString(
-                    String.format(
-                        "CPU: %.2f%% | Memory: %.2fMB",
-                            profilerLoop.getAverageCPU() * 100,
-                            profilerLoop.getAverageMemoryUsed() * Math.pow(10, -6)
-                    ),
-                    settings.getWidth() - xOffset,
-                    yOffset * 2
-            );
+
+            //--- CPU_PROFILE
+            if(displays.contains(Settings.DebugDisplay.CPU_PROFILE)) {
+                layer.g().drawString(
+                        String.format(
+                                "CPU: %.2f%% | Cores: %d",
+                                profilerLoop.getAverageCPU() * 100,
+                                profilerLoop.getAvailableProcessors()
+                        ),
+                        settings.getWidth() - xOffset,
+                        yOffset * xStep
+                );
+
+                xStep++;
+            }
+
+            if(displays.contains(Settings.DebugDisplay.LOOP_PROFILE)) {
+                layer.g().drawString(
+                        String.format(
+                                "FPS: %d (%d) | Ticks: %d (%d)",
+                                E.getE().getCurrentFPS(),
+                                settings.getTargetFPS(),
+                                E.getE().getCurrentTicks(),
+                                settings.getTargetTicks()
+                        ),
+                        settings.getWidth() - xOffset,
+                        yOffset * xStep
+                );
+
+                xStep++;
+            }
+
+            //--- MEMORY_PROFILE
+            if(displays.contains(Settings.DebugDisplay.MEMORY_PROFILE)) {
+                layer.g().drawString(
+                        String.format(
+                                "Heap: %.2fMB | Used: %.2fMB",
+                                profilerLoop.getMaxMemory() * E.C.BYTES_TO_MEGABYTES,
+                                profilerLoop.getAverageMemoryUsed() * E.C.BYTES_TO_MEGABYTES
+                        ),
+                        settings.getWidth() - xOffset,
+                        yOffset * xStep
+                );
+
+                xStep++;
+            }
+
+            //--- GC_PROFILE
+            if(displays.contains(Settings.DebugDisplay.GC_PROFILE)) {
+                List<GarbageCollectorMXBean> gcBeans = profilerLoop.getGCBeans();
+                layer.g().drawString(
+                        String.format(
+                                "GCs: %d",
+                                gcBeans.size()
+                        ),
+                        settings.getWidth() - xOffset,
+                        yOffset * xStep
+                );
+                for (int i = 0; i < gcBeans.size(); i++) {
+
+                    GarbageCollectorMXBean gc = gcBeans.get(0);
+                    layer.g().drawString(
+                            String.format(
+                                    "%s, %d (%dms), %s",
+                                    gc.getName(),
+                                    gc.getCollectionCount(),
+                                    gc.getCollectionTime(),
+                                    StringUtils.join(gc.getMemoryPoolNames(), ", ")
+                            ),
+                            (int) (settings.getWidth() - xOffset * 0.95),
+                            yOffset * ((xStep + 1) + i));
+
+                }
+            }
 
         }
         //---

@@ -3,10 +3,8 @@ package de.SweetCode.e;
 import de.SweetCode.e.utils.Version;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface Settings {
@@ -135,6 +133,14 @@ public interface Settings {
     }
 
     /**
+     * Define what you see of the debug information.
+     * @return
+     */
+    default List<DebugDisplay> getDebugInformation() {
+        return Arrays.asList(DebugDisplay.values());
+    }
+
+    /**
      * Validator to validate settings.
      */
     final class Validator {
@@ -179,9 +185,25 @@ public interface Settings {
                 invalids.add("The amount of layers must be at least 1");
             }
 
+            if(settings.getDebugInformation() == null) {
+                invalids.add("The getDebugInformation cannot be null.");
+            }
+
             return invalids;
 
         }
+
+    }
+
+    /**
+     * The developer can chose what he wanna see as debug informatuon.
+     */
+    enum DebugDisplay {
+
+        CPU_PROFILE,
+        MEMORY_PROFILE,
+        LOOP_PROFILE,
+        GC_PROFILE
 
     }
 

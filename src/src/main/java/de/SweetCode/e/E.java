@@ -271,7 +271,15 @@ public class E {
 
     public static class C {
 
+        /**
+         * 1 second as nanoseconds.
+         */
         public final static long SECOND_AS_NANO = TimeUnit.SECONDS.toNanos(1);
+
+        /**
+         * Multiplier to convert bytes to megabytes.
+         */
+        public final static double BYTES_TO_MEGABYTES = Math.pow(10, -6);
 
     }
 
