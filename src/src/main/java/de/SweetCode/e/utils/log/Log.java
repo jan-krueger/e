@@ -1,5 +1,6 @@
 package de.SweetCode.e.utils.log;
 
+import de.SweetCode.e.E;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.util.Queue;
@@ -27,6 +28,10 @@ public class Log {
      */
     public void log(LogEntry entry) {
         this.entries.offer(entry);
+
+        if(E.getE().getSettings().isDebugging()) {
+            System.out.println(entry.toString());
+        }
     }
 
     /**

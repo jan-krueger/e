@@ -38,7 +38,7 @@ public class LogEntry {
     public String toString() {
         return ToStringBuilder.create(this)
                 .append("message", this.message)
-                .append("timestamp", this.timestamp)
+                .append("timestamp", this.timestamp.toString())
             .build();
     }
 
