@@ -6,6 +6,7 @@ import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
+import de.SweetCode.e.loop.ProfilerLoop;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.utils.log.LogEntry;
@@ -16,9 +17,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.awt.image.VolatileImage;
-import java.lang.management.ManagementFactory;
 import java.nio.IntBuffer;
-import com.sun.management.OperatingSystemMXBean;
 
 public class EScreen extends JFrame implements GLEventListener {
 
@@ -47,9 +46,6 @@ public class EScreen extends JFrame implements GLEventListener {
 
     // OpenGL
     private GLProfile glProfile = null;
-
-    // Debug Stuff
-    private OperatingSystemMXBean bean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
     public EScreen() {
 
@@ -203,6 +199,9 @@ public class EScreen extends JFrame implements GLEventListener {
 
         //--- Debugging
         if(settings.isDebugging()) {
+
+            ProfilerLoop profilerLoop = E.getE().getProfilerLoop();
+
             int xOffset = 200;
             int yOffset = 10;
 
@@ -226,8 +225,8 @@ public class EScreen extends JFrame implements GLEventListener {
             layer.g().drawString(
                     String.format(
                         "CPU: %.2f%% | Memory: %.2fMB",
-                            this.bean.getProcessCpuLoad() * 100,
-                            (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * Math.pow(10, -6)
+                            profilerLoop.getAverageCPU() * 100,
+                            profilerLoop.getAverageMemoryUsed() * Math.pow(10, -6)
                     ),
                     settings.getWidth() - xOffset,
                     yOffset * 2

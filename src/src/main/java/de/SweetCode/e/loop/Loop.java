@@ -58,6 +58,10 @@ public abstract class Loop implements Runnable {
 
     }
 
+    /**
+     * Called every tick.
+     * @param updateLength Time in nanoseconds since the last call.
+     */
     public abstract void tick(long updateLength);
 
 }

@@ -1,6 +1,7 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.input.Input;
+import de.SweetCode.e.loop.ProfilerLoop;
 import de.SweetCode.e.loop.RenderLoop;
 import de.SweetCode.e.loop.UpdateLoop;
 import de.SweetCode.e.rendering.DefaultGameScene;
@@ -49,6 +50,7 @@ public class E {
 
     private RenderLoop renderLoop;
     private UpdateLoop updateLoop;
+    private ProfilerLoop profilerLoop;
     //---
 
     /**
@@ -82,6 +84,10 @@ public class E {
         //--- Setting up loops
         this.renderLoop = new RenderLoop(this.screen, (C.SECOND_AS_NANO / this.settings.getTargetFPS()));
         this.updateLoop = new UpdateLoop(this.settings, this.input, (C.SECOND_AS_NANO / this.settings.getTargetTicks()));
+
+        if(settings.isDebugging()) {
+            this.profilerLoop = new ProfilerLoop();
+        }
         //---
 
     }
@@ -102,6 +108,13 @@ public class E {
         return this.layers;
     }
 
+    /**
+     * Returns the instance of the profiler loop. It returns null if debugging is not enabled.
+     * @return
+     */
+    public ProfilerLoop getProfilerLoop() {
+        return this.profilerLoop;
+    }
 
     public Map<Class<? extends GameScene>, GameSceneEntry> getScenes() {
         return this.scenes;
@@ -236,6 +249,15 @@ public class E {
                 this.updateLoop.getOptimalIterationTime(),
                 TimeUnit.NANOSECONDS
         );
+
+        if(this.settings.isDebugging()) {
+            this.executor.scheduleAtFixedRate(
+                    this.profilerLoop,
+                    0,
+                    this.profilerLoop.getOptimalIterationTime(),
+                    TimeUnit.NANOSECONDS
+            );
+        }
 
     }
 
