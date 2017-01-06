@@ -106,6 +106,19 @@ public interface Settings {
     }
 
     /**
+     * If the update-loop should run updates parallel to each other, it is using
+     * internally a parallelized stream by default it is sequential. You should only
+     * consider using this if:
+     *  - you have a massive amount of components to update
+     *  - the time it takes to update the component takes to long to satisfy your tick rate requirements
+     *
+     * A parallel stream has a higher overhead than the sequential version of it!
+     * A parallel stream IGNORES all set priorities.
+     * @return
+     */
+    default boolean isParallelizingUpdate() { return false; }
+
+    /**
      * Hints to be used while rendering.
      * @return
      */

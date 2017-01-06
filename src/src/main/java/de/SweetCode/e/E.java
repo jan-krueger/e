@@ -12,6 +12,7 @@ import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
 import de.SweetCode.e.utils.log.Log;
+import de.SweetCode.e.utils.log.LogEntry;
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -81,7 +82,7 @@ public class E {
         }
 
         this.renderLoop = new RenderLoop(this.screen, (E.NANO_SECOND / this.settings.getTargetFPS()));
-        this.updateLoop = new UpdateLoop(this.input, (E.NANO_SECOND / this.settings.getTargetTicks()));
+        this.updateLoop = new UpdateLoop(this.settings, this.input, (E.NANO_SECOND / this.settings.getTargetTicks()));
 
 
     }
@@ -150,6 +151,14 @@ public class E {
      * @param priority
      */
     public void addComponent(GameComponent gameComponent, Priority priority) {
+
+        this.getLog().log(
+                LogEntry.Builder.create().message(
+                    "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +
+                    "the GameComponent that is tied to a GameScene, however the priority for the GameScene itself " +
+                    "will be set."
+                ).build()
+        );
 
         this.gameComponents.add(new GameComponentEntry(gameComponent, priority));
 

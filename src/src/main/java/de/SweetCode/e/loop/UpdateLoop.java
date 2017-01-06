@@ -1,17 +1,24 @@
 package de.SweetCode.e.loop;
 
 import de.SweetCode.e.E;
+import de.SweetCode.e.GameComponentEntry;
+import de.SweetCode.e.Settings;
 import de.SweetCode.e.input.Input;
 import de.SweetCode.e.input.InputEntry;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class UpdateLoop extends Loop {
 
+    private final Settings settings;
     private final Input input;
 
-    public UpdateLoop(Input input, long optimalTime) {
+    public UpdateLoop(Settings settings, Input input, long optimalTime) {
         super(optimalTime);
+
+        this.settings = settings;
         this.input = input;
 
         this.setRunning(true);
@@ -21,14 +28,23 @@ public class UpdateLoop extends Loop {
     public void tick(long updateLength) {
 
         // update length to required delta unit
-        long delta = Math.max(E.getE().getSettings().getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (E.getE().getSettings().roundDelta() ? 1 : 0));
+        long delta = Math.max(
+                this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS),
+                (this.settings.roundDelta() ? 1 : 0)
+        );
 
         // get the input
         InputEntry input = this.input.build();
         long now = System.currentTimeMillis();
 
-        E.getE().getGameComponents().forEach(k -> {
+        //--- Depending on what the developer chose, we gonna use a sequential or parallelized stream.
+        Stream<GameComponentEntry> stream = (
+                this.settings.isParallelizingUpdate() ?
+                        E.getE().getGameComponents().parallelStream() : E.getE().getGameComponents().stream()
+        );
+        stream.forEach(k -> {
 
+            System.out.println(k.getPriority().name());
             if(k.getGameComponent().isActive()) {
                 k.getGameComponent().update(
                         // the input since the last call
@@ -39,6 +55,8 @@ public class UpdateLoop extends Loop {
             }
 
         });
+
+        System.out.println("Delta Update: " + (System.currentTimeMillis() - now));
 
     }
 
