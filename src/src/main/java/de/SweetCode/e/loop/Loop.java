@@ -38,8 +38,6 @@ public abstract class Loop implements Runnable {
         this.isRunning = isRunning;
     }
 
-
-
     @Override
     public void run() {
 
@@ -50,7 +48,7 @@ public abstract class Loop implements Runnable {
         this.lastIterationTime += updateLength;
         this.TMP_TICKS++;
 
-        if(this.lastIterationTime >= E.NANO_SECOND) {
+        if(this.lastIterationTime >= E.C.SECOND_AS_NANO) {
             this.currentTicks = this.TMP_TICKS;
             this.lastIterationTime = 0;
             this.TMP_TICKS = 0;

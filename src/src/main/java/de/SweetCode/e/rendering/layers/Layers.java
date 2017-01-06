@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Managing and combining all layers.
@@ -15,7 +16,9 @@ public class Layers {
 
     private final List<Layer> layers = new LinkedList<>();
 
-    public Layers() {}
+    public Layers(int amount) {
+        IntStream.range(0, amount).forEach(i -> layers.add(new Layer()));
+    }
 
     public List<Layer> getLayers() {
         return this.layers;

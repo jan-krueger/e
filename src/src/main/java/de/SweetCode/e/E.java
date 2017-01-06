@@ -23,7 +23,6 @@ public class E {
 
     //--- Static & Final Variables
     private static E instance;
-    public final static long NANO_SECOND = TimeUnit.SECONDS.toNanos(1);
     private final static Random random = new Random();
     private final static Random secureRandom = new SecureRandom();
     //---
@@ -34,7 +33,7 @@ public class E {
 
     //--- Loop & Render Related
     private final EScreen screen;
-    private final Layers layers = new Layers();
+    private final Layers layers;
 
     private final List<GameComponentEntry> gameComponents = new CopyOnWriteArrayList<>();
     private final Map<Class<? extends GameScene>, GameSceneEntry> scenes = new LinkedHashMap<>();
@@ -71,19 +70,19 @@ public class E {
         Assert.assertTrue("Failed to validate settings: " + StringUtils.join(validation, ", "), validation.isEmpty());
 
         E.instance = this;
-
         this.settings = settings;
+
+        //--- Setting up internals
         this.log = new Log(settings.getLogCapacity());
         this.screen = new EScreen();
         this.input = new Input();
+        this.layers = new Layers(settings.getAmountOfLayers());
+        //---
 
-        for(int i = 0; i < settings.getAmountOfLayers(); i++) {
-            this.layers.add(new Layer());
-        }
-
-        this.renderLoop = new RenderLoop(this.screen, (E.NANO_SECOND / this.settings.getTargetFPS()));
-        this.updateLoop = new UpdateLoop(this.settings, this.input, (E.NANO_SECOND / this.settings.getTargetTicks()));
-
+        //--- Setting up loops
+        this.renderLoop = new RenderLoop(this.screen, (C.SECOND_AS_NANO / this.settings.getTargetFPS()));
+        this.updateLoop = new UpdateLoop(this.settings, this.input, (C.SECOND_AS_NANO / this.settings.getTargetTicks()));
+        //---
 
     }
 
@@ -244,6 +243,12 @@ public class E {
      */
     public static E getE() {
         return E.instance;
+    }
+
+    public static class C {
+
+        public final static long SECOND_AS_NANO = TimeUnit.SECONDS.toNanos(1);
+
     }
 
 }
