@@ -225,6 +225,21 @@ public final class Input extends KeyAdapter {
         return stream;
     }
 
+    /**
+     * Builds a new InputEntry with the current values and removes all from the queue.
+     * @return
+     */
+    public InputEntry build() {
+        return new InputEntry(
+                this.getKeyboardEntries(),
+                this.getMouseEntries(),
+                this.getMouseWheelEntries(),
+                this.getMouseDraggedEntries(),
+                this.getMouseMovedEntries(),
+                this.getMouseReleasedQueue()
+        );
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.create(this)

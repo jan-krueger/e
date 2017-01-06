@@ -24,12 +24,18 @@ public class UpdateLoop extends Loop {
         long delta = Math.max(E.getE().getSettings().getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS), (E.getE().getSettings().roundDelta() ? 1 : 0));
 
         // get the input
-        InputEntry input = new InputEntry(this.input.getKeyboardEntries(), this.input.getMouseEntries(), this.input.getMouseWheelEntries(), this.input.getMouseDraggedEntries(), this.input.getMouseMovedEntries(), this.input.getMouseReleasedQueue());
+        InputEntry input = this.input.build();
+        long now = System.currentTimeMillis();
 
         E.getE().getGameComponents().forEach(k -> {
 
             if(k.getGameComponent().isActive()) {
-                k.getGameComponent().update(input, delta);
+                k.getGameComponent().update(
+                        // the input since the last call
+                        input,
+                        // Delta + iterationTime -> We do this to make the delta more accurate
+                        delta + (System.currentTimeMillis() - now)
+                );
             }
 
         });

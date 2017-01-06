@@ -199,7 +199,16 @@ public class EScreen extends JFrame implements GLEventListener {
         if(settings.isDebugging()) {
             Layer layer = E.getE().getLayers().first();
             layer.g().setColor(Color.MAGENTA);
-            layer.g().drawString(String.format("FPS: %d | Ticks: %d",  E.getE().getCurrentFPS(), E.getE().getCurrentTicks()), settings.getWidth() - 200, 10);
+            layer.g().drawString(
+                    String.format(
+                        "FPS: %d | Ticks: %d | Memory: %.2fMB",
+                            E.getE().getCurrentFPS(),
+                            E.getE().getCurrentTicks(),
+                            (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * Math.pow(10, -6)
+                    ),
+                    settings.getWidth() - 200,
+                    10
+            );
         }
 
         return E.getE().getLayers().combine();
