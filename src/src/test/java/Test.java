@@ -1,7 +1,5 @@
 import de.SweetCode.e.E;
-import de.SweetCode.e.GameComponent;
 import de.SweetCode.e.Settings;
-import de.SweetCode.e.input.InputEntry;
 
 public class Test {
 
@@ -11,6 +9,11 @@ public class Test {
             @Override
             public boolean isParallelizingUpdate() {
                 return false;
+            }
+
+            @Override
+            public int getTargetFPS() {
+                return 1;
             }
         });
         e.run();

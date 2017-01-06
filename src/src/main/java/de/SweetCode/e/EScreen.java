@@ -203,8 +203,15 @@ public class EScreen extends JFrame implements GLEventListener {
 
         //--- Debugging
         if(settings.isDebugging()) {
+            int xOffset = 200;
+            int yOffset = 10;
+
             Layer layer = E.getE().getLayers().first();
-            layer.g().setColor(Color.MAGENTA);
+            layer.g().setColor(
+                    EScreen.highContrast(
+                        new Color(layer.b().getRGB(settings.getWidth() - xOffset / 2, (int) (yOffset * 1.5D)))
+                    )
+            );
             layer.g().drawString(
                     String.format(
                         "FPS: %d (%d) | Ticks: %d (%d)",
@@ -213,8 +220,8 @@ public class EScreen extends JFrame implements GLEventListener {
                             E.getE().getCurrentTicks(),
                             settings.getTargetTicks()
                     ),
-                    settings.getWidth() - 200,
-                    10
+                    settings.getWidth() - xOffset,
+                    yOffset
             );
             layer.g().drawString(
                     String.format(
@@ -222,8 +229,8 @@ public class EScreen extends JFrame implements GLEventListener {
                             this.bean.getProcessCpuLoad() * 100,
                             (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * Math.pow(10, -6)
                     ),
-                    settings.getWidth() - 200,
-                    20
+                    settings.getWidth() - xOffset,
+                    yOffset * 2
             );
 
         }
@@ -300,5 +307,31 @@ public class EScreen extends JFrame implements GLEventListener {
 
     @Override
     public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {}
+
+    /**
+     * Returns a color with the highest possible contrast compared to the input color.
+     * @param input The input color.
+     * @return The complementary color.
+     */
+    private static Color highContrast(Color input) {
+
+        //--- RGB to HSB (Hue, Saturation, Brightness)
+        float[] hsb = new float[3];
+        Color.RGBtoHSB(input.getRed(), input.getGreen(), input.getBlue(), hsb);
+
+        float hue = hsb[0];
+        float saturation = hsb[1];
+        float brightness = hsb[2];
+
+        //--- If we have a color with low saturation -> not colorful
+        if(saturation < 0.3) {
+            return (brightness < 0.5 ? Color.WHITE : Color.BLACK);
+        }
+
+        //--- If we have a color with high saturation -> colorful
+        // then we get the complementary
+        return new Color(Color.HSBtoRGB((hue * 360 + 180) % 360 / 360, saturation, brightness));
+    }
+
 
 }
