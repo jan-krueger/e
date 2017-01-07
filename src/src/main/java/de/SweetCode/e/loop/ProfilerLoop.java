@@ -6,22 +6,27 @@ import de.SweetCode.e.Settings;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class ProfilerLoop extends Loop {
 
-    private OperatingSystemMXBean bean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+    private OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+    private MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
 
     private double TMP_CPU = 0;
-    private double TMP_MEMORY_USED = 0;
+    private double TMP_MEMORY_HEAP_USED = 0;
+    private double TMP_MEMORY_JVM_USED = 0;
 
     private double averageCPU = 0;
-    private double averageMemoryUsed = 0;
+    private double averageHeapMemoryUsed = 0;
+    private double averageJvmMemoryUsed = 0;
 
     private int CPU_PROCESSORS = 0;
-    private long MEMORY_MAX = 0;
+    private long MEMORY_HEAP_MAX = 0;
+    private long MEMORY_JVM_MAX = 0;
 
     private List<GarbageCollectorMXBean> GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
     private Set<Thread> THREAD_LIST = Thread.getAllStackTraces().keySet();
@@ -50,19 +55,35 @@ public class ProfilerLoop extends Loop {
     }
 
     /**
-     * Returns the average memory use in the last time frame.
+     * Returns the average memory use in the last time frame by the heap.
      * @return
      */
-    public double getAverageMemoryUsed() {
-        return this.averageMemoryUsed;
+    public double getAverageHeapMemoryUsed() {
+        return this.averageHeapMemoryUsed;
     }
 
     /**
      * Returns the max heap size.
      * @return
      */
-    public long getMaxMemory() {
-        return this.MEMORY_MAX;
+    public long getMaxHeapSize() {
+        return this.MEMORY_HEAP_MAX;
+    }
+
+    /**
+     * Returns the average memory use in the last time frame by the JVM.
+     * @return
+     */
+    public double getAverageJvmMemoryUsed() {
+        return this.averageJvmMemoryUsed;
+    }
+
+    /**
+     * Returns the max JVM size.
+     * @return
+     */
+    public long getMaxJvmSize() {
+        return this.MEMORY_JVM_MAX;
     }
 
     /**
@@ -97,10 +118,11 @@ public class ProfilerLoop extends Loop {
             if(displays.contains(Settings.DebugDisplay.CPU_PROFILE)) {
                 if(updateRequired) {
                     this.averageCPU = (this.TMP_CPU / this.updates);
-                    this.CPU_PROCESSORS = this.bean.getAvailableProcessors();
+                    this.CPU_PROCESSORS = this.osBean.getAvailableProcessors();
+
                     this.TMP_CPU = 0;
                 } else {
-                    this.TMP_CPU += this.bean.getProcessCpuLoad();
+                    this.TMP_CPU += this.osBean.getProcessCpuLoad();
                 }
             }
 
@@ -108,11 +130,17 @@ public class ProfilerLoop extends Loop {
             if(displays.contains(Settings.DebugDisplay.MEMORY_PROFILE)) {
 
                 if(updateRequired) {
-                    this.MEMORY_MAX = Runtime.getRuntime().maxMemory();
-                    this.averageMemoryUsed = (this.TMP_MEMORY_USED / this.updates);
-                    this.TMP_MEMORY_USED = 0;
+                    this.MEMORY_HEAP_MAX = this.memoryBean.getHeapMemoryUsage().getMax();
+                    this.MEMORY_JVM_MAX = this.memoryBean.getNonHeapMemoryUsage().getMax();
+
+                    this.averageHeapMemoryUsed = (this.TMP_MEMORY_HEAP_USED / this.updates);
+                    this.averageJvmMemoryUsed = (this.TMP_MEMORY_JVM_USED / this.updates);
+
+                    this.TMP_MEMORY_HEAP_USED = 0;
+                    this.TMP_MEMORY_JVM_USED = 0;
                 } else {
-                    this.TMP_MEMORY_USED += (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+                    this.TMP_MEMORY_HEAP_USED += this.memoryBean.getHeapMemoryUsage().getUsed();
+                    this.TMP_MEMORY_JVM_USED += this.memoryBean.getNonHeapMemoryUsage().getUsed();
                 }
 
             }

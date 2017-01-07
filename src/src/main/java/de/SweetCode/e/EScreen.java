@@ -9,7 +9,6 @@ import com.jogamp.opengl.util.texture.TextureData;
 import de.SweetCode.e.loop.ProfilerLoop;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
-import de.SweetCode.e.utils.StringUtils;
 import de.SweetCode.e.utils.log.LogEntry;
 
 import javax.swing.*;
@@ -308,7 +307,7 @@ public class EScreen extends JFrame implements GLEventListener {
         if(displays.contains(Settings.DebugDisplay.CPU_PROFILE)) {
             layer.g().drawString(
                     String.format(
-                            "CPU: %.2f%% | Cores: %d",
+                        "CPU: %.2f%% | Cores: %d",
                             profilerLoop.getAverageCPU() * 100,
                             profilerLoop.getAvailableProcessors()
                     ),
@@ -322,7 +321,7 @@ public class EScreen extends JFrame implements GLEventListener {
         if(displays.contains(Settings.DebugDisplay.LOOP_PROFILE)) {
             layer.g().drawString(
                     String.format(
-                            "FPS: %d (%d) | Ticks: %d (%d)",
+                        "FPS: %d (%d) | Ticks: %d (%d)",
                             E.getE().getCurrentFPS(),
                             settings.getTargetFPS(),
                             E.getE().getCurrentTicks(),
@@ -337,17 +336,27 @@ public class EScreen extends JFrame implements GLEventListener {
 
         //--- MEMORY_PROFILE
         if(displays.contains(Settings.DebugDisplay.MEMORY_PROFILE)) {
+            layer.g().drawString("Memory Usage JVM & Heap", settings.getWidth() - xOffset, yOffset * xStep);
             layer.g().drawString(
                     String.format(
-                            "Heap: %.2fMB | Used: %.2fMB",
-                            profilerLoop.getMaxMemory() * E.C.BYTES_TO_MEGABYTES,
-                            profilerLoop.getAverageMemoryUsed() * E.C.BYTES_TO_MEGABYTES
+                        "JVM - Max: %.2fMB | Used: %.2fMB",
+                            profilerLoop.getAverageJvmMemoryUsed() * E.C.BYTES_TO_MEGABYTES,
+                            profilerLoop.getAverageJvmMemoryUsed() * E.C.BYTES_TO_MEGABYTES
                     ),
-                    settings.getWidth() - xOffset,
-                    yOffset * xStep
+                    (int) (settings.getWidth() - xOffset * 0.95),
+                    yOffset * (xStep + 1)
+            );
+            layer.g().drawString(
+                    String.format(
+                        "Heap - Max: %.2fMB | Used: %.2fMB",
+                            profilerLoop.getMaxHeapSize() * E.C.BYTES_TO_MEGABYTES,
+                            profilerLoop.getAverageHeapMemoryUsed() * E.C.BYTES_TO_MEGABYTES
+                    ),
+                    (int) (settings.getWidth() - xOffset * 0.95),
+                    yOffset * (xStep + 2)
             );
 
-            xStep++;
+            xStep += 3;
         }
 
         //--- GC_PROFILE
@@ -355,7 +364,7 @@ public class EScreen extends JFrame implements GLEventListener {
             List<GarbageCollectorMXBean> gcBeans = profilerLoop.getGCBeans();
             layer.g().drawString(
                     String.format(
-                            "GCs: %d",
+                        "GCs: %d",
                             gcBeans.size()
                     ),
                     settings.getWidth() - xOffset,
@@ -368,11 +377,10 @@ public class EScreen extends JFrame implements GLEventListener {
                 GarbageCollectorMXBean gc = gcBeans.get(0);
                 layer.g().drawString(
                         String.format(
-                                "%s, %d (%dms) %s",
+                            "%s, %d (%dms)",
                                 gc.getName(),
                                 gc.getCollectionCount(),
-                                gc.getCollectionTime(),
-                                gc.getObjectName().getDomain()
+                                gc.getCollectionTime()
                         ),
                         (int) (settings.getWidth() - xOffset * 0.95),
                         yOffset * ((xStep + 1) + i)
@@ -403,7 +411,7 @@ public class EScreen extends JFrame implements GLEventListener {
             Set<Thread> threads = profilerLoop.getThreads();
             layer.g().drawString(
                     String.format(
-                            "Threads: %d",
+                        "Threads: %d",
                             threads.size()
                     ),
                     settings.getWidth() - xOffset,
@@ -417,7 +425,7 @@ public class EScreen extends JFrame implements GLEventListener {
                     .forEach(t -> {
                         layer.g().drawString(
                                 String.format(
-                                        "%d - P: %d - %s (%s)",
+                                    "%d - P: %d - %s (%s)",
                                         t.getId(),
                                         t.getPriority(),
                                         t.getName(),
