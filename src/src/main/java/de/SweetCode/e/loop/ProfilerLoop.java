@@ -26,7 +26,6 @@ public class ProfilerLoop extends Loop {
 
     private int CPU_PROCESSORS = 0;
     private long MEMORY_HEAP_MAX = 0;
-    private long MEMORY_JVM_MAX = 0;
 
     private List<GarbageCollectorMXBean> GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
     private Map<String, List<Thread>> THREAD_LIST = ProfilerLoop.getThreadsByGroup();
@@ -79,14 +78,6 @@ public class ProfilerLoop extends Loop {
     }
 
     /**
-     * Returns the max JVM size.
-     * @return
-     */
-    public long getMaxJvmSize() {
-        return this.MEMORY_JVM_MAX;
-    }
-
-    /**
      * Gives all related GC (garbage collection) beans.
      * @return
      */
@@ -131,7 +122,6 @@ public class ProfilerLoop extends Loop {
 
                 if(updateRequired) {
                     this.MEMORY_HEAP_MAX = this.memoryBean.getHeapMemoryUsage().getMax();
-                    this.MEMORY_JVM_MAX = this.memoryBean.getNonHeapMemoryUsage().getMax();
 
                     this.averageHeapMemoryUsed = (this.TMP_MEMORY_HEAP_USED / this.updates);
                     this.averageJvmMemoryUsed = (this.TMP_MEMORY_JVM_USED / this.updates);

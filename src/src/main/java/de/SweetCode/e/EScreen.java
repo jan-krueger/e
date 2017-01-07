@@ -340,8 +340,7 @@ public class EScreen extends JFrame implements GLEventListener {
             layer.g().drawString("Memory Usage JVM & Heap", settings.getWidth() - xOffset, yOffset * xStep);
             layer.g().drawString(
                     String.format(
-                        "JVM - Max: %.2fMB | Used: %.2fMB",
-                            profilerLoop.getAverageJvmMemoryUsed() * E.C.BYTES_TO_MEGABYTES,
+                        "JVM - Used: %.2fMB",
                             profilerLoop.getAverageJvmMemoryUsed() * E.C.BYTES_TO_MEGABYTES
                     ),
                     (int) (settings.getWidth() - xOffset * 0.95),
