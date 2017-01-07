@@ -2,9 +2,10 @@ package de.SweetCode.e.loop;
 
 import de.SweetCode.e.E;
 
-public abstract class Loop extends Thread {
+public abstract class Loop implements Runnable {
 
     //--- Internals
+    private final String name;
     private final long optimalIterationTime;
 
     private boolean isRunning = false;
@@ -19,8 +20,12 @@ public abstract class Loop extends Thread {
     //---
 
     public Loop(String name, long optimalIterationTime) {
-        super(name);
-        this.optimalIterationTime = optimalIterationTime;
+        this.name = name;
+        this.optimalIterationTime = Math.max(optimalIterationTime, 1);
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public int getCurrentTicks() {

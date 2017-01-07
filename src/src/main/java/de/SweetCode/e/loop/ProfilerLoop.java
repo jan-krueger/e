@@ -159,11 +159,11 @@ public class ProfilerLoop extends Loop {
     private static Map<ThreadGroup, List<Thread>> getThreadsByGroup() {
         // get & sort by id
         List<Thread> threads = new ArrayList<>(Thread.getAllStackTraces().keySet());
-        Collections.sort(threads, Comparator.comparingLong(Thread::getId));
+        threads.sort(Comparator.comparing(Thread::getId));
 
         // store by groups
         return threads.stream().collect(
-                Collectors.groupingBy(t -> t.getThreadGroup())
+                Collectors.groupingBy(Thread::getThreadGroup)
         );
     }
 
