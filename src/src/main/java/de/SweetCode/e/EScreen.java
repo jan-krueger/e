@@ -9,7 +9,6 @@ import com.jogamp.opengl.util.texture.TextureData;
 import de.SweetCode.e.loop.ProfilerLoop;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
-import de.SweetCode.e.utils.StringUtils;
 import de.SweetCode.e.utils.log.LogEntry;
 
 import javax.swing.*;
@@ -20,9 +19,8 @@ import java.awt.image.DataBufferInt;
 import java.awt.image.VolatileImage;
 import java.lang.management.GarbageCollectorMXBean;
 import java.nio.IntBuffer;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class EScreen extends JFrame implements GLEventListener {
 
@@ -200,142 +198,9 @@ public class EScreen extends JFrame implements GLEventListener {
 
         });
 
-        Settings settings = E.getE().getSettings();
-
         //--- Debugging
-        if(settings.isDebugging()) {
-
-            ProfilerLoop profilerLoop = E.getE().getProfilerLoop();
-            List<Settings.DebugDisplay> displays = settings.getDebugInformation();
-
-            //--- Offsets
-            int xOffset = 360;
-            int yOffset = 12;
-
-            int xStep = 1;
-
-            Layer layer = E.getE().getLayers().first();
-            layer.g().setColor(
-                    EScreen.highContrast(
-                        new Color(layer.b().getRGB(settings.getWidth() - xOffset / 2, (int) (yOffset * 1.5D)))
-                    )
-            );
-
-            //--- CPU_PROFILE
-            if(displays.contains(Settings.DebugDisplay.CPU_PROFILE)) {
-                layer.g().drawString(
-                        String.format(
-                                "CPU: %.2f%% | Cores: %d",
-                                profilerLoop.getAverageCPU() * 100,
-                                profilerLoop.getAvailableProcessors()
-                        ),
-                        settings.getWidth() - xOffset,
-                        yOffset * xStep
-                );
-
-                xStep++;
-            }
-
-            if(displays.contains(Settings.DebugDisplay.LOOP_PROFILE)) {
-                layer.g().drawString(
-                        String.format(
-                                "FPS: %d (%d) | Ticks: %d (%d)",
-                                E.getE().getCurrentFPS(),
-                                settings.getTargetFPS(),
-                                E.getE().getCurrentTicks(),
-                                settings.getTargetTicks()
-                        ),
-                        settings.getWidth() - xOffset,
-                        yOffset * xStep
-                );
-
-                xStep++;
-            }
-
-            //--- MEMORY_PROFILE
-            if(displays.contains(Settings.DebugDisplay.MEMORY_PROFILE)) {
-                layer.g().drawString(
-                        String.format(
-                                "Heap: %.2fMB | Used: %.2fMB",
-                                profilerLoop.getMaxMemory() * E.C.BYTES_TO_MEGABYTES,
-                                profilerLoop.getAverageMemoryUsed() * E.C.BYTES_TO_MEGABYTES
-                        ),
-                        settings.getWidth() - xOffset,
-                        yOffset * xStep
-                );
-
-                xStep++;
-            }
-
-            //--- GC_PROFILE
-            if(displays.contains(Settings.DebugDisplay.GC_PROFILE)) {
-                List<GarbageCollectorMXBean> gcBeans = profilerLoop.getGCBeans();
-                layer.g().drawString(
-                        String.format(
-                                "GCs: %d",
-                                gcBeans.size()
-                        ),
-                        settings.getWidth() - xOffset,
-                        yOffset * xStep
-                );
-                for (int i = 0; i < gcBeans.size(); i++) {
-
-                    GarbageCollectorMXBean gc = gcBeans.get(0);
-                    layer.g().drawString(
-                            String.format(
-                                "%s, %d (%dms), %s",
-                                    gc.getName(),
-                                    gc.getCollectionCount(),
-                                    gc.getCollectionTime(),
-                                    StringUtils.join(gc.getMemoryPoolNames(), ", ")
-                            ),
-                            (int) (settings.getWidth() - xOffset * 0.95),
-                            yOffset * ((xStep + 1) + i)
-                    );
-
-                }
-
-                xStep += gcBeans.size();
-                xStep++;
-
-            }
-
-            //--- THREAD_PROFILE
-            if(displays.contains(Settings.DebugDisplay.GC_PROFILE)) {
-                Set<Thread> threads = profilerLoop.getThreads();
-                layer.g().drawString(
-                        String.format(
-                                "Threads: %d",
-                                threads.size(),
-                                StringUtils.join(threads.toArray(new Thread[threads.size()]), ", ")
-                        ),
-                        settings.getWidth() - xOffset,
-                        yOffset * xStep
-                );
-
-                final int[] i = {0};
-                int finalXStep = xStep;
-                threads.stream()
-                    .sorted(Comparator.comparingLong(value -> value.getId()))
-                    .forEach(t -> {
-                        layer.g().drawString(
-                            String.format(
-                                "%d - P: %d - %s (%s)",
-                                    t.getId(),
-                                    t.getPriority(),
-                                    t.getName(),
-                                    t.getState().name()
-                            ),
-                            (int) (settings.getWidth() - xOffset * 0.95),
-                            yOffset * ((finalXStep + 1) + i[0])
-                        );
-                        i[0]++;
-                });
-
-                xStep += threads.size();
-                xStep++;
-            }
-
+        if(E.getE().getSettings().isDebugging() && !(E.getE().getSettings().getDebugInformation().isEmpty())) {
+            EScreen.drawDebugInformation();
         }
         //---
 
@@ -413,6 +278,185 @@ public class EScreen extends JFrame implements GLEventListener {
 
     @Override
     public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {}
+
+    /**
+     * This method draws to the first layer all requested debug information.
+     */
+    private static void drawDebugInformation() {
+
+        Settings settings = E.getE().getSettings();
+        Layer layer = E.getE().getLayers().first();
+
+        ProfilerLoop profilerLoop = E.getE().getProfilerLoop();
+        List<Settings.DebugDisplay> displays = settings.getDebugInformation();
+
+        //--- Offsets
+        int xOffset = 360;
+        int yOffset = 12;
+
+        int xStep = 1;
+
+        layer.g().setColor(
+                EScreen.highContrast(
+                        new Color(layer.b().getRGB(settings.getWidth() - xOffset / 2, (int) (yOffset * 1.5D)))
+                )
+        );
+
+        //--- CPU_PROFILE
+        if(displays.contains(Settings.DebugDisplay.CPU_PROFILE)) {
+            layer.g().drawString(
+                    String.format(
+                        "CPU: %.2f%% | Cores: %d",
+                            profilerLoop.getAverageCPU() * 100,
+                            profilerLoop.getAvailableProcessors()
+                    ),
+                    settings.getWidth() - xOffset,
+                    yOffset * xStep
+            );
+
+            xStep++;
+        }
+
+        if(displays.contains(Settings.DebugDisplay.LOOP_PROFILE)) {
+            layer.g().drawString(
+                    String.format(
+                        "FPS: %d (%d) | Ticks: %d (%d) | VRAM: %s | OpenGL: %s",
+                            E.getE().getCurrentFPS(),
+                            settings.getTargetFPS(),
+                            E.getE().getCurrentTicks(),
+                            settings.getTargetTicks(),
+                            (EScreen.USE_VRAM ? "on" : "off"),
+                            (EScreen.USE_JOGL ? "on" : "off")
+                    ),
+                    settings.getWidth() - xOffset,
+                    yOffset * xStep
+            );
+
+            xStep++;
+        }
+
+        //--- MEMORY_PROFILE
+        if(displays.contains(Settings.DebugDisplay.MEMORY_PROFILE)) {
+            layer.g().drawString("Memory Usage JVM & Heap", settings.getWidth() - xOffset, yOffset * xStep);
+            layer.g().drawString(
+                    String.format(
+                        "JVM - Used: %.2fMB",
+                            profilerLoop.getAverageJvmMemoryUsed() * E.C.BYTES_TO_MEGABYTES
+                    ),
+                    (int) (settings.getWidth() - xOffset * 0.95),
+                    yOffset * (xStep + 1)
+            );
+            layer.g().drawString(
+                    String.format(
+                        "Heap - Max: %.2fMB | Used: %.2fMB",
+                            profilerLoop.getMaxHeapSize() * E.C.BYTES_TO_MEGABYTES,
+                            profilerLoop.getAverageHeapMemoryUsed() * E.C.BYTES_TO_MEGABYTES
+                    ),
+                    (int) (settings.getWidth() - xOffset * 0.95),
+                    yOffset * (xStep + 2)
+            );
+
+            xStep += 3;
+        }
+
+        //--- GC_PROFILE
+        if(displays.contains(Settings.DebugDisplay.GC_PROFILE)) {
+            List<GarbageCollectorMXBean> gcBeans = profilerLoop.getGCBeans();
+            layer.g().drawString(
+                    String.format(
+                        "GCs: %d",
+                            gcBeans.size()
+                    ),
+                    settings.getWidth() - xOffset,
+                    yOffset * xStep
+            );
+
+            int gcTotalSize = gcBeans.size();
+            int beanIndex = 0;
+            for (int i = 0; i < gcTotalSize; i++) {
+
+                GarbageCollectorMXBean gc = gcBeans.get(beanIndex);
+                layer.g().drawString(
+                        String.format(
+                            "%s, %d (%dms)",
+                                gc.getName(),
+                                gc.getCollectionCount(),
+                                gc.getCollectionTime()
+                        ),
+                        (int) (settings.getWidth() - xOffset * 0.95),
+                        yOffset * ((xStep + 1) + i)
+                );
+
+                //--- Pools
+                String[] pools = gc.getMemoryPoolNames();
+                for(int x = 0; x < pools.length; x++) {
+                    layer.g().drawString(
+                            String.format("%s", pools[x]),
+                            (int) (settings.getWidth() - xOffset * 0.9),
+                            yOffset * ((xStep + 2) + i + x)
+                    );
+                }
+
+                gcTotalSize += pools.length;
+                i += pools.length;
+                beanIndex++;
+
+            }
+
+            xStep += gcTotalSize;
+            xStep++;
+
+        }
+
+        //--- THREAD_PROFILE
+        if(displays.contains(Settings.DebugDisplay.GC_PROFILE)) {
+            Map<ThreadGroup, List<Thread>> threads = profilerLoop.getThreads();
+            layer.g().drawString(
+                    String.format(
+                        "Threads: %d",
+                            threads.size()
+                    ),
+                    settings.getWidth() - xOffset,
+                    yOffset * xStep
+            );
+
+            final int[] i = {0};
+            int finalXStep = xStep;
+            threads.forEach((threadGroup, threadList) -> {
+
+                //--- Group Name
+                layer.g().drawString(
+                        String.format(
+                            "%s",
+                                threadGroup.getName()
+                        ),
+                        (int) (settings.getWidth() - xOffset * 0.95),
+                        yOffset * ((finalXStep + 1) + i[0]))
+                ;
+                i[0]++;
+
+                //--- Threads belonging to the group
+                threadList.forEach(t -> {
+                    layer.g().drawString(
+                            String.format(
+                                "%d - P: %d - %s (%s)",
+                                    t.getId(),
+                                    t.getPriority(),
+                                    t.getName(),
+                                    t.getState().name()
+                            ),
+                            (int) (settings.getWidth() - xOffset * 0.9),
+                            yOffset * ((finalXStep + 1) + i[0])
+                    );
+                    i[0]++;
+                });
+
+            });
+
+            xStep += i[0];
+            xStep++;
+        }
+    }
 
     /**
      * Returns a color with the highest possible contrast compared to the input color.

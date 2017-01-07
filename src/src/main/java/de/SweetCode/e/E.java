@@ -169,9 +169,9 @@ public class E {
         if(!(priority == Priority.NORMAL)) {
             this.getLog().log(
                     LogEntry.Builder.create().message(
-                            "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +
-                                    "the GameComponent that is tied to a GameScene, however the priority for the GameScene itself " +
-                                    "will be set."
+                        "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +
+                        "the GameComponent that is tied to a GameScene, however the priority for the GameScene itself " +
+                        "will be set."
                     ).build()
             );
         }
@@ -252,7 +252,7 @@ public class E {
                 TimeUnit.NANOSECONDS
         );
 
-        if(this.settings.isDebugging()) {
+        if(this.settings.isDebugging() && !(this.settings.getDebugInformation().isEmpty())) {
             this.executor.scheduleAtFixedRate(
                     this.profilerLoop,
                     0,
