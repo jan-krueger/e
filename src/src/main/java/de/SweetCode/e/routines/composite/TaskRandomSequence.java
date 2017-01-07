@@ -17,12 +17,12 @@ public class TaskRandomSequence<T> extends TaskRandomSelector<T> {
         this(name, new LinkedList<>());
     }
 
-    public TaskRandomSequence(String name, LinkedList<Task<T>> tasks) {
+    public TaskRandomSequence(String name, LinkedList<Task> tasks) {
         super(name, tasks);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

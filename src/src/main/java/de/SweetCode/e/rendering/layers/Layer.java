@@ -27,7 +27,7 @@ public class Layer {
     /**
      * Gets the used BufferedImage.
      *
-     * @return
+     * @return Returns a BufferedImage used by the layer to draw on.
      */
     public BufferedImage getBufferedImage() {
         return bufferedImage;
@@ -37,7 +37,7 @@ public class Layer {
     /**
      * Gets the used BufferedImage.
      *
-     * @return
+     * @return Returns the same as {@link #getBufferedImage()}.
      */
     public BufferedImage b() {
         return this.bufferedImage;
@@ -46,7 +46,7 @@ public class Layer {
     /**
      * Gets the Graphics2D object.
      *
-     * @return
+     * @return Returns a Graphics2D object used by the layer to draw on.
      */
     public Graphics2D getGraphics2D() {
         return this.graphics2D;
@@ -55,7 +55,7 @@ public class Layer {
     /**
      * Gets the Graphics2D object.
      *
-     * @return
+     * @return Returns the same as {@link #getGraphics2D()}
      */
     public Graphics2D g() {
         return this.graphics2D;
@@ -64,7 +64,7 @@ public class Layer {
     /**
      * Gets the used alpha value to setScene the layers.
      *
-     * @return
+     * @return Returns the alpha value of the image. The value is in the interval of [0, 1].
      */
     public float getAlpha() {
         return alpha;
@@ -73,7 +73,7 @@ public class Layer {
     /**
      * Sets the alpha value.
      *
-     * @param alpha
+     * @param alpha This method sets the alpha value of this layer. The value must be in the interval of [0, 1].
      */
     public void setAlpha(float alpha) {
         Assert.assertTrue("The alpha value must be => 0 and <= 1.", (alpha >= 0 && alpha <= 1));

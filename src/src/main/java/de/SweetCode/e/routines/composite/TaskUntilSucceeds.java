@@ -14,12 +14,12 @@ public class TaskUntilSucceeds<T> extends TaskDecorator<T> {
         this(name, null);
     }
 
-    public TaskUntilSucceeds(String name, Task<T> task) {
+    public TaskUntilSucceeds(String name, Task task) {
         super(name, task);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

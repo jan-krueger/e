@@ -12,7 +12,7 @@ import java.util.List;
  * If it runs out of children completely, it will return a failure status code
  * @param <T>
  */
-public class TaskSelector<T> extends Task<T> {
+public class TaskSelector<T> extends Task {
 
     /**
      * The index of the currently running child.
@@ -25,7 +25,7 @@ public class TaskSelector<T> extends Task<T> {
         this(name, Arrays.asList());
     }
 
-    public TaskSelector(String name, List<Task<T>> tasks) {
+    public TaskSelector(String name, List<Task> tasks) {
         super(name);
 
         tasks.forEach(this::addChild);
@@ -35,7 +35,7 @@ public class TaskSelector<T> extends Task<T> {
      * Returns the child that is currently running.
      * @return
      */
-    public Task<T> getCurrent() {
+    public Task getCurrent() {
         return this.getChild(this.currentIndex);
     }
 
@@ -72,7 +72,7 @@ public class TaskSelector<T> extends Task<T> {
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

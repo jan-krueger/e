@@ -35,9 +35,17 @@ public class DialogueConditionWrapper {
     }
 
     /**
+     * Gives the identifier of the condition.
+     * @return The unique id of the condition.
+     */
+    public String getId() {
+        return this.id;
+    }
+
+    /**
      * Checks if the condition is fulfilled.
      * @param fields A map with all fields and their current values to pass them to condition method.
-     * @return
+     * @return Returns true of all conditions are fulfilled, otherwise false.
      */
     public boolean isFulfilled(Map<String, Object> fields) {
 
@@ -61,10 +69,11 @@ public class DialogueConditionWrapper {
 
     /**
      * Parsing all conditions from the instance.
-     * @param dialogueConditions
-     * @return
+     * @param dialogueConditions A wrapper class containing all DialogueConditions that can be used in the context.
+     * @return Returns a map with the parsed conditions. The key is the ID of the {@link DialogueCondition} with an
+     *          leading at (@) symbol. The value is a wrapper and helper object of the condition method.
      */
-    public static final Map<String, DialogueConditionWrapper> getConditionWrappers(DialogueConditions dialogueConditions) {
+    public static Map<String, DialogueConditionWrapper> getConditionWrappers(DialogueConditions dialogueConditions) {
 
         Map<String, DialogueConditionWrapper> conditionWrapper = new HashMap<>();
 

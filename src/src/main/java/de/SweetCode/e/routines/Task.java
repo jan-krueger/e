@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class Task<T> {
+public abstract class Task {
 
     /**
      * The name of the task.
@@ -26,12 +26,12 @@ public abstract class Task<T> {
     /**
      * This list keeps track of all children.
      */
-    private List<Task<T>> children = new LinkedList<>();
+    private List<Task> children = new LinkedList<>();
 
     /**
      * This list keeps track of all predicates.
      */
-    private List<Predicate<Task<T>>> predicates = new LinkedList<>();
+    private List<Predicate<Task>> predicates = new LinkedList<>();
 
     public Task() {
         this(null);
@@ -43,10 +43,10 @@ public abstract class Task<T> {
 
     /**
      * Returns the name of the name, null when no name provided.
-     * @return
+     * @return Returns a string.
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -60,18 +60,18 @@ public abstract class Task<T> {
     /**
      * This method returns a stream of all children.
      *
-     * @return
+     * @return Returns a {@link LinkedList} with all children {@link Task tasks} of this task.
      */
-    public List<Task<T>> getChildren() {
+    public List<Task> getChildren() {
         return this.children;
     }
 
     /**
      * Returns a child by its index.
-     * @param index
-     * @return
+     * @param index The index of the child.
+     * @return Returns the {@link Task} defined by the provided index.
      */
-    public Task<T> getChild(int index) {
+    public Task getChild(int index) {
 
         if(this.children.isEmpty() || index < 0 || index >= this.children.size()) {
             throw new IndexOutOfBoundsException("A child with this index does not exist.");
@@ -82,7 +82,7 @@ public abstract class Task<T> {
 
     /**
      * Returns the number of children of the task.
-     * @return
+     * @return The amount of children.
      */
     public int getChildAmount() {
         return this.children.size();
@@ -91,9 +91,9 @@ public abstract class Task<T> {
     /**
      * This method will add a child to the list of this task's children.
      *
-     * @param child
+     * @param child The child {@link Task task}.
      */
-    public void addChild(Task<T> child) {
+    public void addChild(Task child) {
         //@TODO Check if one of the parents has this child's instance already as child/parent, if this is the case
         // the child cannot be added again, because e.g. this would cause an endless loop in the cancel method.
 
@@ -104,25 +104,25 @@ public abstract class Task<T> {
     /**
      * Adds a predicate.
      *
-     * @param predicate
+     * @param predicate The {@link Predicate<Task<T>>}.
      */
-    public void addFilter(Predicate<Task<T>> predicate) {
+    public void addFilter(Predicate<Task> predicate) {
         this.predicates.add(predicate);
     }
 
     /**
-     * Returns its children.
-     * @return
+     * Returns its parent.
+     * @return Returns the parent of the task, it is null if the task has no parent.
      */
-    public Task<T> getParent() {
+    public Task getParent() {
         return this.parent;
     }
 
     /**
      * Sets the parent of the task.
-     * @param parent
+     * @param parent The parent that should be assigned to this task.
      */
-    public void setParent(Task<T> parent) {
+    public void setParent(Task parent) {
         this.parent = parent;
     }
 
@@ -136,7 +136,7 @@ public abstract class Task<T> {
     }
 
     /**
-     * This method will be called to request a rerun & wants to keep running.
+     * This method will be called to request a rerun and wants to keep running.
      */
     public final void running() {
 
@@ -235,8 +235,11 @@ public abstract class Task<T> {
      * @param taskStatus The taskStatus of the task.
      * @param task The task that called this method.
      */
-    public void child(TaskStatus taskStatus, Task<T> task) {}
+    public void child(TaskStatus taskStatus, Task task) {}
 
+    /**
+     * This method contains the logic/job that is the task supposed to do if called.
+     */
     public abstract void run();
 
     @Override

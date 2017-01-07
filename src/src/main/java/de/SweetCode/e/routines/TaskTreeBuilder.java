@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 
 public class TaskTreeBuilder<T> {
 
-    private final Task<T> root;
-    private Task<T> currentNode;
+    private final Task root;
+    private Task currentNode;
 
-    public TaskTreeBuilder(Task<T> root) {
+    public TaskTreeBuilder(Task root) {
         Assert.assertNotNull("The root cannot be null.", root);
 
         this.root = root;
@@ -102,7 +102,7 @@ public class TaskTreeBuilder<T> {
      * Adss a child.
      * @param child
      */
-    public TaskTreeBuilder<T> child(Task<T> child) {
+    public TaskTreeBuilder<T> child(Task child) {
         this.currentNode.addChild(child);
         child.setParent(this.currentNode);
         return this;
@@ -113,7 +113,7 @@ public class TaskTreeBuilder<T> {
      * @param predicate
      * @return
      */
-    public TaskTreeBuilder<T> filter(Predicate<Task<T>> predicate) {
+    public TaskTreeBuilder<T> filter(Predicate<Task> predicate) {
         this.currentNode.addFilter(predicate);
         return this;
     }
@@ -134,16 +134,16 @@ public class TaskTreeBuilder<T> {
      * Builds the task tree.
      * @return
      */
-    public Task<T> build() {
+    public Task build() {
         return this.root;
     }
 
-    private void addChild(Task<T> child) {
+    private void addChild(Task child) {
         this.currentNode.addChild(child);
         this.currentNode = child;
     }
 
-    public static <T> TaskTreeBuilder<T> create(Task<T> root) {
+    public static <T> TaskTreeBuilder<T> create(Task root) {
         return new TaskTreeBuilder<>(root);
     }
 

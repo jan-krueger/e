@@ -22,7 +22,7 @@ public class TaskRandomSelector<T> extends TaskSelector<T> {
         this(name, Collections.emptyList());
     }
 
-    public TaskRandomSelector(String name, List<Task<T>> tasks) {
+    public TaskRandomSelector(String name, List<Task> tasks) {
         super(name, tasks);
     }
 
@@ -63,7 +63,7 @@ public class TaskRandomSelector<T> extends TaskSelector<T> {
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

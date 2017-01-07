@@ -17,12 +17,12 @@ public class TaskInverter<T> extends TaskDecorator<T> {
         this(name, null);
     }
 
-    public TaskInverter(String name, Task<T> child) {
+    public TaskInverter(String name, Task child) {
         super(name, child);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

@@ -19,12 +19,12 @@ public class TaskSequence<T> extends TaskSelector<T> {
         this(name, new LinkedList<>());
     }
 
-    public TaskSequence(String name, LinkedList<Task<T>> tasks) {
+    public TaskSequence(String name, LinkedList<Task> tasks) {
         super(name, tasks);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

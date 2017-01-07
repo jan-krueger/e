@@ -20,12 +20,12 @@ public class TaskAlwaysFail<T> extends TaskDecorator<T> {
         this(name, null);
     }
 
-    public TaskAlwaysFail(String name, Task<T> task) {
+    public TaskAlwaysFail(String name, Task task) {
         super(name, task);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 
