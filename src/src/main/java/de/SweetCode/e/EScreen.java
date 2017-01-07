@@ -306,8 +306,7 @@ public class EScreen extends JFrame implements GLEventListener {
                 layer.g().drawString(
                         String.format(
                                 "Threads: %d",
-                                threads.size(),
-                                StringUtils.join(threads.toArray(new Thread[threads.size()]), ", ")
+                                threads.size()
                         ),
                         settings.getWidth() - xOffset,
                         yOffset * xStep
