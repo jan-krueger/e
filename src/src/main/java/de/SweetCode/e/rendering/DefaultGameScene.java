@@ -28,7 +28,6 @@ public class DefaultGameScene extends GameScene {
         String headline = "Welcome to e.";
         String sub = "1.6021E−19";
 
-
         g.setBackground(Color.WHITE);
 
         Random random = E.getE().getRandom(false);
