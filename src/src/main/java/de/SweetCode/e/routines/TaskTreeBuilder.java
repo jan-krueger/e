@@ -5,12 +5,12 @@ import de.SweetCode.e.utils.Assert;
 
 import java.util.function.Predicate;
 
-public class TaskTreeBuilder<T> {
+public class TaskTreeBuilder {
 
-    private final Task<T> root;
-    private Task<T> currentNode;
+    private final Task root;
+    private Task currentNode;
 
-    public TaskTreeBuilder(Task<T> root) {
+    private TaskTreeBuilder(Task root) {
         Assert.assertNotNull("The root cannot be null.", root);
 
         this.root = root;
@@ -18,111 +18,131 @@ public class TaskTreeBuilder<T> {
     }
 
     /**
-     * Adds a random selector.
-     * @return
+     * Adds a new {@link TaskRandomSelector}.
+     *
+     * @param name The name of the {@link TaskRandomSelector}.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> randomSelector(String name) {
-        this.addChild(new TaskRandomSelector<>(name));
+    public TaskTreeBuilder randomSelector(String name) {
+        this.addChild(new TaskRandomSelector(name));
         return this;
     }
 
     /**
-     * Adds a random sequence.
-     * @return
+     * Adds a {@link TaskRandomSequence}.
+     *
+     * @param name The name of the {@link TaskRandomSequence}.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> randomSequenece(String name) {
-        this.addChild(new TaskRandomSequence<>(name));
+    public TaskTreeBuilder randomSequenece(String name) {
+        this.addChild(new TaskRandomSequence(name));
         return this;
     }
 
     /**
-     * Adds a selector.
-     * @return
+     * Adds a {@link TaskSelector}.
+     *
+     * @param name The name of the {@link TaskSelector}.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> selector(String name) {
-        this.addChild(new TaskSelector<>(name));
+    public TaskTreeBuilder selector(String name) {
+        this.addChild(new TaskSelector(name));
         return this;
     }
 
     /**
-     * Adds a sequence.
-     * @return
+     * Adds a {@link TaskSequence}.
+     *
+     * @param name The name of the {@link TaskSequence}.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> sequence(String name) {
-        this.addChild(new TaskSequence<>(name));
+    public TaskTreeBuilder sequence(String name) {
+        this.addChild(new TaskSequence(name));
         return this;
     }
 
     /**
-     * Adds a always fail task.
-     * @return
+     * Adds a {@link TaskAlwaysFail}.
+     *
+     * @param name The name of the {@link TaskAlwaysFail}.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> alwaysFail(String name) {
-        this.addChild(new TaskAlwaysFail<>(name));
+    public TaskTreeBuilder alwaysFail(String name) {
+        this.addChild(new TaskAlwaysFail(name));
         return this;
     }
 
     /**
-     * Adds a always succeed task.
-     * @return
+     * Adds a {@link TaskAlwaysSucceeds}.
+     *
+     * @param name The name of the {@link TaskAlwaysSucceeds}.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> alwaysSucceed(String name) {
-        this.addChild(new TaskAlwaysSucceeds<>(name));
+    public TaskTreeBuilder alwaysSucceed(String name) {
+        this.addChild(new TaskAlwaysSucceeds(name));
         return this;
     }
 
     /**
-     * Adds a until fails task.
-     * @return
+     * Adds a {@link TaskUntilFails}.
+     *
+     * @param name The name of the {@link TaskUntilFails}.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> untilFails(String name) {
-        this.addChild(new TaskUntilFails<>(name));
+    public TaskTreeBuilder untilFails(String name) {
+        this.addChild(new TaskUntilFails(name));
         return this;
     }
 
     /**
-     * Adds a until succeeds task.
-     * @return
+     * Adds a {@link TaskUntilSucceeds}.
+     *
+     * @param name The name of the {@link TaskUntilSucceeds}.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> untilSucceeds(String name) {
-        this.addChild(new TaskUntilSucceeds<>(name));
+    public TaskTreeBuilder untilSucceeds(String name) {
+        this.addChild(new TaskUntilSucceeds(name));
         return this;
     }
 
     /**
-     * Adds a loop task.
-     * @return
+     * Adds a {@link TaskLoop}.
+     *
+     * @param name The name of the {@link TaskLoop}.
+     * @param n The amount of iterations.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> loop(String name, int n) {
-        this.addChild(new TaskLoop<>(name, n));
+    public TaskTreeBuilder loop(String name, int n) {
+        this.addChild(new TaskLoop(name, n));
         return this;
     }
 
     /**
-     * Adss a child.
-     * @param child
+     * Adds a {@link Task}.
+     * @param child The child to add.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> child(Task<T> child) {
+    public TaskTreeBuilder child(Task child) {
         this.currentNode.addChild(child);
         child.setParent(this.currentNode);
         return this;
     }
 
     /**
-     * Adds a predicate.
-     * @param predicate
-     * @return
+     * Adds a {@link Predicate} as filter.
+     * @param predicate The predicate.
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> filter(Predicate<Task<T>> predicate) {
+    public TaskTreeBuilder filter(Predicate<Task> predicate) {
         this.currentNode.addFilter(predicate);
         return this;
     }
 
     /**
      * Goes one step end in the tree.
-     * @return
+     * @return The reference to the used builder.
      */
-    public TaskTreeBuilder<T> end() {
+    public TaskTreeBuilder end() {
 
         Assert.assertNotNull("You can't go further end.", this.currentNode.getParent());
         this.currentNode = this.currentNode.getParent();
@@ -131,20 +151,19 @@ public class TaskTreeBuilder<T> {
     }
 
     /**
-     * Builds the task tree.
-     * @return
+     * @return Builds the task tree and returns its {@link Task root}.
      */
-    public Task<T> build() {
+    public Task build() {
         return this.root;
     }
 
-    private void addChild(Task<T> child) {
+    private void addChild(Task child) {
         this.currentNode.addChild(child);
         this.currentNode = child;
     }
 
-    public static <T> TaskTreeBuilder<T> create(Task<T> root) {
-        return new TaskTreeBuilder<>(root);
+    public static TaskTreeBuilder create(Task root) {
+        return new TaskTreeBuilder(root);
     }
 
 }

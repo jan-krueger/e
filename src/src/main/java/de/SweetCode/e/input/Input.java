@@ -154,10 +154,8 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * Returns all pressed keys since the last method call in the wrong order.
-     *
-     * The first element in the stream is the oldest key.
-     * @return
+     * @return Returns all pressed keys since the last method call in the wrong order. The first element in the stream
+     *         is the oldest key.
      */
     public LinkedList<KeyEntry> getKeyboardEntries() {
         LinkedList<KeyEntry> stream = new LinkedList<>(this.keyQueue);
@@ -166,10 +164,8 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * Returns all pressed mouse buttons since the last method call in the wrong order.
-     *
-     * The first element in the stream is the oldest mouse button.
-     * @return
+     * @return Returns all pressed mouse buttons since the last method call in the wrong order. The first element in
+     *         the stream is the oldest mouse button.
      */
     public LinkedList<MouseEntry> getMouseEntries() {
         LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseQueue);
@@ -178,10 +174,8 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * Returns all mouse scrolls since the last method call in the wrong order.
-     *
-     * The first element in the stream is the oldest mouse button.
-     * @return
+     * @return Returns all mouse scrolls since the last method call in the wrong order. The first element in the stream
+     *         is the oldest mouse button.
      */
     public LinkedList<MouseWheelEntry> getMouseWheelEntries() {
         LinkedList<MouseWheelEntry> stream = new LinkedList<>(this.mouseScrollQueue);
@@ -190,10 +184,8 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * Returns all mouse scrolls since the last method call in the wrong order.
-     *
-     * The first element in the stream is the oldest mouse button.
-     * @return
+     * @return Returns all mouse scrolls since the last method call in the wrong order. The first element in the stream
+     *         is the oldest mouse button.
      */
     public LinkedList<MouseEntry> getMouseDraggedEntries() {
         LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseDraggedEntries);
@@ -202,10 +194,8 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * Returns all mouse scrolls since the last method call in the wrong order.
-     *
-     * The first element in the stream is the oldest mouse button.
-     * @return
+     * @return Returns all mouse scrolls since the last method call in the wrong order. The first element in the stream
+     *         is the oldest mouse button.
      */
     public LinkedList<MouseEntry> getMouseMovedEntries() {
         LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseMovedEntries);
@@ -214,10 +204,8 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * Returns all mouse scrolls since the last method call in the wrong order.
-     *
-     * The first element in the stream is the oldest mouse button.
-     * @return
+     * @return Returns all mouse scrolls since the last method call in the wrong order. The first element in the stream
+     *         is the oldest mouse button.
      */
     public LinkedList<MouseEntry> getMouseReleasedQueue() {
         LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseReleasedQueue);
@@ -226,8 +214,7 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * Builds a new InputEntry with the current values and removes all from the queue.
-     * @return
+     * @return Builds a new {@link InputEntry} with the current values and removes all from the queue.
      */
     public InputEntry build() {
         return new InputEntry(

@@ -23,17 +23,14 @@ public class GameSceneEntry {
     }
 
     /**
-     * Gives the game-scene.
-     * @return
+     * @return Returns the wrapped {@link GameScene}.
      */
     public GameScene getGameScene() {
         return this.gameScene;
     }
 
-
     /**
-     * Gives the priority of the game-scene in the game-loop.
-     * @return
+     * @return Gives the {@link Priority} of the game-scene in the game-loop.
      */
     public Priority getPriority() {
         return this.priority;

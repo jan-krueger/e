@@ -6,7 +6,7 @@ public interface Renderable extends GameComponent {
 
     /**
      * Called every update.
-     * @param layers
+     * @param layers A container object containg all layers that are know to the engine.
      */
     void render(Layers layers);
 

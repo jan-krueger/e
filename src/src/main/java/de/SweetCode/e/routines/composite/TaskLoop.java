@@ -5,7 +5,7 @@ import de.SweetCode.e.routines.TaskDecorator;
 import de.SweetCode.e.routines.TaskStatus;
 import de.SweetCode.e.utils.Assert;
 
-public class TaskLoop<T> extends TaskDecorator<T> {
+public class TaskLoop extends TaskDecorator {
 
     private final int n;
     private int x = 0;
@@ -18,7 +18,7 @@ public class TaskLoop<T> extends TaskDecorator<T> {
         this(name, null, n);
     }
 
-    public TaskLoop(String name, Task<T> task, int n) {
+    public TaskLoop(String name, Task task, int n) {
 
         super(name, task);
 
@@ -35,7 +35,7 @@ public class TaskLoop<T> extends TaskDecorator<T> {
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         this.x++;
 

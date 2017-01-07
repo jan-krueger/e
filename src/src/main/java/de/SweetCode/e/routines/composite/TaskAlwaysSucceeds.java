@@ -7,9 +7,8 @@ import de.SweetCode.e.routines.TaskStatus;
 /**
  * The TaskAlwaysSucceeds task will always succeed no matter the wrapped task succeeds or fails.
  *
- * @param <T>
  */
-public class TaskAlwaysSucceeds<T> extends TaskDecorator<T> {
+public class TaskAlwaysSucceeds extends TaskDecorator {
 
     public TaskAlwaysSucceeds() {}
 
@@ -17,12 +16,12 @@ public class TaskAlwaysSucceeds<T> extends TaskDecorator<T> {
         this(name, null);
     }
 
-    public TaskAlwaysSucceeds(String name, Task<T> child) {
+    public TaskAlwaysSucceeds(String name, Task child) {
         super(name, child);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

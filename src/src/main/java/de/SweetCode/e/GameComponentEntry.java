@@ -23,16 +23,14 @@ public class GameComponentEntry {
     }
 
     /**
-     * Gives the game-component;
-     * @return
+     * @return Returns Gives the game-component;
      */
     public GameComponent getGameComponent() {
         return this.gameComponent;
     }
 
     /**
-     * Gives the priority of the game-component in the update-loop.
-     * @return
+     * @return Gives the {@link Priority} of the game-component in the update-loop.
      */
     public Priority getPriority() {
         return this.priority;

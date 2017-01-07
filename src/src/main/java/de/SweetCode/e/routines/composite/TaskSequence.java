@@ -9,9 +9,8 @@ import java.util.LinkedList;
  * A sequence is a task that runs each of its child behaviors in turn. It will return immediately with a failure
  * status code when one of its children fails. As long as its children are succeeding, it will keep on running the tasks.
  * If it runs out of children completely, it will return a succeeded status code
- * @param <T>
  */
-public class TaskSequence<T> extends TaskSelector<T> {
+public class TaskSequence extends TaskSelector {
 
     public TaskSequence() {}
 
@@ -19,12 +18,12 @@ public class TaskSequence<T> extends TaskSelector<T> {
         this(name, new LinkedList<>());
     }
 
-    public TaskSequence(String name, LinkedList<Task<T>> tasks) {
+    public TaskSequence(String name, LinkedList<Task> tasks) {
         super(name, tasks);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

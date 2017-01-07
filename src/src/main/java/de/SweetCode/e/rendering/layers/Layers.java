@@ -16,10 +16,18 @@ public class Layers {
 
     private final List<Layer> layers = new LinkedList<>();
 
+    /**
+     * Constructor.
+     * @param amount The amount of layers that the constructor sould generate.
+     */
     public Layers(int amount) {
-        IntStream.range(0, amount).forEach(i -> layers.add(new Layer()));
+        IntStream.range(0, amount).forEach(i -> this.layers.add(new Layer()));
     }
 
+    /**
+     * Gives a reference to the list of all layers stored by the object.
+     * @return Returns a {@link LinkedList} list of {@link Layer} references.
+     */
     public List<Layer> getLayers() {
         return this.layers;
     }
@@ -27,7 +35,7 @@ public class Layers {
     /**
      * Returns the first layer.
      *
-     * @return
+     * @return Returns a {@link Layer}.
      */
     public Layer first() {
         return this.layers.get(0);
@@ -35,7 +43,7 @@ public class Layers {
 
     /**
      * Returns the last layer.
-     * @return
+     * @return Returns a {@link Layer}.
      */
     public Layer last() {
         return this.layers.get(this.layers.size() - 1);
@@ -44,8 +52,8 @@ public class Layers {
     /**
      * Returns the layer by a specified index.
      *
-     * @param index
-     * @return
+     * @param index The index of the layer to grab.
+     * @return Returns a {@link Layer}.
      */
     public Layer get(int index) {
         Assert.assertTrue("index is not a valid layer index.", (index >= 0 && index < this.layers.size()));
@@ -56,7 +64,7 @@ public class Layers {
     /**
      * Adds a new layer.
      *
-     * @param layer
+     * @param layer A reference to the layer to store.
      */
     public void add(Layer layer) {
         Assert.assertNotNull("The layer cannot be null.", layer);
@@ -65,9 +73,10 @@ public class Layers {
     }
 
     /**
-     * Combines all layers them.
+     * Combines all layers to a single {@link BufferedImage} used in the final render process. The BufferdImage is
+     * using the ARGB color space.
      *
-     * @return
+     * @return Returns a {@link BufferedImage}.
      */
     public BufferedImage combine() {
 

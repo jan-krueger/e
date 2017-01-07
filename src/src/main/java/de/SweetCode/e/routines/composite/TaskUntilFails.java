@@ -4,7 +4,7 @@ import de.SweetCode.e.routines.Task;
 import de.SweetCode.e.routines.TaskDecorator;
 import de.SweetCode.e.routines.TaskStatus;
 
-public class TaskUntilFails<T> extends TaskDecorator<T> {
+public class TaskUntilFails extends TaskDecorator {
 
     public TaskUntilFails() {
         super();
@@ -14,12 +14,12 @@ public class TaskUntilFails<T> extends TaskDecorator<T> {
         this(name, null);
     }
 
-    public TaskUntilFails(String name, Task<T> task) {
+    public TaskUntilFails(String name, Task task) {
         super(name, task);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

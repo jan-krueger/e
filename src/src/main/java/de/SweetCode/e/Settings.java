@@ -10,94 +10,82 @@ import java.util.concurrent.TimeUnit;
 public interface Settings {
 
     /**
-     * The name of the game.
-     * @return
+     * @return The name of the game.
      */
     default String getName() {
         return "e - 1.6021";
     }
 
     /**
-     * The version of the game.
-     * @return
+     * @return The {@link Version} of the game.
      */
     default Version getVersion() {
         return new Version(1, 0, 0, 1, Version.ReleaseTag.NIGHTLY);
     }
 
     /**
-     * The timeunit that the delta time should use.
-     * @return
+     * @return The {@link TimeUnit} that the delta time should use.
      */
     default TimeUnit getDeltaUnit() {
         return TimeUnit.MILLISECONDS;
     }
 
     /**
-     * If this is set to true, the delta time will always be 1 or higher.
-     * @return
+     * @return If this is set to true, the delta time will always be 1 or higher.
      */
     default boolean roundDelta() {
         return true;
     }
 
     /**
-     * The width of the screen.
-     * @return
+     * @return The width of the screen.
      */
     default int getWidth() {
         return 1280;
     }
 
     /**
-     * The height of the screen.
-     * @return
+     * @return The height of the screen.
      */
     default int getHeight() {
         return 720;
     }
 
     /**
-     * The optimal FPS (Frames-Per-Second) target.
-     * @return
+     * @return The optimal FPS (Frames-Per-Second) target.
      */
     default int getTargetFPS() {
         return 25;
     }
 
     /**
-     * How often should run the update-loop/second.
-      * @return
+     * @return How often should run the update-loop/second.
      */
     default int getTargetTicks() { return 64; }
 
     /**
-     * The max. amount of log entries.
-     * @return
+     * @return The max. amount of log entries.
      */
     default int getLogCapacity() {
         return 1024;
     }
 
     /**
-     * The amount of layers.
-     * @return
+     * @return The amount of layers.
      */
     default int getAmountOfLayers() {
         return 1;
     }
 
     /**
-     * If the screen is decorated.
-     * @return
+     * @return If the screen is decorated.
      */
     default boolean isDecorated() {
         return false;
     }
 
     /**
-     * If the screen is resizable.
-     * @return
+     * @return If the screen is resizable.
      */
     default boolean isResizable() {
         return false;
@@ -112,29 +100,26 @@ public interface Settings {
      *
      * A parallel stream has a higher overhead than the sequential version of it!
      * A parallel stream IGNORES all set priorities.
-     * @return
+     * @return True, run it parallelized, otherwise not.
      */
     default boolean isParallelizingUpdate() { return false; }
 
     /**
-     * Hints to be used while rendering.
-     * @return
+     * @return Hints to be used while rendering.
      */
     default Map<RenderingHints.Key, Object> getRenderingHints() {
         return new HashMap<>();
     }
 
     /**
-     * Rendering debugging information.
-     * @return
+     * @return Rendering debugging information.
      */
     default boolean isDebugging() {
         return true;
     }
 
     /**
-     * Define what you see of the debug information.
-     * @return
+     * @return Define what you see of the debug information.
      */
     default List<DebugDisplay> getDebugInformation() {
         return Arrays.asList(DebugDisplay.values());

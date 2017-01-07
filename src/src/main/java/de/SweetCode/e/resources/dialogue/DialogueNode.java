@@ -6,6 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ *
+ * @param <T> The type of the identifier.
+ */
 public class DialogueNode<T> {
 
     private final T identifier;
@@ -25,17 +29,14 @@ public class DialogueNode<T> {
     }
 
     /**
-     * Gets the unique identifier of this node.
-     * @return
+     * @return Gives the unique identifier of this node.
      */
     public T getIdentifier() {
         return this.identifier;
     }
 
     /**
-     * Returns all available options.
-     *
-     * @return
+     * @return Gives all available options.
      */
     public List<DialogueOptionPointer<DialogueNode>> getOptionPointers() {
         return this.optionPointers
@@ -46,7 +47,7 @@ public class DialogueNode<T> {
 
     /**
      * Sets the pointers for this node.
-     * @param pointers
+     * @param pointers A list of all {@link DialogueOptionPointer DialogueOptionPointers}.
      */
     public void setPointers(List<DialogueOptionPointer<DialogueNode>> pointers) {
         this.optionPointers = pointers;
@@ -78,11 +79,11 @@ public class DialogueNode<T> {
     }
 
     /**
-     * Creates a dummy dialogue node, only with an ideintifier.
+     * Creates a dummy dialogue node, only with an identifier.
      *
-     * @param identifier
-     * @param <T>
-     * @return
+     * @param identifier The identifier of the dummy.
+     * @param <T> The type of the identifier.
+     * @return A new {@link DialogueNode} dummy instance.
      */
     public static <T> DialogueNode<T> dummy(T identifier) {
         return new DialogueNode<>(identifier, null, null);

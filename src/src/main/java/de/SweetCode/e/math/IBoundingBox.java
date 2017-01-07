@@ -52,40 +52,35 @@ public class IBoundingBox {
     }
 
     /**
-     * Returns the max location.
-     * @return
+     * @return Gives the max {@link Location}.
      */
     public ILocation getMax() {
         return this.max;
     }
 
     /**
-     * Returns the center of the bounding box.
-     * @return
+     * @return Gives the center of the bounding box.
      */
     public Location getCenter() {
         return new Location(((this.getMin().getX() + this.getMax().getX()) / 2.0D), ((this.getMin().getY() + this.getMax().getY()) / 2.0D));
     }
 
     /**
-     * Returns the min location.
-     * @return
+     * @return Returns the min {@link Location}.
      */
     public ILocation getMin() {
         return this.min;
     }
 
     /**
-     * Returns the height of the bounding box.
-     * @return
+     * @return Returns the height of the bounding box.
      */
     public int getHeight() {
         return Math.abs(this.getMax().getY() - this.getMin().getY());
     }
 
     /**
-     * Returns the with of the bounding box.
-     * @return
+     * @return Returns the with of the bounding box.
      */
     public int getWidth() {
         return Math.abs(this.getMax().getX() - this.getMin().getX());
@@ -97,7 +92,7 @@ public class IBoundingBox {
      * @param minY The minimum y coordinate of the box.
      * @param maxX The maximum x coordinate of the box.
      * @param maxY The maximum y coordinate of the box.
-     * @return
+     * @return true, if they intersect, otherwise false.
      */
     public boolean intersects(double minX, double minY, double maxX, double maxY) {
         return this.intersects(new BoundingBox(minX, minY, maxX, maxY));
@@ -106,7 +101,7 @@ public class IBoundingBox {
     /**
      * Checks if a square is intersecting this bounding box.
      * @param other The bounding box to check against.
-     * @return
+     * @return true, if they intersect, otherwise false.
      */
     public boolean intersects(BoundingBox other) {
         return (
@@ -120,7 +115,7 @@ public class IBoundingBox {
     /**
      * Checks if the bounding box contains another bounding box.
      * @param other The bounding box to check against.
-     * @return
+     * @return true, if they intersect, otherwise false.
      */
     public boolean contains(BoundingBox other) {
         return (
@@ -134,7 +129,7 @@ public class IBoundingBox {
     /**
      * Checks if the bounding box contains a location.
      * @param location The location to check against.
-     * @return
+     * @return true, if this object contains the other location, otherwise false.
      */
     public boolean contains(Location location) {
         return (
@@ -148,7 +143,7 @@ public class IBoundingBox {
     /**
      * Checks if the bounding box contains a location.
      * @param location The location to check against.
-     * @return
+     * @return true, if this object contains the other location, otherwise false.
      */
     public boolean contains(ILocation location) {
         return this.contains(new Location(location));

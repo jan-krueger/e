@@ -7,9 +7,8 @@ import de.SweetCode.e.routines.TaskStatus;
 /**
  * The TaskInverter task succeeds if the wrapped class fails and fails if it succeeds.
  *
- * @param <T>
  */
-public class TaskInverter<T> extends TaskDecorator<T> {
+public class TaskInverter extends TaskDecorator {
 
     public TaskInverter() {}
 
@@ -17,12 +16,12 @@ public class TaskInverter<T> extends TaskDecorator<T> {
         this(name, null);
     }
 
-    public TaskInverter(String name, Task<T> child) {
+    public TaskInverter(String name, Task child) {
         super(name, child);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

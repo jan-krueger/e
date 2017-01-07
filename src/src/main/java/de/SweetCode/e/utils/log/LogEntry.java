@@ -11,7 +11,6 @@ public class LogEntry {
     private final Timestamp timestamp = new Timestamp(new Date().getTime());
 
     /**
-     *
      * @param message Message to appear in the log.
      */
     public LogEntry(String message) {
@@ -19,16 +18,14 @@ public class LogEntry {
     }
 
     /**
-     * Returns the message.
-     * @return
+     * @return Gives the message of the entry.
      */
     public String getMessage() {
         return this.message;
     }
 
     /**
-     * Returns the time when the log entry was created.
-     * @return
+     * @return Gives the time when the log entry was created.
      */
     public Timestamp getTimestamp() {
         return this.timestamp;

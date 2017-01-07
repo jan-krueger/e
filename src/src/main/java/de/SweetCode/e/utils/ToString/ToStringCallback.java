@@ -5,7 +5,7 @@ public interface ToStringCallback {
     /**
      * Will be called to generate the string that should be appended.
      *
-     * @return
+     * @return Gives the string that should be appended.
      */
     String create();
 

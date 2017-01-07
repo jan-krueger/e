@@ -27,16 +27,14 @@ public class Matrix {
     }
 
     /**
-     * The amount of m.
-     * @return
+     * @return The amount of columns.
      */
     public int getN() {
         return this.n;
     }
 
     /**
-     * The amount of n.
-     * @return
+     * @return The amount of rows.
      */
     public int getM() {
         return this.m;

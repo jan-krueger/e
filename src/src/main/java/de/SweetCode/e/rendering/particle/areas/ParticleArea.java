@@ -90,6 +90,8 @@ public class ParticleArea implements Renderable {
      * @param vector2D The vector for all particles.
      * @param width The width of a particle
      * @param amount The amount of particles spawned in the area.
+     * @param mixType If it is set to true than it iterates through all different particle types.
+     * @param color The color of all particles.
      */
     public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, Color color, boolean mixType, int width, int amount) {
         this(layer, boundingBox, vector2D, ParticleTypes.RANDOM, color, mixType, -1, width, amount);
@@ -101,6 +103,7 @@ public class ParticleArea implements Renderable {
      * @param vector2D The vector for all particles.
      * @param width The width of a particle
      * @param amount The amount of particles spawned in the area.
+     * @param mixType If it is set to true than it iterates through all different particle types.
      */
     public ParticleArea(Layer layer, BoundingBox boundingBox, Vector2D vector2D, boolean mixType, int width, int amount) {
         this(layer, boundingBox, vector2D, ParticleTypes.RANDOM, null, mixType, -1, width, amount);

@@ -8,9 +8,8 @@ import de.SweetCode.e.routines.TaskStatus;
  *
  * The TaskAlwaysFail will fail no matter the wrapped tasks fails or succeeds.
  *
- * @param <T>
  */
-public class TaskAlwaysFail<T> extends TaskDecorator<T> {
+public class TaskAlwaysFail extends TaskDecorator {
 
     public TaskAlwaysFail() {
         super();
@@ -20,12 +19,12 @@ public class TaskAlwaysFail<T> extends TaskDecorator<T> {
         this(name, null);
     }
 
-    public TaskAlwaysFail(String name, Task<T> task) {
+    public TaskAlwaysFail(String name, Task task) {
         super(name, task);
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

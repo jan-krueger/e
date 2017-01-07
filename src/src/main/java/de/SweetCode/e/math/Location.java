@@ -34,16 +34,14 @@ public class Location {
     }
 
     /**
-     * The x coordinate of the location.
-     * @return
+     * @return The x coordinate of the location.
      */
     public double getX() {
         return this.x;
     }
 
     /**
-     * The y coordinate of the location.
-     * @return
+     * @return The y coordinate of the location.
      */
     public double getY() {
         return this.y;
@@ -80,18 +78,16 @@ public class Location {
     }
 
     /**
-     * Returns the distance to another location.
      * @param other The other location.
-     * @return
+     * @return Returns the distance to another location.
      */
     public double distanceTo(Location other) {
         return Math.sqrt(Math.pow(other.getX() - this.getX(), 2) + Math.pow(other.getY() - this.getY(), 2));
     }
 
     /**
-     * Returns the distance to another location.
      * @param other The other location.
-     * @return
+     * @return Returns the distance to another location.
      */
     public double distanceTo(ILocation other) {
         return this.distanceTo(new Location(other));

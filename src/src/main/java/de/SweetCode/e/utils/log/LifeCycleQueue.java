@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedTransferQueue;
  * A LifeCycleQueue keeps only n items in its queue, if
  * new items are added than the queue will remove its head
  * and append the new item.
- * @param <E>
+ * @param <E> The type of elements held in this collection.
  */
 public class LifeCycleQueue<E> implements Queue<E> {
 

@@ -1,11 +1,11 @@
 package de.SweetCode.e.routines;
 
-public abstract class TaskDecorator<T> extends Task<T> {
+public abstract class TaskDecorator extends Task {
 
     /**
      * The child task wrapped by this decorator.
      */
-    private Task<T> child;
+    private Task child;
 
     public TaskDecorator() {}
 
@@ -13,7 +13,7 @@ public abstract class TaskDecorator<T> extends Task<T> {
         this(name, null);
     }
 
-    public TaskDecorator(String name, Task<T> child) {
+    public TaskDecorator(String name, Task child) {
         super(name);
 
         this.child = child;
@@ -25,7 +25,7 @@ public abstract class TaskDecorator<T> extends Task<T> {
     }
 
     @Override
-    public Task<T> getChild(int index) {
+    public Task getChild(int index) {
 
         if(this.child == null) {
             throw new IndexOutOfBoundsException("The task has no child.");
@@ -39,7 +39,7 @@ public abstract class TaskDecorator<T> extends Task<T> {
     }
 
     @Override
-    public void addChild(Task<T> child) {
+    public void addChild(Task child) {
 
         if(!(this.child == null)) {
             throw new IllegalStateException("A decorator task cannot have more than one child.");
@@ -61,7 +61,7 @@ public abstract class TaskDecorator<T> extends Task<T> {
     }
 
     @Override
-    public void child(TaskStatus taskStatus, Task<T> task) {
+    public void child(TaskStatus taskStatus, Task task) {
 
         switch (taskStatus) {
 

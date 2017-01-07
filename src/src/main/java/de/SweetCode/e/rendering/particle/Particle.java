@@ -79,16 +79,14 @@ public class Particle implements Renderable {
     }
 
     /**
-     * The layer the particle is rendered on.
-     * @return
+     * @return The {@link Layer} the particle is rendered on.
      */
     public Layer getLayer() {
         return this.layer;
     }
 
     /**
-     * The location of the layer.
-     * @return
+     * @return The {@link Location} of the particle.
      */
     public Location getLocation() {
         return this.location;
@@ -96,7 +94,7 @@ public class Particle implements Renderable {
 
     /**
      * Destroys the particle if the value is true.
-     * @param destroy Should the particle be destroyed?
+     * @param destroy True if the particle should be destroyed, and false if not.
      */
     public void setDestroy(boolean destroy) {
         this.destroy = destroy;
@@ -190,8 +188,7 @@ public class Particle implements Renderable {
     }
 
     /**
-     * Sets the vector of the particle.
-     * @param vector2D The vector.
+     * @param vector2D Sets the {@link Vector2D vector} of the particle.
      */
     public void setVector2D(Vector2D vector2D) {
         this.vector2D = vector2D;

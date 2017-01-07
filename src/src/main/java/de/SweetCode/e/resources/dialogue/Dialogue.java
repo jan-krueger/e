@@ -4,7 +4,7 @@ import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 /**
  * Represents one dialogue.
- * @param <T>
+ * @param <T> The type of the {@link DialogueNode} identifier.
  */
 public class Dialogue<T> {
 
@@ -18,8 +18,7 @@ public class Dialogue<T> {
     }
 
     /**
-     * Returns the start node of the dialogue.
-     * @return
+     * @return Gives the start node of the dialogue.
      */
     public DialogueNode<T> getStartNode() {
         return this.startNode;

@@ -33,48 +33,42 @@ public class ProfilerLoop extends Loop {
     }
 
     /**
-     * Average CPU usage in the last time frame caused by the JVM.
-     * @return
+     * @return Gives average CPU usage in the last time frame caused by the JVM.
      */
     public double getAverageCPU() {
         return this.averageCPU;
     }
 
     /**
-     * Amount of available processors.
-     * @return
+     * @return Gives mount of available processors.
      */
     public int getAvailableProcessors() {
         return this.CPU_PROCESSORS;
     }
 
     /**
-     * Returns the average memory use in the last time frame.
-     * @return
+     * @return Gives the average memory use in the last time frame.
      */
     public double getAverageMemoryUsed() {
         return this.averageMemoryUsed;
     }
 
     /**
-     * Returns the max heap size.
-     * @return
+     * @return Gives the max heap size.
      */
     public long getMaxMemory() {
         return this.MEMORY_MAX;
     }
 
     /**
-     * Gives all related GC (garbage collection) beans.
-     * @return
+     * @return Gives all related GC (garbage collection) beans.
      */
     public List<GarbageCollectorMXBean> getGCBeans() {
         return this.GC_BEANS;
     }
 
     /**
-     * Gives all threads.
-     * @return
+     * @return Gives all threads.
      */
     public Set<Thread> getThreads() {
         return this.THREAD_LIST;
