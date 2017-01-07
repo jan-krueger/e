@@ -23,6 +23,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The E is the heart. It is responsible for holding everything together and to have
+ * a reference to all important parts of the engine and its information.
+ */
 public class E {
 
     //--- Static & Final Variables
@@ -97,18 +101,33 @@ public class E {
 
     }
 
+    /**
+     * To get a {@link Random} instance.
+     * @param secure If this is true it returns {@link SecureRandom}, otherwise {@link Random}.
+     * @return Depending on the secure parameter the reference to the correct instance.
+     */
     public Random getRandom(boolean secure) {
         return (secure ? E.secureRandom : E.random);
     }
 
+    /**
+     * @return Gives the log of the engine instance.
+     */
     public Log getLog() {
         return this.log;
     }
 
+    /**
+     * @return Gives the {@link EScreen} of the engine instance.
+     */
     public EScreen getScreen() {
         return this.screen;
     }
 
+    /**
+     * @return Gives a instance of the {@link Layers} of the engine, it contains all {@link com.sun.javafx.webkit.prism.WCGraphicsPrismContext.Layer}
+     *         references used in the engine instance.
+     */
     public Layers getLayers() {
         return this.layers;
     }
@@ -120,9 +139,14 @@ public class E {
         return this.profilerLoop;
     }
 
+    /**
+     * @return A map with all scenes. The key is the {@link Class} of the {@link GameScene} and the value
+     *         is the related {@link GameSceneEntry}.
+     */
     public Map<Class<? extends GameScene>, GameSceneEntry> getScenes() {
         return this.scenes;
     }
+
     /**
      * @return The {@link Settings} of the game.
      */
