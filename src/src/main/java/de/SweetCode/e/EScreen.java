@@ -278,24 +278,39 @@ public class EScreen extends JFrame implements GLEventListener {
                         settings.getWidth() - xOffset,
                         yOffset * xStep
                 );
-                for (int i = 0; i < gcBeans.size(); i++) {
+
+                int gcTotalSize = gcBeans.size();
+                for (int i = 0; i < gcTotalSize; i++) {
 
                     GarbageCollectorMXBean gc = gcBeans.get(0);
                     layer.g().drawString(
                             String.format(
-                                "%s, %d (%dms), %s",
+                                "%s, %d (%dms) %s",
                                     gc.getName(),
                                     gc.getCollectionCount(),
                                     gc.getCollectionTime(),
-                                    StringUtils.join(gc.getMemoryPoolNames(), ", ")
+                                    gc.getObjectName().getDomain()
                             ),
                             (int) (settings.getWidth() - xOffset * 0.95),
                             yOffset * ((xStep + 1) + i)
                     );
 
+                    //--- Pools
+                    String[] pools = gc.getMemoryPoolNames();
+                    for(int x = 0; x < pools.length; x++) {
+                        layer.g().drawString(
+                                String.format("%s", pools[x]),
+                                (int) (settings.getWidth() - xOffset * 0.9),
+                                yOffset * ((xStep + 2) + i + x)
+                        );
+                    }
+
+                    gcTotalSize += pools.length;
+                    i += pools.length;
+
                 }
 
-                xStep += gcBeans.size();
+                xStep += gcTotalSize;
                 xStep++;
 
             }
