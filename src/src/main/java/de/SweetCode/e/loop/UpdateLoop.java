@@ -38,17 +38,17 @@ public class UpdateLoop extends Loop {
 
         //--- Depending on what the developer chose, we gonna use a sequential or parallelized stream.
         Stream<GameComponentEntry> stream = (
-                this.settings.isParallelizingUpdate() ?
-                        E.getE().getGameComponents().parallelStream() : E.getE().getGameComponents().stream()
+            this.settings.isParallelizingUpdate() ?
+                    E.getE().getGameComponents().parallelStream() : E.getE().getGameComponents().stream()
         );
         stream.forEach(k -> {
 
             if(k.getGameComponent().isActive()) {
                 k.getGameComponent().update(
-                        // the input since the last call
-                        input,
-                        // Delta + iterationTime -> We do this to make the delta more accurate
-                        delta + (System.currentTimeMillis() - now)
+                    // the input since the last call
+                    input,
+                    // Delta + iterationTime -> We do this to make the delta more accurate
+                    delta + (System.currentTimeMillis() - now)
                 );
             }
 

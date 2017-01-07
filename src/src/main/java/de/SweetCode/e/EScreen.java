@@ -408,7 +408,7 @@ public class EScreen extends JFrame implements GLEventListener {
 
         //--- THREAD_PROFILE
         if(displays.contains(Settings.DebugDisplay.GC_PROFILE)) {
-            Map<String, List<Thread>> threads = profilerLoop.getThreads();
+            Map<ThreadGroup, List<Thread>> threads = profilerLoop.getThreads();
             layer.g().drawString(
                     String.format(
                         "Threads: %d",
@@ -420,11 +420,14 @@ public class EScreen extends JFrame implements GLEventListener {
 
             final int[] i = {0};
             int finalXStep = xStep;
-            threads.forEach((groupName, threadList) -> {
+            threads.forEach((threadGroup, threadList) -> {
 
                 //--- Group Name
                 layer.g().drawString(
-                        groupName,
+                        String.format(
+                            "%s",
+                                threadGroup.getName()
+                        ),
                         (int) (settings.getWidth() - xOffset * 0.95),
                         yOffset * ((finalXStep + 1) + i[0]))
                 ;

@@ -28,7 +28,7 @@ public class ProfilerLoop extends Loop {
     private long MEMORY_HEAP_MAX = 0;
 
     private List<GarbageCollectorMXBean> GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
-    private Map<String, List<Thread>> THREAD_LIST = ProfilerLoop.getThreadsByGroup();
+    private Map<ThreadGroup, List<Thread>> THREAD_LIST = ProfilerLoop.getThreadsByGroup();
 
     private double deltaTime = 0;
     private double updates = 0;
@@ -89,7 +89,7 @@ public class ProfilerLoop extends Loop {
      * Gives all threads grouped by their thread group name.
      * @return
      */
-    public Map<String, List<Thread>> getThreads() {
+    public Map<ThreadGroup, List<Thread>> getThreads() {
         return this.THREAD_LIST;
     }
 
@@ -157,17 +157,15 @@ public class ProfilerLoop extends Loop {
      * Generating a map of all threads grouped by their thread group.
      * @return
      */
-    private static Map<String, List<Thread>> getThreadsByGroup() {
+    private static Map<ThreadGroup, List<Thread>> getThreadsByGroup() {
         // get & sort by id
         List<Thread> threads = new ArrayList<>(Thread.getAllStackTraces().keySet());
         Collections.sort(threads, Comparator.comparingLong(Thread::getId));
 
         // store by groups
-        Map<String, List<Thread>> threadGroups = threads.stream().collect(
-                Collectors.groupingBy(t -> t.getThreadGroup().getName())
+        return threads.stream().collect(
+                Collectors.groupingBy(t -> t.getThreadGroup())
         );
-
-        return threadGroups;
     }
 
 }
