@@ -7,9 +7,8 @@ import de.SweetCode.e.routines.TaskStatus;
 /**
  * The TaskInverter task succeeds if the wrapped class fails and fails if it succeeds.
  *
- * @param <T>
  */
-public class TaskInverter<T> extends TaskDecorator<T> {
+public class TaskInverter extends TaskDecorator {
 
     public TaskInverter() {}
 

@@ -50,8 +50,7 @@ public abstract class Task {
     }
 
     /**
-     * Returns the current status of the task.
-     * @return
+     * @return Returns the current {@link TaskStatus status} of the task.
      */
     public TaskStatus getTaskStatus() {
         return this.taskStatus;
@@ -104,7 +103,7 @@ public abstract class Task {
     /**
      * Adds a predicate.
      *
-     * @param predicate The {@link Predicate<Task<T>>}.
+     * @param predicate The {@link Predicate}.
      */
     public void addFilter(Predicate<Task> predicate) {
         this.predicates.add(predicate);

@@ -4,7 +4,7 @@ import de.SweetCode.e.routines.Task;
 import de.SweetCode.e.routines.TaskDecorator;
 import de.SweetCode.e.routines.TaskStatus;
 
-public class TaskUntilFails<T> extends TaskDecorator<T> {
+public class TaskUntilFails extends TaskDecorator {
 
     public TaskUntilFails() {
         super();

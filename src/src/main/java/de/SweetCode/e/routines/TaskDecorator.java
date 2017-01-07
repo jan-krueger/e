@@ -1,6 +1,6 @@
 package de.SweetCode.e.routines;
 
-public abstract class TaskDecorator<T> extends Task {
+public abstract class TaskDecorator extends Task {
 
     /**
      * The child task wrapped by this decorator.

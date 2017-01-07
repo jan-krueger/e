@@ -1,6 +1,7 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.input.Input;
+import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.loop.LoopThreadFactory;
 import de.SweetCode.e.loop.ProfilerLoop;
 import de.SweetCode.e.loop.RenderLoop;
@@ -111,8 +112,7 @@ public class E {
     }
 
     /**
-     * Returns the instance of the profiler loop. It returns null if debugging is not enabled.
-     * @return
+     * @return Returns the instance of the {@link ProfilerLoop}. It returns null if debugging is not enabled.
      */
     public ProfilerLoop getProfilerLoop() {
         return this.profilerLoop;
@@ -122,36 +122,36 @@ public class E {
         return this.scenes;
     }
     /**
-     * The settings of the game.
-     * @return
+     * @return The {@link Settings} of the game.
      */
     public Settings getSettings() {
         return this.settings;
     }
 
     /**
-     * The current number of frames per second.
-     * @return
+     * @return The current amount of frames per second.
      */
     public int getCurrentFPS() {
         return this.renderLoop.getCurrentTicks();
     }
 
     /**
-     * Returns the current tick rate of the update loop.
-     * @return
+     * @return Returns the current tick rate of the update loop.
      */
     public int getCurrentTicks() {
         return this.updateLoop.getCurrentTicks();
     }
 
+    /**
+     * @return Returns {@link CopyOnWriteArrayList} of {@link GameComponentEntry GameComponentEntries}.
+     */
     public List<GameComponentEntry> getGameComponents() {
         return this.gameComponents;
     }
 
     /**
-     * Add a new GameComponent.
-     * @param gameComponent
+     * Adds a new GameComponent with {@link Priority#NORMAL}.
+     * @param gameComponent The reference to the {@link GameComponent}.
      */
     public void addComponent(GameComponent gameComponent) {
 
@@ -160,9 +160,10 @@ public class E {
     }
 
     /**
-     * Add a new GameComponent.
-     * @param gameComponent
-     * @param priority
+     * Add a new GameComponent with the specified priority.
+     * @param gameComponent The reference to the {@link GameComponent}.
+     * @param priority The priority the component has in the {@link UpdateLoop update-loop}. If {@link Settings#isParallelizingUpdate()}
+     *                 is true then can the priority value only be {@link Priority#NORMAL}.
      */
     public void addComponent(GameComponent gameComponent, Priority priority) {
 
@@ -184,8 +185,8 @@ public class E {
     }
 
     /**
-     * Add a new scene to the engine.
-     * @param gameScene
+     * Add a new scene to the engine with {@link Priority#NORMAL}..
+     * @param gameScene The game scene.
      */
     public void addScene(GameScene gameScene) {
 
@@ -195,8 +196,10 @@ public class E {
 
     /**
      * Add a new scene to the engine.
-     * @param gameScene
-     * @param priority
+     * @param gameScene The game scene.
+     * @param priority The priority the {@link GameScene#update(InputEntry, long)} method has in the {@link UpdateLoop update-loop}
+     *                 and the priority of the {@link GameScene#render(Layers)} method has in the {@link RenderLoop render-loop}.
+     *                 If {@link Settings#isParallelizingUpdate()} is true then can the priority value only be {@link Priority#NORMAL}.
      */
     public void addScene(GameScene gameScene, Priority priority) {
 
@@ -217,8 +220,8 @@ public class E {
     }
 
     /**
-     * Starts to setScene this scene at the front.
-     * @param scene
+     * Select the seen you wanna render at the moment.
+     * @param scene The scne you wanna render.
      */
     public void show(Class<?> scene) {
         Assert.assertTrue("The scene doesn't exist.", this.scenes.containsKey(scene));
@@ -264,8 +267,7 @@ public class E {
     }
 
     /**
-     * Returns the current instance of E.
-     * @return
+     * @return Returns the instance of {@link E}.
      */
     public static E getE() {
         return E.instance;

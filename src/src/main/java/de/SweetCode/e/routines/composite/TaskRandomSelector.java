@@ -10,9 +10,8 @@ import java.util.stream.IntStream;
 
 /**
  * A TaskRandomSelector is a selector task's variant that runs its children in a random order until one of it succeeds.
- * @param <T>
  */
-public class TaskRandomSelector<T> extends TaskSelector<T> {
+public class TaskRandomSelector extends TaskSelector {
 
     private List<Integer> availableIndices = new ArrayList<>();
 
@@ -28,7 +27,7 @@ public class TaskRandomSelector<T> extends TaskSelector<T> {
 
     /**
      * Returns the list of all available indices.
-     * @return
+     * @return Returns a {@link ArrayList} the list is empty if no indices are left but never null.
      */
     protected List<Integer> getAvailableIndices() {
         return this.availableIndices;
@@ -36,7 +35,7 @@ public class TaskRandomSelector<T> extends TaskSelector<T> {
 
     /**
      * Returns a random index and removes it from the available indices.
-     * @return
+     * @return The randomly chosen index.
      */
     protected int getRandomIndex() {
         return this.availableIndices.remove(0);

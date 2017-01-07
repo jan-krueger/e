@@ -13,8 +13,8 @@ public interface TextureLoader extends GameComponent {
 
     /**
      * Gets image by its index.
-     * @param index
-     * @return
+     * @param index The index of the image.
+     * @return A reference to the {@link Image}.
      */
     Image get(int index);
 

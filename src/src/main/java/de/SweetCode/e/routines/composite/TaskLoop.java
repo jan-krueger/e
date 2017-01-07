@@ -5,7 +5,7 @@ import de.SweetCode.e.routines.TaskDecorator;
 import de.SweetCode.e.routines.TaskStatus;
 import de.SweetCode.e.utils.Assert;
 
-public class TaskLoop<T> extends TaskDecorator<T> {
+public class TaskLoop extends TaskDecorator {
 
     private final int n;
     private int x = 0;

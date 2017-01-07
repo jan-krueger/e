@@ -10,9 +10,8 @@ import java.util.List;
  * A selector is a task that runs each of its child behaviors in turn. It will return immediately with a success
  * status code when one of its children runs successfully. As long as its children are failing, it will keep on trying.
  * If it runs out of children completely, it will return a failure status code
- * @param <T>
  */
-public class TaskSelector<T> extends Task {
+public class TaskSelector extends Task {
 
     /**
      * The index of the currently running child.
@@ -32,16 +31,14 @@ public class TaskSelector<T> extends Task {
     }
 
     /**
-     * Returns the child that is currently running.
-     * @return
+     * @return Returns a reference to the currently running {@link Task child}.
      */
     public Task getCurrent() {
         return this.getChild(this.currentIndex);
     }
 
     /**
-     * Returns the index of the currently running child.
-     * @return
+     * @return Returns a index of the currently running child. Always a positive integer.
      */
     public int getCurrentIndex() {
         return this.currentIndex;
@@ -49,7 +46,7 @@ public class TaskSelector<T> extends Task {
 
     /**
      * Sets the current index.
-     * @param currentIndex
+     * @param currentIndex Sets the index of the currently running child.
      */
     protected void setCurrentIndex(int currentIndex) {
         this.currentIndex = currentIndex;

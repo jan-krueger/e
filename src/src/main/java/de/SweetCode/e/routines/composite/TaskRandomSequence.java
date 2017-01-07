@@ -7,9 +7,8 @@ import java.util.LinkedList;
 
 /**
  * A TaskRandomSequence is a sequence task's variant that runs its children in a random order until one of it fails.
- * @param <T>
  */
-public class TaskRandomSequence<T> extends TaskRandomSelector<T> {
+public class TaskRandomSequence extends TaskRandomSelector {
 
     public TaskRandomSequence() {}
 
