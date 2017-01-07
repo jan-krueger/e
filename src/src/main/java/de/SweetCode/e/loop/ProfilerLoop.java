@@ -104,52 +104,51 @@ public class ProfilerLoop extends Loop {
         // We gonna update the display-values every: 1 second.
         boolean updateRequired = (this.deltaTime >= E.C.SECOND_AS_NANO);
 
-
-            //--- CPU
-            if(displays.contains(Settings.DebugDisplay.CPU_PROFILE)) {
-                if(updateRequired) {
-                    this.averageCPU = (this.TMP_CPU / this.updates);
-                    this.CPU_PROCESSORS = this.osBean.getAvailableProcessors();
-
-                    this.TMP_CPU = 0;
-                } else {
-                    this.TMP_CPU += this.osBean.getProcessCpuLoad();
-                }
-            }
-
-            //--- Memory
-            if(displays.contains(Settings.DebugDisplay.MEMORY_PROFILE)) {
-
-                if(updateRequired) {
-                    this.MEMORY_HEAP_MAX = this.memoryBean.getHeapMemoryUsage().getMax();
-
-                    this.averageHeapMemoryUsed = (this.TMP_MEMORY_HEAP_USED / this.updates);
-                    this.averageJvmMemoryUsed = (this.TMP_MEMORY_JVM_USED / this.updates);
-
-                    this.TMP_MEMORY_HEAP_USED = 0;
-                    this.TMP_MEMORY_JVM_USED = 0;
-                } else {
-                    this.TMP_MEMORY_HEAP_USED += this.memoryBean.getHeapMemoryUsage().getUsed();
-                    this.TMP_MEMORY_JVM_USED += this.memoryBean.getNonHeapMemoryUsage().getUsed();
-                }
-
-            }
-
-            //--- GC
-            if(displays.contains(Settings.DebugDisplay.GC_PROFILE) && updateRequired) {
-                this.GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
-            }
-
-            //--- Threads
-            if(displays.contains(Settings.DebugDisplay.THREAD_PROFILE) && updateRequired) {
-                this.THREAD_LIST = ProfilerLoop.getThreadsByGroup();
-            }
-
-            //--- Reset
+        //--- CPU
+        if(displays.contains(Settings.DebugDisplay.CPU_PROFILE)) {
             if(updateRequired) {
-                this.deltaTime = 0;
-                this.updates = 0;
+                this.averageCPU = (this.TMP_CPU / this.updates);
+                this.CPU_PROCESSORS = this.osBean.getAvailableProcessors();
+
+                this.TMP_CPU = 0;
+            } else {
+                this.TMP_CPU += this.osBean.getProcessCpuLoad();
             }
+        }
+
+        //--- Memory
+        if(displays.contains(Settings.DebugDisplay.MEMORY_PROFILE)) {
+
+            if(updateRequired) {
+                this.MEMORY_HEAP_MAX = this.memoryBean.getHeapMemoryUsage().getMax();
+
+                this.averageHeapMemoryUsed = (this.TMP_MEMORY_HEAP_USED / this.updates);
+                this.averageJvmMemoryUsed = (this.TMP_MEMORY_JVM_USED / this.updates);
+
+                this.TMP_MEMORY_HEAP_USED = 0;
+                this.TMP_MEMORY_JVM_USED = 0;
+            } else {
+                this.TMP_MEMORY_HEAP_USED += this.memoryBean.getHeapMemoryUsage().getUsed();
+                this.TMP_MEMORY_JVM_USED += this.memoryBean.getNonHeapMemoryUsage().getUsed();
+            }
+
+        }
+
+        //--- GC
+        if(displays.contains(Settings.DebugDisplay.GC_PROFILE) && updateRequired) {
+            this.GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
+        }
+
+        //--- Threads
+        if(displays.contains(Settings.DebugDisplay.THREAD_PROFILE) && updateRequired) {
+            this.THREAD_LIST = ProfilerLoop.getThreadsByGroup();
+        }
+
+        //--- Reset
+        if(updateRequired) {
+            this.deltaTime = 0;
+            this.updates = 0;
+        }
 
     }
 

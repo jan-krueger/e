@@ -19,10 +19,8 @@ import java.awt.image.DataBufferInt;
 import java.awt.image.VolatileImage;
 import java.lang.management.GarbageCollectorMXBean;
 import java.nio.IntBuffer;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class EScreen extends JFrame implements GLEventListener {
 
@@ -322,11 +320,13 @@ public class EScreen extends JFrame implements GLEventListener {
         if(displays.contains(Settings.DebugDisplay.LOOP_PROFILE)) {
             layer.g().drawString(
                     String.format(
-                        "FPS: %d (%d) | Ticks: %d (%d)",
+                        "FPS: %d (%d) | Ticks: %d (%d) | VRAM: %s | OpenGL: %s",
                             E.getE().getCurrentFPS(),
                             settings.getTargetFPS(),
                             E.getE().getCurrentTicks(),
-                            settings.getTargetTicks()
+                            settings.getTargetTicks(),
+                            USE_VRAM,
+                            USE_JOGL
                     ),
                     settings.getWidth() - xOffset,
                     yOffset * xStep
@@ -372,9 +372,10 @@ public class EScreen extends JFrame implements GLEventListener {
             );
 
             int gcTotalSize = gcBeans.size();
+            int beanIndex = 0;
             for (int i = 0; i < gcTotalSize; i++) {
 
-                GarbageCollectorMXBean gc = gcBeans.get(0);
+                GarbageCollectorMXBean gc = gcBeans.get(beanIndex);
                 layer.g().drawString(
                         String.format(
                             "%s, %d (%dms)",
@@ -398,6 +399,7 @@ public class EScreen extends JFrame implements GLEventListener {
 
                 gcTotalSize += pools.length;
                 i += pools.length;
+                beanIndex++;
 
             }
 
