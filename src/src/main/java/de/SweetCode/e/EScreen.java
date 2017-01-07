@@ -199,7 +199,7 @@ public class EScreen extends JFrame implements GLEventListener {
         });
 
         //--- Debugging
-        if(E.getE().getSettings().isDebugging()) {
+        if(E.getE().getSettings().isDebugging() && !(E.getE().getSettings().getDebugInformation().isEmpty())) {
             EScreen.drawDebugInformation();
         }
         //---
@@ -325,8 +325,8 @@ public class EScreen extends JFrame implements GLEventListener {
                             settings.getTargetFPS(),
                             E.getE().getCurrentTicks(),
                             settings.getTargetTicks(),
-                            USE_VRAM,
-                            USE_JOGL
+                            (EScreen.USE_VRAM ? "on" : "off"),
+                            (EScreen.USE_JOGL ? "on" : "off")
                     ),
                     settings.getWidth() - xOffset,
                     yOffset * xStep

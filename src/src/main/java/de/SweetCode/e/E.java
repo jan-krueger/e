@@ -252,7 +252,7 @@ public class E {
                 TimeUnit.NANOSECONDS
         );
 
-        if(this.settings.isDebugging()) {
+        if(this.settings.isDebugging() && !(settings.getDebugInformation().isEmpty())) {
             this.executor.scheduleAtFixedRate(
                     this.profilerLoop,
                     0,
