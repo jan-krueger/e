@@ -2,6 +2,7 @@ package de.SweetCode.e.loop;
 
 import com.sun.management.OperatingSystemMXBean;
 import de.SweetCode.e.E;
+import de.SweetCode.e.Settings;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -83,30 +84,54 @@ public class ProfilerLoop extends Loop {
     @Override
     public void tick(long updateLength) {
 
+        List<Settings.DebugDisplay> displays = E.getE().getSettings().getDebugInformation();
+
         this.deltaTime += updateLength;
         this.updates++;
 
         // We gonna update the display-values every: 1 second.
-        if(this.deltaTime >= E.C.SECOND_AS_NANO) {
-            this.averageCPU = (this.TMP_CPU / this.updates);
-            this.averageMemoryUsed = (this.TMP_MEMORY_USED / this.updates);
+        boolean updateRequired = (this.deltaTime >= E.C.SECOND_AS_NANO);
 
-            //--- Update usually constant values
-            this.CPU_PROCESSORS = this.bean.getAvailableProcessors();
-            this.MEMORY_MAX = Runtime.getRuntime().maxMemory();
-            this.GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
-            this.THREAD_LIST = Thread.getAllStackTraces().keySet();
 
-            // reset
-            this.deltaTime = 0;
-            this.updates = 0;
+            //--- CPU
+            if(displays.contains(Settings.DebugDisplay.CPU_PROFILE)) {
+                if(updateRequired) {
+                    this.averageCPU = (this.TMP_CPU / this.updates);
+                    this.CPU_PROCESSORS = this.bean.getAvailableProcessors();
+                    this.TMP_CPU = 0;
+                } else {
+                    this.TMP_CPU += this.bean.getProcessCpuLoad();
+                }
+            }
 
-            this.TMP_CPU = 0;
-            this.TMP_MEMORY_USED = 0;
-        }
+            //--- Memory
+            if(displays.contains(Settings.DebugDisplay.MEMORY_PROFILE)) {
 
-        this.TMP_CPU += this.bean.getProcessCpuLoad();
-        this.TMP_MEMORY_USED += (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+                if(updateRequired) {
+                    this.MEMORY_MAX = Runtime.getRuntime().maxMemory();
+                    this.averageMemoryUsed = (this.TMP_MEMORY_USED / this.updates);
+                    this.TMP_MEMORY_USED = 0;
+                } else {
+                    this.TMP_MEMORY_USED += (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+                }
+
+            }
+
+            //--- GC
+            if(displays.contains(Settings.DebugDisplay.GC_PROFILE) && updateRequired) {
+                this.GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
+            }
+
+            //--- Threads
+            if(displays.contains(Settings.DebugDisplay.THREAD_PROFILE) && updateRequired) {
+                this.THREAD_LIST = Thread.getAllStackTraces().keySet();
+            }
+
+            //--- Reset
+            if(updateRequired) {
+                this.deltaTime = 0;
+                this.updates = 0;
+            }
 
     }
 
