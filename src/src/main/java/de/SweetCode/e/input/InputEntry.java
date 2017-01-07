@@ -35,48 +35,42 @@ public class InputEntry {
     }
 
     /**
-     * All key entries from the keyboard.
-     * @return
+     * @return Gives ll key entries from the keyboard.
      */
     public LinkedList<KeyEntry> getKeyEntries() {
         return this.keyEntries;
     }
 
     /**
-     * All mouse entries from normal clicks.
-     * @return
+     * @return Gives all mouse entries from normal clicks.
      */
     public LinkedList<MouseEntry> getMouseEntries() {
         return this.mouseEntries;
     }
 
     /**
-     * All mouse entries from mouse releases.
-     * @return
+     * @return Gives all mouse entries from mouse releases.
      */
     public LinkedList<MouseEntry> getMouseReleasedQueue() {
         return this.mouseReleasedQueue;
     }
 
     /**
-     * All mouse entries from the mouse wheel.
-     * @return
+     * @return Gives all mouse entries from the mouse wheel.
      */
     public LinkedList<MouseWheelEntry> getMouseWheelEntries() {
         return this.mouseWheelEntries;
     }
 
     /**
-     * All mouse entries from mouse dragging.
-     * @return
+     * @return Gives all mouse entries from mouse dragging.
      */
     public LinkedList<MouseEntry> getMouseDraggedEntries() {
         return this.mouseDraggedEntries;
     }
 
     /**
-     * All mouse entries from mouse movement.
-     * @return
+     * @return Gives all mouse entries from mouse movement.
      */
     public LinkedList<MouseEntry> getMouseMovedEntries() {
         return this.mouseMovedEntries;

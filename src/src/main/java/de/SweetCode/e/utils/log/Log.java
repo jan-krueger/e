@@ -16,7 +16,7 @@ public class Log {
     /**
      * The log has a limited capacity. If the log hits the limit it deletes the oldest
      * entry in the log.
-     * @param capacity
+     * @param capacity The maximum of elements that can be in the log.
      */
     public Log(int capacity) {
         this.entries = new LifeCycleQueue<>(capacity);
@@ -24,7 +24,7 @@ public class Log {
 
     /**
      * Logs a new entry.
-     * @param entry
+     * @param entry The {@link LogEntry} to add.
      */
     public void log(LogEntry entry) {
         this.entries.offer(entry);
@@ -35,8 +35,7 @@ public class Log {
     }
 
     /**
-     * A stream of all log entries.
-     * @return
+     * @return A {@link Stream} of all {@link LogEntry log entries}.
      */
     public Stream<LogEntry> getLog() {
         return this.entries.stream();

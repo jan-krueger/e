@@ -65,6 +65,8 @@ public class E {
 
     /**
      * Creates a new game with custom settings.
+     *
+     * @param settings The custom settings to pass to the engine.
      */
     public E(Settings settings) {
 

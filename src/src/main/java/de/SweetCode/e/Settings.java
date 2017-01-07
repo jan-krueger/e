@@ -100,7 +100,7 @@ public interface Settings {
      *
      * A parallel stream has a higher overhead than the sequential version of it!
      * A parallel stream IGNORES all set priorities.
-     * @return True -> run it parallelized, otherwise not.
+     * @return True, run it parallelized, otherwise not.
      */
     default boolean isParallelizingUpdate() { return false; }
 

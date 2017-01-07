@@ -42,6 +42,7 @@ public class ExplosionArea implements Renderable {
      * @param amount The amount of particles used in the explosion.
      * @param steps The amount of steps to spawn all particles.
      * @param stepDelay The delay between each step.
+     * @param evenDistribution Should the particle be evenly distributed in the area.
      */
     public ExplosionArea(Layer layer, CircleBox circleBox, boolean evenDistribution, int amount, int steps, int stepDelay) {
 

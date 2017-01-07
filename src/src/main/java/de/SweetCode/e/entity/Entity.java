@@ -39,16 +39,14 @@ public abstract class Entity implements GameComponent {
     }
 
     /**
-     * Returns the identifier of the entity.
-     * @return
+     * @return Gives the identifier of the entity.
      */
     public UUID getIdentifier() {
         return this.identifier;
     }
 
     /**
-     * Returns the center of the entity bounding box as entity location.
-     * @return
+     * @return Gives the center of the entity bounding box as entity location.
      */
     public Location getLocation() {
         return this.boundingBox.getCenter();

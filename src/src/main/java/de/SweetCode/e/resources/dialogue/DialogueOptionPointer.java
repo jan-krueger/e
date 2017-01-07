@@ -32,24 +32,21 @@ public class DialogueOptionPointer<T> {
     }
 
     /**
-     * Returns the object the pointer is pointing at.
-     * @return
+     * @return Gives the object the pointer is pointing at.
      */
     public T getPointer() {
         return this.pointer;
     }
 
     /**
-     * The option text.
-     * @return
+     * @return Gives the option text.
      */
     public String getOptionText() {
         return this.optionText;
     }
 
     /**
-     * Returns all related dialogue conditions.
-     * @return
+     * @return Gives all related dialogue conditions.
      */
     public List<DialogueConditionWrapper> getDialogueConditionWrappers() {
         return this.dialogueConditionWrappers;
@@ -59,7 +56,7 @@ public class DialogueOptionPointer<T> {
      * Checks all connected dialogue conditions.
      *
      * @param caller The DialogueNode calling this method.
-     * @return
+     * @return true, if all conditions are fulfilled, otherwise false.
      */
     public boolean isValid(DialogueNode caller) {
         Map<String, Object> options = new HashMap<>();
