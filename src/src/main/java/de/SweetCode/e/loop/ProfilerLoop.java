@@ -7,9 +7,9 @@ import de.SweetCode.e.Settings;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class ProfilerLoop extends Loop {
 
@@ -29,7 +29,7 @@ public class ProfilerLoop extends Loop {
     private long MEMORY_JVM_MAX = 0;
 
     private List<GarbageCollectorMXBean> GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
-    private Set<Thread> THREAD_LIST = Thread.getAllStackTraces().keySet();
+    private Map<String, List<Thread>> THREAD_LIST = ProfilerLoop.getThreadsByGroup();
 
     private double deltaTime = 0;
     private double updates = 0;
@@ -95,10 +95,10 @@ public class ProfilerLoop extends Loop {
     }
 
     /**
-     * Gives all threads.
+     * Gives all threads grouped by their thread group name.
      * @return
      */
-    public Set<Thread> getThreads() {
+    public Map<String, List<Thread>> getThreads() {
         return this.THREAD_LIST;
     }
 
@@ -152,7 +152,7 @@ public class ProfilerLoop extends Loop {
 
             //--- Threads
             if(displays.contains(Settings.DebugDisplay.THREAD_PROFILE) && updateRequired) {
-                this.THREAD_LIST = Thread.getAllStackTraces().keySet();
+                this.THREAD_LIST = ProfilerLoop.getThreadsByGroup();
             }
 
             //--- Reset
@@ -161,6 +161,23 @@ public class ProfilerLoop extends Loop {
                 this.updates = 0;
             }
 
+    }
+
+    /**
+     * Generating a map of all threads grouped by their thread group.
+     * @return
+     */
+    private static Map<String, List<Thread>> getThreadsByGroup() {
+        // get & sort by id
+        List<Thread> threads = new ArrayList<>(Thread.getAllStackTraces().keySet());
+        Collections.sort(threads, Comparator.comparingLong(Thread::getId));
+
+        // store by groups
+        Map<String, List<Thread>> threadGroups = threads.stream().collect(
+                Collectors.groupingBy(t -> t.getThreadGroup().getName())
+        );
+
+        return threadGroups;
     }
 
 }

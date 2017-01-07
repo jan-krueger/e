@@ -21,6 +21,7 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.nio.IntBuffer;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class EScreen extends JFrame implements GLEventListener {
@@ -408,7 +409,7 @@ public class EScreen extends JFrame implements GLEventListener {
 
         //--- THREAD_PROFILE
         if(displays.contains(Settings.DebugDisplay.GC_PROFILE)) {
-            Set<Thread> threads = profilerLoop.getThreads();
+            Map<String, List<Thread>> threads = profilerLoop.getThreads();
             layer.g().drawString(
                     String.format(
                         "Threads: %d",
@@ -420,24 +421,35 @@ public class EScreen extends JFrame implements GLEventListener {
 
             final int[] i = {0};
             int finalXStep = xStep;
-            threads.stream()
-                    .sorted(Comparator.comparingLong(value -> value.getId()))
-                    .forEach(t -> {
-                        layer.g().drawString(
-                                String.format(
-                                    "%d - P: %d - %s (%s)",
-                                        t.getId(),
-                                        t.getPriority(),
-                                        t.getName(),
-                                        t.getState().name()
-                                ),
-                                (int) (settings.getWidth() - xOffset * 0.95),
-                                yOffset * ((finalXStep + 1) + i[0])
-                        );
-                        i[0]++;
-                    });
+            threads.forEach((groupName, threadList) -> {
 
-            xStep += threads.size();
+                //--- Group Name
+                layer.g().drawString(
+                        groupName,
+                        (int) (settings.getWidth() - xOffset * 0.95),
+                        yOffset * ((finalXStep + 1) + i[0]))
+                ;
+                i[0]++;
+
+                //--- Threads belonging to the group
+                threadList.forEach(t -> {
+                    layer.g().drawString(
+                            String.format(
+                                "%d - P: %d - %s (%s)",
+                                    t.getId(),
+                                    t.getPriority(),
+                                    t.getName(),
+                                    t.getState().name()
+                            ),
+                            (int) (settings.getWidth() - xOffset * 0.9),
+                            yOffset * ((finalXStep + 1) + i[0])
+                    );
+                    i[0]++;
+                });
+
+            });
+
+            xStep += i[0];
             xStep++;
         }
     }
