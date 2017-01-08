@@ -15,6 +15,11 @@ public class Test {
             public boolean isDecorated() {
                 return true;
             }
+
+            @Override
+            public boolean fixAspectRatio() {
+                return true;
+            }
         });
         e.run();
 
