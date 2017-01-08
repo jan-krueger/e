@@ -13,7 +13,10 @@ import java.util.Queue;
 import java.util.concurrent.LinkedTransferQueue;
 
 /**
- * The Input class is registering all relevant input provided by the user.
+ * <p>
+ *    The Input is basically just a {@link KeyAdapter} waiting for all user input to put it into {@link LinkedTransferQueue}
+ *    to make it easier accessible for the user.
+ * </p>
  */
 public final class Input extends KeyAdapter {
 
@@ -24,12 +27,19 @@ public final class Input extends KeyAdapter {
     private final Queue<MouseEntry> mouseDraggedEntries = new LinkedTransferQueue<>();
     private final Queue<MouseEntry> mouseMovedEntries = new LinkedTransferQueue<>();
 
+    /**
+     * <p>
+     *    Creates a new instance of Input and calls the {@link Input#register()} method to set up all listeners.
+     * </p>
+     */
     public Input() {
         this.register();
     }
 
     /**
-     * Adds the listener.
+     * <p>
+     *    Sets up all listeners.
+     * </p>
      */
     private void register() {
 
@@ -154,8 +164,13 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * @return Returns all pressed keys since the last method call in the wrong order. The first element in the stream
-     *         is the oldest key.
+     * <pre>
+     *    This method returns a {@link LinkedList} of all keyboard entries since its last call. It copies all entries
+     *    from the queue which the listener is feeding into the list and clears it.
+     *    <b>Event:</b> {@link KeyEvent} and {@link KeyEvent#getID()} equals to <i>{@link KeyEvent#KEY_PRESSED}</i>
+     * </pre>
+     *
+     * @return A list of all registered keyboard entries.
      */
     public LinkedList<KeyEntry> getKeyboardEntries() {
         LinkedList<KeyEntry> stream = new LinkedList<>(this.keyQueue);
@@ -164,8 +179,13 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * @return Returns all pressed mouse buttons since the last method call in the wrong order. The first element in
-     *         the stream is the oldest mouse button.
+     * <pre>
+     *    This method returns a {@link LinkedList} of all mouse entries since its last call. It copies all entries from
+     *    the queue which the listener is feeding into the list and clears it.
+     *    <b>Event:</b> {@link MouseAdapter#mousePressed(MouseEvent)}
+     * </pre>
+     *
+     * @return A list of all registered mouse entries.
      */
     public LinkedList<MouseEntry> getMouseEntries() {
         LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseQueue);
@@ -174,8 +194,13 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * @return Returns all mouse scrolls since the last method call in the wrong order. The first element in the stream
-     *         is the oldest mouse button.
+     * <pre>
+     *    This method returns a {@link LinkedList} of all mouse wheel entries since its last call. It copies all entries
+     *    from the queue which the listener is feeding into the list and clears it.
+     *    <b>Event:</b> {@link MouseWheelEvent}
+     * </pre>
+     *
+     * @return A list of all registered mouse wheel entries.
      */
     public LinkedList<MouseWheelEntry> getMouseWheelEntries() {
         LinkedList<MouseWheelEntry> stream = new LinkedList<>(this.mouseScrollQueue);
@@ -184,8 +209,13 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * @return Returns all mouse scrolls since the last method call in the wrong order. The first element in the stream
-     *         is the oldest mouse button.
+     * <pre>
+     *    This method returns a {@link LinkedList} of all mouse dragged entries since its last call. It copies all entries
+     *    from the queue which the listener is feeding into the list and clears it.
+     *    <b>Event:</b> {@link MouseMotionAdapter#mouseDragged(MouseEvent)}
+     * </pre>
+     *
+     * @return A list of all registered mouse dragged entries.
      */
     public LinkedList<MouseEntry> getMouseDraggedEntries() {
         LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseDraggedEntries);
@@ -194,8 +224,13 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * @return Returns all mouse scrolls since the last method call in the wrong order. The first element in the stream
-     *         is the oldest mouse button.
+     * <pre>
+     *    This method returns a {@link LinkedList} of all mouse moved entries since its last call. It copies all entries
+     *    from the queue which the listener is feeding into the list and clears it.
+     *    <b>Event:</b> {@link MouseMotionAdapter#mouseMoved(MouseEvent)}
+     * </pre>
+     *
+     * @return A list of all registered mouse moved entries.
      */
     public LinkedList<MouseEntry> getMouseMovedEntries() {
         LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseMovedEntries);
@@ -204,8 +239,13 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * @return Returns all mouse scrolls since the last method call in the wrong order. The first element in the stream
-     *         is the oldest mouse button.
+     * <pre>
+     *    This method returns a {@link LinkedList} of all mouse moved entries since its last call. It copies all entries
+     *    from the queue which the listener is feeding into the list and clears it.
+     *    <b>Event:</b> {@link MouseMotionAdapter#mouseMoved(MouseEvent)}
+     * </pre>
+     *
+     * @return A list of all registered mouse release entries.
      */
     public LinkedList<MouseEntry> getMouseReleasedQueue() {
         LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseReleasedQueue);
@@ -214,6 +254,21 @@ public final class Input extends KeyAdapter {
     }
 
     /**
+     * <p>
+     *    Builds a new {@link InputEntry} by calling:
+     * </p>
+     * <ul>
+     *     <li>{@link Input#getKeyboardEntries()}</li>
+     *     <li>{@link Input#getMouseEntries()}</li>
+     *     <li>{@link Input#getMouseWheelEntries()}</li>
+     *     <li>{@link Input#getMouseDraggedEntries()}</li>
+     *     <li>{@link Input#getMouseMovedEntries()}</li>
+     *     <li>{@link Input#getMouseReleasedQueue()}</li>
+     * </ul>
+     * <p>
+     *    and passing them to its constructor.
+     * </p>
+     *
      * @return Builds a new {@link InputEntry} with the current values and removes all from the queue.
      */
     public InputEntry build() {
