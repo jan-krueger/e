@@ -2,6 +2,11 @@ package de.SweetCode.e.loop;
 
 import de.SweetCode.e.E;
 
+/**
+ * <p>
+ * A Loop is a concept of frequently called methods. They are used heavily internal by the engine to easily manage its loops.
+ * </p>
+ */
 public abstract class Loop implements Runnable {
 
     //--- Internals
@@ -19,29 +24,50 @@ public abstract class Loop implements Runnable {
     private int TMP_TICKS = 0;
     //---
 
-    public Loop(String name, long optimalIterationTime) {
+    /**
+     * <p>
+     *    Creates a new loop.
+     * </p>
+     *
+     * @param name The internal name of the loop used e.g. in debug messages to make it easier to identify them for a human.
+     * @param optimalIterationTime The time in {@link java.util.concurrent.TimeUnit#NANOSECONDS} between each update call.
+     */
+    Loop(String name, long optimalIterationTime) {
         this.name = name;
         this.optimalIterationTime = Math.max(optimalIterationTime, 1);
     }
 
+    /**
+     * <p>
+     *    Gives the name of the loop which can be used in debug information. Easily readable for humans.
+     * </p>
+     *
+     * @return The name of the loop.
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * <p>
+     *    The amount of updates in the last full second.
+     * </p>
+     *
+     * @return The current tick rate.
+     */
     public int getCurrentTicks() {
         return this.currentTicks;
     }
 
+    /**
+     * <p>
+     *    The optimal time between calls of the {@link Loop#tick(long)} method in {@link java.util.concurrent.TimeUnit#NANOSECONDS}.
+     * </p>
+     *
+     * @return The time between to calls.
+     */
     public long getOptimalIterationTime() {
         return this.optimalIterationTime;
-    }
-
-    public boolean isRunning() {
-        return this.isRunning;
-    }
-
-    public void setRunning(boolean isRunning) {
-        this.isRunning = isRunning;
     }
 
     @Override
@@ -65,8 +91,11 @@ public abstract class Loop implements Runnable {
     }
 
     /**
-     * Called every tick.
-     * @param updateLength Time in nanoseconds since the last call.
+     * <p>
+     *    This method gets called automatically by the loop. The frequency of calls depends on the optimal iteration time.
+     * </p>
+     *
+     * @param updateLength Time in {@link java.util.concurrent.TimeUnit#NANOSECONDS} since the last call.
      */
     public abstract void tick(long updateLength);
 

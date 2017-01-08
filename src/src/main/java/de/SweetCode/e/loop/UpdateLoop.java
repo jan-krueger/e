@@ -20,7 +20,6 @@ public class UpdateLoop extends Loop {
         this.settings = settings;
         this.input = input;
 
-        this.setRunning(true);
     }
 
     @Override

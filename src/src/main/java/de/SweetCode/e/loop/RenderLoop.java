@@ -11,7 +11,6 @@ public class RenderLoop extends Loop {
         super("Render Loop", optimalTime);
 
         this.screen  = screen;
-        this.setRunning(true);
     }
 
     @Override
