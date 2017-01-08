@@ -242,7 +242,7 @@ public final class Input extends KeyAdapter {
      * <pre>
      *    This method returns a {@link LinkedList} of all mouse moved entries since its last call. It copies all entries
      *    from the queue which the listener is feeding into the list and clears it.
-     *    <b>Event:</b> {@link MouseMotionAdapter#mouseMoved(MouseEvent)}
+     *    <b>Event:</b> {@link MouseAdapter#mouseReleased(MouseEvent)}
      * </pre>
      *
      * @return A list of all registered mouse release entries.
