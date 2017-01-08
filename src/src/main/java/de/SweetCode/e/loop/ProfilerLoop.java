@@ -52,12 +52,7 @@ public class ProfilerLoop extends Loop {
     }
 
     /**
-<<<<<<< HEAD
      * @return Gives the average memory use in the last time frame.
-=======
-     * Returns the average memory use in the last time frame by the heap.
-     * @return
->>>>>>> c861ec27517230dc2f4db43fe017e17722e614cd
      */
     public double getAverageHeapMemoryUsed() {
         return this.averageHeapMemoryUsed;
