@@ -7,6 +7,8 @@ import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import de.SweetCode.e.loop.ProfilerLoop;
+import de.SweetCode.e.math.BoundingBox;
+import de.SweetCode.e.rendering.AspectRatio;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.utils.log.LogEntry;
@@ -22,6 +24,9 @@ import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * EScreen is the component of the engine that is responsible for rendering.
+ */
 public class EScreen extends JFrame implements GLEventListener {
 
     /**
@@ -44,7 +49,6 @@ public class EScreen extends JFrame implements GLEventListener {
     private BufferStrategy bufferStrategy;
     private GameScene current = null;
 
-    private VolatileImage volatileImage = null;
     private static GraphicsConfiguration graphicConfiguration;
 
     // OpenGL
@@ -78,22 +82,14 @@ public class EScreen extends JFrame implements GLEventListener {
             this.add(canvas);
 
         } else {
-            if (!(EScreen.USE_VRAM)) {
 
-                this.createBufferStrategy(1);
-                this.bufferStrategy = this.getBufferStrategy();
+            this.createBufferStrategy(1);
+            this.bufferStrategy = this.getBufferStrategy();
 
-                if (this.bufferStrategy == null) {
-                    E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
-                }
-
-            } else {
-                E.getE().getLog().log(
-                        LogEntry.Builder.create()
-                                .message("Using images stored in VRAM to render the frames.")
-                                .build()
-                );
+            if (this.bufferStrategy == null) {
+                E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
             }
+
         }
 
         this.pack();
@@ -126,59 +122,32 @@ public class EScreen extends JFrame implements GLEventListener {
 
         Settings s = E.getE().getSettings();
 
-        //@TODO Work on camera.
-        //Camera camera = E.getE().getCamera();
-
         do {
 
-            Graphics2D g;
-
-            if(USE_VRAM) {
-                if(
-                    this.volatileImage == null ||
-                    (
-                        this.volatileImage != null &&
-                        this.volatileImage.validate(super.getGraphicsConfiguration()) == VolatileImage.IMAGE_INCOMPATIBLE
-                    )
-                ) {
-                    this.volatileImage = super.createVolatileImage(s.getWidth(), s.getHeight());
-                }
-
-                g = this.volatileImage.createGraphics();
-            } else {
-                g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
-            }
-
-
+            Graphics2D g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
             g.setRenderingHints(E.getE().getSettings().getRenderingHints());
 
             int x = 0;
             int y = 0;
-            /**
-             @TODO
-             if(E.getE().getSettings().fixAspectRatio()) {
-             AspectRatio aspectRatio = new AspectRatio(new Dimension(1280, 720), new Dimension(this.getWidth(), this.getHeight()));
-             BoundingBox optimal = aspectRatio.getOptimal();
 
-             x = (int) optimal.getMin().getX();
-             y = (int) optimal.getMin().getY();
-             }**/
+            if(/*E.getE().getSettings().fixAspectRatio()*/ true) {
+                AspectRatio aspectRatio = new AspectRatio(new Dimension(s.getWidth(), s.getHeight()), new Dimension(this.getWidth(), this.getHeight()));
+                BoundingBox optimal = aspectRatio.getOptimal();
 
-            BufferedImage frame = this.frame();
+                x = (int) optimal.getMin().getX();
+                y = (int) optimal.getMin().getY();
 
-            g.drawImage(frame, x, y, null);
-
-            if(EScreen.USE_VRAM) {
-                graphics.drawImage(this.volatileImage, 0, 0, null);
-            } else {
-                this.bufferStrategy.show();
             }
 
+            Image frame = this.frame();
+            g.drawImage(frame, x, y, null);
+
+            this.bufferStrategy.show();
             g.dispose();
 
             E.getE().getLayers().getLayers().forEach(Layer::clean);
 
-        } while(USE_VRAM ? this.volatileImage.contentsLost() : this.bufferStrategy.contentsLost());
+        } while(this.bufferStrategy.contentsLost());
 
     }
 
