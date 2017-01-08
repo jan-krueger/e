@@ -125,7 +125,7 @@ public class E {
     }
 
     /**
-     * @return Gives a instance of the {@link Layers} of the engine, it contains all {@link com.sun.javafx.webkit.prism.WCGraphicsPrismContext.Layer}
+     * @return Gives a instance of the {@link Layers} of the engine, it contains all {@link de.SweetCode.e.rendering.layers.Layer}
      *         references used in the engine instance.
      */
     public Layers getLayers() {
