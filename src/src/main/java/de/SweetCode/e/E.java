@@ -61,14 +61,20 @@ public class E {
     //---
 
     /**
-     * Creates a new game with default settings.
+     * <pre>
+     *     Creates a new instance of the engine with its
+     *     default settings.
+     * </pre>
      */
     public E() {
         this(new Settings() {});
     }
 
     /**
-     * Creates a new game with custom settings.
+     * <pre>
+     *     Creates a new instance of the engine with
+     *     custom settings.
+     * </pre>
      *
      * @param settings The custom settings to pass to the engine.
      */
@@ -102,7 +108,11 @@ public class E {
     }
 
     /**
-     * To get a {@link Random} instance.
+     * <pre>
+     *     Returns a singleton instance of {@link Random} or {@link SecureRandom}
+     *     depending on the given parameter.
+     * </pre>
+     *
      * @param secure If this is true it returns {@link SecureRandom}, otherwise {@link Random}.
      * @return Depending on the secure parameter the reference to the correct instance.
      */
@@ -111,6 +121,11 @@ public class E {
     }
 
     /**
+     * <pre>
+     *     Returns a reference to the {@link Log} used by
+     *     engine.
+     * </pre>
+     *
      * @return Gives the log of the engine instance.
      */
     public Log getLog() {
@@ -118,6 +133,11 @@ public class E {
     }
 
     /**
+     * <pre>
+     *     Returns a reference to the {@link EScreen} used
+     *     by the engine to render frames.
+     * </pre>
+     *
      * @return Gives the {@link EScreen} of the engine instance.
      */
     public EScreen getScreen() {
@@ -125,29 +145,51 @@ public class E {
     }
 
     /**
-     * @return Gives a instance of the {@link Layers} of the engine, it contains all {@link de.SweetCode.e.rendering.layers.Layer}
-     *         references used in the engine instance.
+     * <pre>
+     *     Gives a instance of the {@link Layers} of the engine, it
+     *     contains all {@link de.SweetCode.e.rendering.layers.Layer}
+     *     references used in the engine instance.
+     * </pre>
+     *
+     * @return A wrapper object of {@link de.SweetCode.e.rendering.layers.Layer layers}.
      */
     public Layers getLayers() {
         return this.layers;
     }
 
     /**
-     * @return Returns the instance of the {@link ProfilerLoop}. It returns null if debugging is not enabled.
+     * <pre>
+     *     Gives a instance of the {@link ProfilerLoop} used
+     *     by the engine to collect data if the engine is in
+     *     debug mode.
+     * </pre>
+     *
+     * @return Returns a {@link ProfilerLoop} reference if debugging is enabled, otherwise null.
      */
     public ProfilerLoop getProfilerLoop() {
         return this.profilerLoop;
     }
 
     /**
-     * @return A map with all scenes. The key is the {@link Class} of the {@link GameScene} and the value
-     *         is the related {@link GameSceneEntry}.
+     * <pre>
+     *     Returns a {@link LinkedHashMap} of all scenes registered
+     *     to the engine.
+     *     The key is the {@link Class} of the {@link GameScene} and
+     *     the value is the related {@link GameSceneEntry}.
+     * </pre>
+     *
+     * @return A {@link LinkedHashMap} with all scenes, if no scenes are registered then the map is empty, but never null.
      */
     public Map<Class<? extends GameScene>, GameSceneEntry> getScenes() {
         return this.scenes;
     }
 
     /**
+     * <pre>
+     *     Returns a instance of the settings used by
+     *     the engine currently.
+     * </pre>
+     *
      * @return The {@link Settings} of the game.
      */
     public Settings getSettings() {
@@ -155,20 +197,37 @@ public class E {
     }
 
     /**
-     * @return The current amount of frames per second.
+     * <pre>
+     *     Returns the amount of frames the engine could
+     *     render in the last full second.
+     * </pre>
+     *
+     * @return The amount of frames per second, never negative.
      */
     public int getCurrentFPS() {
         return this.renderLoop.getCurrentTicks();
     }
 
     /**
-     * @return Returns the current tick rate of the update loop.
+     * <pre>
+     *     Returns the amount of updates/ticks the engine
+     *     could perform in the last full second.
+     * </pre>
+     *
+     * @return Returns the tick rate of the update loop, never negative.
      */
     public int getCurrentTicks() {
         return this.updateLoop.getCurrentTicks();
     }
 
     /**
+     * <pre>
+     *     Returns a {@link CopyOnWriteArrayList} of all {@link GameComponentEntry GameComponent entries}
+     *     that are currently registered to the engine. This includes
+     *     active and inactive components as well as {@link GameScene},
+     *     because they are a sub-class of {@link GameScene}.
+     * </pre>
+     *
      * @return Returns {@link CopyOnWriteArrayList} of {@link GameComponentEntry GameComponentEntries}.
      */
     public List<GameComponentEntry> getGameComponents() {
@@ -176,7 +235,10 @@ public class E {
     }
 
     /**
-     * Adds a new GameComponent with {@link Priority#NORMAL}.
+     * <pre>
+     *     Adds a new GameComponent with {@link Priority#NORMAL}.
+     * </pre>
+     *
      * @param gameComponent The reference to the {@link GameComponent}.
      */
     public void addComponent(GameComponent gameComponent) {
@@ -186,7 +248,16 @@ public class E {
     }
 
     /**
-     * Add a new GameComponent with the specified priority.
+     * <pre>
+     *     Add a new GameComponent with the specified priority.
+     *     The priority determines when the {@link UpdateLoop} calls
+     *     the {@link GameComponent#update(InputEntry, long)} method
+     *     in each iteration.
+     *     If the priority is {@link Priority#HIGH} then it will
+     *     be called before {@link Priority#LOW} and {@link Priority#NORMAL}
+     *     in each iteration of the update loop and vice versa.
+     * </pre>
+     *
      * @param gameComponent The reference to the {@link GameComponent}.
      * @param priority The priority the component has in the {@link UpdateLoop update-loop}. If {@link Settings#isParallelizingUpdate()}
      *                 is true then can the priority value only be {@link Priority#NORMAL}.
@@ -211,7 +282,10 @@ public class E {
     }
 
     /**
-     * Add a new scene to the engine with {@link Priority#NORMAL}..
+     * <pre>
+     *     Adds a new scene to the engine with the
+     *     {@link Priority} set to {@link Priority#NORMAL}.
+     * </pre>
      * @param gameScene The game scene.
      */
     public void addScene(GameScene gameScene) {
@@ -221,11 +295,18 @@ public class E {
     }
 
     /**
-     * Add a new scene to the engine.
+     * <pre>
+     *     Add a new GameScene with the specified priority.
+     *     The priority determines when the {@link RenderLoop} calls
+     *     the {@link GameScene#update(InputEntry, long)} and
+     *     {@link GameScene#render(Layers)} method in each
+     *     iteration.
+     *     If the priority is {@link Priority#HIGH} then it will
+     *     be called before {@link Priority#LOW} and {@link Priority#NORMAL}
+     *     in each iteration of the update loop and vice versa.
+     * </pre>
      * @param gameScene The game scene.
-     * @param priority The priority the {@link GameScene#update(InputEntry, long)} method has in the {@link UpdateLoop update-loop}
-     *                 and the priority of the {@link GameScene#render(Layers)} method has in the {@link RenderLoop render-loop}.
-     *                 If {@link Settings#isParallelizingUpdate()} is true then can the priority value only be {@link Priority#NORMAL}.
+     * @param priority The priority the {@link GameScene#update(InputEntry, long)} method has in the {@link UpdateLoop update-loop}.
      */
     public void addScene(GameScene gameScene, Priority priority) {
 
@@ -246,8 +327,18 @@ public class E {
     }
 
     /**
-     * Select the seen you wanna render at the moment.
-     * @param scene The scne you wanna render.
+     * <pre>
+     *     Selects the seen that the renderer is supposed
+     *     to render. - The argument is the class of the
+     *     scene you wanna render.
+     *     If your class is called <i>ExampleScene</i> you
+     *     just provide <i>ExampleScene.class</i> as argument,
+     *     however you have to register your scene with
+     *     {@link E#addScene(GameScene)}or {@link E#addScene(GameScene, Priority)}
+     *     before calling this method.
+     * </pre>
+     *
+     * @param scene The scene you wanna render.
      */
     public void show(Class<?> scene) {
         Assert.assertTrue("The scene doesn't exist.", this.scenes.containsKey(scene));
@@ -256,7 +347,12 @@ public class E {
 
 
     /**
-     * Starts the engine.
+     * <pre>
+     *     This will start all loops and kick off everything
+     *     that is necessary for the engine to work well. If
+     *     the engine has no scene registered yet, it will just
+     *     add the {@link DefaultGameScene} and show it.
+     * </pre>
      */
     public void run() {
 
@@ -293,12 +389,28 @@ public class E {
     }
 
     /**
+     * <pre>
+     *     Gives the instance of the engine that is currently
+     *     running. You can use this method everywhere to
+     *     get easy access to its tools and references that you
+     *     may need.
+     * </pre>
+     *
      * @return Returns the instance of {@link E}.
      */
     public static E getE() {
         return E.instance;
     }
 
+    /**
+     * <pre>
+     *     This class contains some constants which are often
+     *     used in the engine code. You are not supposed to use
+     *     them, because they may change depending on the engines
+     *     needs.
+     * </pre>
+     */
+    @Deprecated
     public static class C {
 
         /**
