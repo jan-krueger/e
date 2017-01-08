@@ -8,6 +8,8 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import de.SweetCode.e.loop.ProfilerLoop;
 import de.SweetCode.e.math.BoundingBox;
+import de.SweetCode.e.math.IBoundingBox;
+import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.AspectRatio;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
@@ -61,7 +63,6 @@ public class EScreen extends JFrame implements GLEventListener {
         this.setUndecorated(!settings.isDecorated());
         this.setResizable(settings.isResizable());
         this.setPreferredSize(new Dimension(settings.getWidth(), settings.getHeight()));
-        this.setMinimumSize(new Dimension(settings.getWidth(), settings.getHeight()));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         EScreen.graphicConfiguration = this.getGraphicsConfiguration();
@@ -127,20 +128,23 @@ public class EScreen extends JFrame implements GLEventListener {
             Graphics2D g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
             g.setRenderingHints(E.getE().getSettings().getRenderingHints());
 
-            int x = 0;
-            int y = 0;
+            Image frame = this.frame();
 
-            if(/*E.getE().getSettings().fixAspectRatio()*/ true) {
-                AspectRatio aspectRatio = new AspectRatio(new Dimension(s.getWidth(), s.getHeight()), new Dimension(this.getWidth(), this.getHeight()));
-                BoundingBox optimal = aspectRatio.getOptimal();
+            ILocation drawPosition = new ILocation(0, 0);
 
-                x = (int) optimal.getMin().getX();
-                y = (int) optimal.getMin().getY();
+            if(E.getE().getSettings().fixAspectRatio()) {
+                AspectRatio.Result aspectRatio = AspectRatio.calculateOptimal(new Dimension(s.getWidth(), s.getHeight()), new Dimension(this.getWidth(), this.getHeight()));
 
+                drawPosition = aspectRatio.getPosition();
+                Dimension dimension = aspectRatio.getDimension();
+
+                //Note: only rescale if necessary
+                if(!(frame.getWidth(null) == dimension.getWidth()) || !(frame.getHeight(null) == dimension.getHeight())) {
+                    frame = frame.getScaledInstance((int) dimension.getWidth(), (int) dimension.getHeight(), Image.SCALE_SMOOTH);
+                }
             }
 
-            Image frame = this.frame();
-            g.drawImage(frame, x, y, null);
+            g.drawImage(frame, drawPosition.getX(), drawPosition.getY(), null);
 
             this.bufferStrategy.show();
             g.dispose();

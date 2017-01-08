@@ -1,8 +1,10 @@
 package de.SweetCode.e.rendering;
 
-import de.SweetCode.e.math.BoundingBox;
+import de.SweetCode.e.math.ILocation;
 
 import java.awt.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * The AspectRatio is a simple calculation class that is work in progress.
@@ -12,55 +14,82 @@ import java.awt.*;
  */
 public class AspectRatio {
 
-    private Dimension render;
-    private Dimension window;
+    private final static int CACHE_SIZE = 10;
 
-    public AspectRatio(Dimension render, Dimension window) {
-        this.render = render;
-        this.window = window;
-    }
+    private final static Map<Integer, Result> cache = new LinkedHashMap<Integer, Result>(CACHE_SIZE) {
 
-    public BoundingBox getOptimal() {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Integer, Result> eldest) {
+            return this.size() > CACHE_SIZE;
+        }
 
-        return new BoundingBox(
-                (window.getWidth() - render.getWidth()) / 2,
-                (window.getHeight() - render.getHeight()) / 2,
-                -1,
-                -1
+    };
+
+    /**
+     * The method generates the optimal with and height as well as the new x and y coordinates in the window
+     * while keeping the aspect ratio of the original frame.
+     *
+     * @param image The dimensions of the image aka. frame.
+     * @param window The dimensions of the window.
+     * @return A {@link AspectRatio.Result} containing the information where the image should be positioned ({@link Result#getPosition()})
+     *         and the new size of the image ({@link Result#getDimension()}).
+     */
+    public static Result calculateOptimal(Dimension image, Dimension window) {
+
+        //--- Key for the cache
+        int key = 59 * (31 + image.hashCode()) * (31 + window.hashCode());
+
+        if(AspectRatio.cache.containsKey(key)) {
+            return AspectRatio.cache.get(key);
+        }
+
+        //--- Some basic math to scale the image correctly
+        double imageRatio = image.getWidth() / image.getHeight();
+        double screenRation = window.getWidth() / window.getHeight();
+
+        double fixedWidth;
+        double fixedHeight;
+
+        if(screenRation > imageRatio) {
+            fixedWidth = image.getWidth() * window.getHeight() / image.getHeight();
+            fixedHeight = window.getHeight();
+        } else {
+            fixedWidth = window.getWidth();
+            fixedHeight = image.getHeight() * window.getWidth() / image.getWidth();
+        }
+
+        Result result = new Result(
+                new ILocation(
+                    (int) Math.floor((window.getWidth() - fixedWidth) / 2),
+                    (int) Math.floor((window.getHeight() - fixedHeight) / 2)
+                ),
+                new Dimension(
+                        (int) Math.floor(fixedWidth),
+                        (int) Math.floor(fixedHeight)
+                )
         );
 
-        /*int optimalWindowWidth = (int) (window.getHeight() * (setScene.getWidth() / setScene.getHeight()));
-        int optimalWindowHeight = (int) (window.getWidth() * (setScene.getHeight() / setScene.getWidth()));
+        AspectRatio.cache.put(key, result);
+        return result;
+    }
 
-        if(optimalWindowWidth > window.getWidth()) {
+    public static class Result {
 
-            // width-constrained display - top and bottom black bars
+        private ILocation position;
+        private Dimension dimension;
 
-            double minX = 0;
-            double maxX = window.getWidth();
+        private Result(ILocation position, Dimension dimension) {
+            this.position = position;
+            this.dimension = dimension;
+        }
 
-            double emptySpace = window.getHeight() - optimalWindowHeight;
-            double halfSpace = (emptySpace / 2D);
+        public ILocation getPosition() {
+            return this.position;
+        }
 
-            double minY = halfSpace;
-            double maxY = halfSpace + optimalWindowHeight;
-
-            return new BoundingBox(new Location(minX, minY), new Location(maxX, maxY));
-
-        } else {
-            // height-constrained display - left and right black bars
-            double minY = 0;
-            double maxY = window.getHeight();
-
-            double emptySpace = window.getWidth() - optimalWindowWidth;
-            double halfSpace = (emptySpace / 2D);
-
-            double minX = halfSpace;
-            double maxX = halfSpace * 2;
-
-            return new BoundingBox(new Location(minX, minY), new Location(maxX, maxY));
-
-        }*/
+        public Dimension getDimension() {
+            return this.dimension;
+        }
 
     }
 

@@ -52,6 +52,14 @@ public interface Settings {
     }
 
     /**
+     * @return If true, than we will fix the aspect ratio on-the-fly if the size of the window is changing by
+     *         repositioning the image correctly.
+     */
+    default boolean fixAspectRatio() {
+        return false;
+    }
+
+    /**
      * @return The optimal FPS (Frames-Per-Second) target.
      */
     default int getTargetFPS() {
