@@ -10,7 +10,10 @@ import de.SweetCode.e.utils.ToString.ToStringBuilder;
 import java.util.UUID;
 
 /**
- * An Entity is going to represent the most abstract type of entity in a game.
+ * <p>
+ * An Entity repents and entity in the engine. The purpose of this class is not fully flashed out yet and it may get
+ * removed later down the path. <b>A use is not recommended, yet.</b>
+ * </p>
  */
 public abstract class Entity implements GameComponent {
 
@@ -18,6 +21,10 @@ public abstract class Entity implements GameComponent {
     private BoundingBox boundingBox;
 
     /**
+     * <p>
+     *    Creates a new Entity with its unique identifier and bounding box representing its hit box.
+     * </p>
+     *
      * @param identifier The unique identifier for the Entity.
      * @param boundingBox The bounding box acting as collision box.
      */
@@ -31,7 +38,9 @@ public abstract class Entity implements GameComponent {
     }
 
     /**
-     * The constructor generating a UUID.
+     * <p>
+     *    Creates a new Entity but calls {@link UUID#randomUUID()}.
+     * </p>
      * @param boundingBox The bounding box acting as collision box.
      */
     public Entity(BoundingBox boundingBox) {
@@ -39,6 +48,10 @@ public abstract class Entity implements GameComponent {
     }
 
     /**
+     * <p>
+     *    Gives the unique identifier of the entity.
+     * </p>
+     *
      * @return Gives the identifier of the entity.
      */
     public UUID getIdentifier() {
@@ -46,6 +59,10 @@ public abstract class Entity implements GameComponent {
     }
 
     /**
+     * <p>
+     *    Gives the center location of the entitie's hit box aka. bounding box.
+     * </p>
+     *
      * @return Gives the center of the entity bounding box as entity location.
      */
     public Location getLocation() {
