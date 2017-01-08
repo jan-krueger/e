@@ -381,7 +381,6 @@ public class E {
      *     because they may change depending on the engines needs.
      * </p>
      */
-    @Deprecated
     public static class C {
 
         /**

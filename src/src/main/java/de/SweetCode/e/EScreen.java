@@ -13,6 +13,7 @@ import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.AspectRatio;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
+import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.log.LogEntry;
 
 import javax.swing.*;
@@ -27,7 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * <p>
  * EScreen is the component of the engine that is responsible for rendering.
+ * </p>
  */
 public class EScreen extends JFrame implements GLEventListener {
 
@@ -56,7 +59,7 @@ public class EScreen extends JFrame implements GLEventListener {
     // OpenGL
     private GLProfile glProfile = null;
 
-    public EScreen() {
+    EScreen() {
 
         Settings settings = E.getE().getSettings();
         this.setTitle(settings.getName());
@@ -99,11 +102,25 @@ public class EScreen extends JFrame implements GLEventListener {
 
     }
 
+    /**
+     * <p>
+     *    Returns the game scene that is currently rendered.
+     * </p>
+     *
+     * @return The {@link GameScene} which is currently rendered.
+     */
     public GameScene getCurrent() {
         return this.current;
     }
 
-    public void setScene(GameScene gameScene) {
+    /**
+     * <p>
+     *    Sets the scene that should be rendered.
+     * </p>
+     *
+     * @param gameScene The new active {@link GameScene}.
+     */
+    void setScene(GameScene gameScene) {
         this.current = gameScene;
         this.invalidate();
         this.repaint();
@@ -155,10 +172,27 @@ public class EScreen extends JFrame implements GLEventListener {
 
     }
 
+    /**
+     * <p>
+     *    The configuration used to generate and use {@link VolatileImage VolatileImages}.
+     * </p>
+     *
+     * @return The globally used {@link GraphicsConfiguration}.
+     */
     public static GraphicsConfiguration getGraphicConfiguration() {
-        return graphicConfiguration;
+        return EScreen.graphicConfiguration;
     }
 
+    /**
+     * <p>
+     *     This method generates the next frame that is going to be rendered to the screen. It does this by calling
+     *     all {@link GameScene#render(Layers)} methods of all active scenes. Then it checks if the frame should also
+     *     contain debug information and calls {@link EScreen#drawDebugInformation()} to draw them if required, and then
+     *     it finally calls {@link Layers#combine()} to combine all images and to get the final frame.
+     * </p>
+     *
+     * @return The frame to render.
+     */
     private BufferedImage frame() {
 
         this.current.render(E.getE().getLayers());
@@ -253,7 +287,9 @@ public class EScreen extends JFrame implements GLEventListener {
     public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {}
 
     /**
-     * This method draws to the first layer all requested debug information.
+     * <p>
+     *     Draws all debug information to the {@link Layers#first()} layer, but only those which are in {@link Settings#getDebugInformation()}.
+     * </p>
      */
     private static void drawDebugInformation() {
 
@@ -432,7 +468,10 @@ public class EScreen extends JFrame implements GLEventListener {
     }
 
     /**
-     * Returns a color with the highest possible contrast compared to the input color.
+     * <p>
+     *     Returns a color with the highest possible contrast compared to the input color.
+     * </p>
+     *
      * @param input The input color.
      * @return The complementary color.
      */
