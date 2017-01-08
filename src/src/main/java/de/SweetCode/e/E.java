@@ -24,8 +24,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The E is the heart. It is responsible for holding everything together and to have
- * a reference to all important parts of the engine and its information.
+ * <p>
+ *     The E is the heart. It is responsible for holding everything together and to have a reference to all important
+ *     parts of the engine and its information.
+ * </p>
  */
 public class E {
 
@@ -61,20 +63,18 @@ public class E {
     //---
 
     /**
-     * <pre>
-     *     Creates a new instance of the engine with its
-     *     default settings.
-     * </pre>
+     * <p>
+     *     Creates a new instance of the engine with its default settings.
+     * </p>
      */
     public E() {
         this(new Settings() {});
     }
 
     /**
-     * <pre>
-     *     Creates a new instance of the engine with
-     *     custom settings.
-     * </pre>
+     * <p>
+     *     Creates a new instance of the engine with custom settings.
+     * </p>
      *
      * @param settings The custom settings to pass to the engine.
      */
@@ -108,10 +108,9 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Returns a singleton instance of {@link Random} or {@link SecureRandom}
-     *     depending on the given parameter.
-     * </pre>
+     * <p>
+     *     Returns a singleton instance of {@link Random} or {@link SecureRandom} depending on the given parameter.
+     * </p>
      *
      * @param secure If this is true it returns {@link SecureRandom}, otherwise {@link Random}.
      * @return Depending on the secure parameter the reference to the correct instance.
@@ -121,10 +120,9 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Returns a reference to the {@link Log} used by
-     *     engine.
-     * </pre>
+     * <p>
+     *     Returns a reference to the {@link Log} used by engine.
+     * </p>
      *
      * @return Gives the log of the engine instance.
      */
@@ -133,10 +131,9 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Returns a reference to the {@link EScreen} used
-     *     by the engine to render frames.
-     * </pre>
+     * <p>
+     *     Returns a reference to the {@link EScreen} used by the engine to render frames.
+     * </p>
      *
      * @return Gives the {@link EScreen} of the engine instance.
      */
@@ -145,11 +142,10 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Gives a instance of the {@link Layers} of the engine, it
-     *     contains all {@link de.SweetCode.e.rendering.layers.Layer}
+     * <p>
+     *     Gives a instance of the {@link Layers} of the engine, it contains all {@link de.SweetCode.e.rendering.layers.Layer}
      *     references used in the engine instance.
-     * </pre>
+     * </p>
      *
      * @return A wrapper object of {@link de.SweetCode.e.rendering.layers.Layer layers}.
      */
@@ -158,11 +154,9 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Gives a instance of the {@link ProfilerLoop} used
-     *     by the engine to collect data if the engine is in
-     *     debug mode.
-     * </pre>
+     * <p>
+     *     Gives a instance of the {@link ProfilerLoop} used by the engine to collect data if the engine is in debug mode.
+     * </p>
      *
      * @return Returns a {@link ProfilerLoop} reference if debugging is enabled, otherwise null.
      */
@@ -171,12 +165,10 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Returns a {@link LinkedHashMap} of all scenes registered
-     *     to the engine.
-     *     The key is the {@link Class} of the {@link GameScene} and
-     *     the value is the related {@link GameSceneEntry}.
-     * </pre>
+     * <p>
+     *     Returns a {@link LinkedHashMap} of all scenes registered to the engine. The key is the {@link Class} of the
+     *     {@link GameScene} and the value is the related {@link GameSceneEntry}.
+     * </p>
      *
      * @return A {@link LinkedHashMap} with all scenes, if no scenes are registered then the map is empty, but never null.
      */
@@ -185,10 +177,9 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Returns a instance of the settings used by
-     *     the engine currently.
-     * </pre>
+     * <p>
+     *     Returns a instance of the settings used by the engine currently.
+     * </p>
      *
      * @return The {@link Settings} of the game.
      */
@@ -197,10 +188,9 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Returns the amount of frames the engine could
-     *     render in the last full second.
-     * </pre>
+     * <p>
+     *     Returns the amount of frames the engine could render in the last full second.
+     * </p>
      *
      * @return The amount of frames per second, never negative.
      */
@@ -209,10 +199,9 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Returns the amount of updates/ticks the engine
-     *     could perform in the last full second.
-     * </pre>
+     * <p>
+     *     Returns the amount of updates/ticks the engine could perform in the last full second.
+     * </p>
      *
      * @return Returns the tick rate of the update loop, never negative.
      */
@@ -221,12 +210,11 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Returns a {@link CopyOnWriteArrayList} of all {@link GameComponentEntry GameComponent entries}
-     *     that are currently registered to the engine. This includes
-     *     active and inactive components as well as {@link GameScene},
+     * <p>
+     *     Returns a {@link CopyOnWriteArrayList} of all {@link GameComponentEntry GameComponent entries} that are
+     *     currently registered to the engine. This includes active and inactive components as well as {@link GameScene},
      *     because they are a sub-class of {@link GameScene}.
-     * </pre>
+     * </p>
      *
      * @return Returns {@link CopyOnWriteArrayList} of {@link GameComponentEntry GameComponentEntries}.
      */
@@ -235,9 +223,9 @@ public class E {
     }
 
     /**
-     * <pre>
+     * <p>
      *     Adds a new GameComponent with {@link Priority#NORMAL}.
-     * </pre>
+     * </p>
      *
      * @param gameComponent The reference to the {@link GameComponent}.
      */
@@ -249,12 +237,9 @@ public class E {
 
     /**
      * <pre>
-     *     Add a new GameComponent with the specified priority.
-     *     The priority determines when the {@link UpdateLoop} calls
-     *     the {@link GameComponent#update(InputEntry, long)} method
-     *     in each iteration.
-     *     If the priority is {@link Priority#HIGH} then it will
-     *     be called before {@link Priority#LOW} and {@link Priority#NORMAL}
+     *     Add a new GameComponent with the specified priority. The priority determines when the {@link UpdateLoop} calls
+     *     the {@link GameComponent#update(InputEntry, long)} method in each iteration.
+     *     If the priority is {@link Priority#HIGH} then it will be called before {@link Priority#LOW} and {@link Priority#NORMAL}
      *     in each iteration of the update loop and vice versa.
      * </pre>
      *
@@ -283,8 +268,7 @@ public class E {
 
     /**
      * <pre>
-     *     Adds a new scene to the engine with the
-     *     {@link Priority} set to {@link Priority#NORMAL}.
+     *     Adds a new scene to the engine with the {@link Priority} set to {@link Priority#NORMAL}.
      * </pre>
      * @param gameScene The game scene.
      */
@@ -296,13 +280,9 @@ public class E {
 
     /**
      * <pre>
-     *     Add a new GameScene with the specified priority.
-     *     The priority determines when the {@link RenderLoop} calls
-     *     the {@link GameScene#update(InputEntry, long)} and
-     *     {@link GameScene#render(Layers)} method in each
-     *     iteration.
-     *     If the priority is {@link Priority#HIGH} then it will
-     *     be called before {@link Priority#LOW} and {@link Priority#NORMAL}
+     *     Add a new GameScene with the specified priority. The priority determines when the {@link RenderLoop} calls the
+     *     {@link GameScene#update(InputEntry, long)} and {@link GameScene#render(Layers)} method in each iteration.
+     *     If the priority is {@link Priority#HIGH} then it will be called before {@link Priority#LOW} and {@link Priority#NORMAL}
      *     in each iteration of the update loop and vice versa.
      * </pre>
      * @param gameScene The game scene.
@@ -328,13 +308,10 @@ public class E {
 
     /**
      * <pre>
-     *     Selects the seen that the renderer is supposed
-     *     to render. - The argument is the class of the
-     *     scene you wanna render.
-     *     If your class is called <i>ExampleScene</i> you
-     *     just provide <i>ExampleScene.class</i> as argument,
-     *     however you have to register your scene with
-     *     {@link E#addScene(GameScene)}or {@link E#addScene(GameScene, Priority)}
+     *     Selects the seen that the renderer is supposed to render. - The argument is the class of the scene you wanna
+     *     render.
+     *     If your class is called <i>ExampleScene</i> you just provide <i>ExampleScene.class</i> as argument, however
+     *     you have to register your scene with {@link E#addScene(GameScene)}or {@link E#addScene(GameScene, Priority)}
      *     before calling this method.
      * </pre>
      *
@@ -347,12 +324,10 @@ public class E {
 
 
     /**
-     * <pre>
-     *     This will start all loops and kick off everything
-     *     that is necessary for the engine to work well. If
-     *     the engine has no scene registered yet, it will just
-     *     add the {@link DefaultGameScene} and show it.
-     * </pre>
+     * <p>
+     *     This will start all loops and kick off everything that is necessary for the engine to work well. If the engine
+     *     has no scene registered yet, it will just add the {@link DefaultGameScene} and show it.
+     * </p>
      */
     public void run() {
 
@@ -389,12 +364,10 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     Gives the instance of the engine that is currently
-     *     running. You can use this method everywhere to
-     *     get easy access to its tools and references that you
-     *     may need.
-     * </pre>
+     * <p>
+     *     Gives the instance of the engine that is currently running. You can use this method everywhere to get easy
+     *     access to its tools and references that you may need.
+     * </p>
      *
      * @return Returns the instance of {@link E}.
      */
@@ -403,12 +376,10 @@ public class E {
     }
 
     /**
-     * <pre>
-     *     This class contains some constants which are often
-     *     used in the engine code. You are not supposed to use
-     *     them, because they may change depending on the engines
-     *     needs.
-     * </pre>
+     * <p>
+     *     This class contains some constants which are often used in the engine code. You are not supposed to use them,
+     *     because they may change depending on the engines needs.
+     * </p>
      */
     @Deprecated
     public static class C {
