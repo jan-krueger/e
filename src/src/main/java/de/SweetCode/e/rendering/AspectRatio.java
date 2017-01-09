@@ -7,10 +7,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * The AspectRatio is a simple calculation class that is work in progress.
- * It is supposed to take in to Dimension. The Dimension of the screen and the Dimension
- * of the game window. Based on these two values the class can calculate the best AspectRatio
- * for the game window.
+ * <p>
+ * AspectRatio is a class which is responsible for fixing the aspect ratio, if the dimension of the frame don't fit onto
+ * the window it is supposed to be rendered on. - The class has also a small cache keeping the last 10 calculations in it
+ * making it faster.
+ * </p>
  */
 public class AspectRatio {
 
@@ -25,10 +26,14 @@ public class AspectRatio {
 
     };
 
+    private AspectRatio() {}
+
     /**
-     * The method generates the optimal with and height as well as the new x and y coordinates in the window
-     * while keeping the aspect ratio of the original frame.
-     *
+     * <pre>
+     *     The method generates the optimal with and height as well as the new x and y coordinates in the window while
+     *     keeping the aspect ratio of the original frame. Scaling can still cause bad image quality, if forced to scale
+     *     up.
+     * </pre>
      * @param image The dimensions of the image aka. frame.
      * @param window The dimensions of the window.
      * @return A {@link AspectRatio.Result} containing the information where the image should be positioned ({@link Result#getPosition()})
@@ -73,20 +78,47 @@ public class AspectRatio {
         return result;
     }
 
+    /**
+     * <p>
+     * A wrapper class for the results of the calculations.
+     *</p>
+     */
     public static class Result {
 
         private ILocation position;
         private Dimension dimension;
 
+        /**
+         * <p>
+         *    Creates a new Result.
+         * </p>
+         *
+         * @param position The upper-left position of the frame in the window.
+         * @param dimension The new width and height of the frame in the window.
+         */
         private Result(ILocation position, Dimension dimension) {
             this.position = position;
             this.dimension = dimension;
         }
 
+        /**
+         * <p>
+         *    Gives the Location of the upper-left position where the frame should be rendered.
+         * </p>
+         *
+         * @return The Location of the frame in the window.
+         */
         public ILocation getPosition() {
             return this.position;
         }
 
+        /**
+         * <p>
+         *    Gives the dimension of the frame in the window. The width as well as the height.
+         * </p>
+         *
+         * @return The dimension of the frame.
+         */
         public Dimension getDimension() {
             return this.dimension;
         }

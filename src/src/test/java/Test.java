@@ -1,4 +1,5 @@
 import de.SweetCode.e.E;
+import de.SweetCode.e.Settings;
 
 public class Test {
 
