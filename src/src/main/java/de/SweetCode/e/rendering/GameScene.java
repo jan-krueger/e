@@ -3,9 +3,10 @@ package de.SweetCode.e.rendering;
 import de.SweetCode.e.Renderable;
 
 /**
- * A GameScene represents a object that is currently just
- * a Renderable.
-
+ * <p>
+ * A GameScene is basically just a {@link Renderable}. - The future plan is it to provide useful methods to make rendering
+ * easier.
+ * </p>
  */
 public abstract class GameScene implements Renderable {
 
