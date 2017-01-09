@@ -10,8 +10,10 @@ import java.awt.*;
 import java.util.Random;
 
 /**
- * The default game scene to show the developer if the developer didn't any of his own
- * scenes yet.
+ * <p>
+ * The default game scene to show the developer if the developer didn't set any of his own scenes yet. It shows the value
+ * of e and a small welcome message.
+ * </p>
  */
 public class DefaultGameScene extends GameScene {
 
