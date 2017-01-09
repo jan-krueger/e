@@ -18,7 +18,11 @@ public class Layer {
 
     private float alpha = 1F;
 
-    private BufferedImage bufferedImage = new BufferedImage(E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight(), BufferedImage.TYPE_INT_ARGB);
+    private BufferedImage bufferedImage = new BufferedImage(
+            E.getE().getSettings().getFrameDimension().getWidth(),
+            E.getE().getSettings().getFrameDimension().getHeight(),
+            BufferedImage.TYPE_INT_ARGB
+    );
 
     private Graphics2D graphics2D = this.bufferedImage.createGraphics();
 
@@ -111,9 +115,19 @@ public class Layer {
      * </ul>
      */
     public void clean() {
-        this.graphics2D.setClip(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
+        this.graphics2D.setClip(
+                0,
+                0,
+                E.getE().getSettings().getFrameDimension().getWidth(),
+                E.getE().getSettings().getFrameDimension().getHeight()
+        );
         this.graphics2D.setTransform(new AffineTransform());
-        this.graphics2D.clearRect(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
+        this.graphics2D.clearRect(
+                0,
+                0,
+                E.getE().getSettings().getFrameDimension().getWidth(),
+                E.getE().getSettings().getFrameDimension().getHeight()
+        );
         this.graphics2D.setRenderingHints(E.getE().getSettings().getRenderingHints());
     }
 }

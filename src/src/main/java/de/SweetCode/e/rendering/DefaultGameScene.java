@@ -21,7 +21,10 @@ public class DefaultGameScene extends GameScene {
     public void render(Layers layers) {
 
         Settings settings = E.getE().getSettings();
-        ILocation location = new ILocation(settings.getWidth() / 2, settings.getHeight() / 2);
+        ILocation location = new ILocation(
+                settings.getFrameDimension().getWidth() / 2,
+                settings.getFrameDimension().getHeight() / 2
+        );
 
         Graphics2D g = layers.first().g();
 

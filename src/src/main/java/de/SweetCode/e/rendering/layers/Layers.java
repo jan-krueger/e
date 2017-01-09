@@ -109,7 +109,11 @@ public class Layers {
      */
     public BufferedImage combine() {
 
-        BufferedImage img = new BufferedImage(E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage img = new BufferedImage(
+                E.getE().getSettings().getFrameDimension().getWidth(),
+                E.getE().getSettings().getFrameDimension().getHeight(),
+                BufferedImage.TYPE_INT_ARGB
+        );
         Graphics2D g2 = img.createGraphics();
 
         g2.setRenderingHints(E.getE().getSettings().getRenderingHints());

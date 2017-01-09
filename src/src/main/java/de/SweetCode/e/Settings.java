@@ -1,6 +1,7 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.input.InputEntry;
+import de.SweetCode.e.math.IDimension;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.Version;
 
@@ -74,24 +75,24 @@ public interface Settings {
 
     /**
      * <p>
-     *     Defines the width of the canvas in pixel you can draw to
+     *    Defines the size of the frame/canvas in pixel.
      * </p>
      *
-     * @return The width of the screen.
+     * @return The size of the canvas/frame wrapped in a {@link IDimension}.
      */
-    default int getWidth() {
-        return 1280;
+    default IDimension getFrameDimension() {
+        return new IDimension(1280, 720);
     }
 
     /**
      * <p>
-     *     Defines the height of the canvas in pixel you can draw to.
+     *    Defines the size of the window in pixel.
      * </p>
      *
-     * @return The height of the screen.
+     * @return The size of the window wrapped in a {@link IDimension}.
      */
-    default int getHeight() {
-        return 720;
+    default IDimension getWindowDimension() {
+        return this.getFrameDimension();
     }
 
     /**
@@ -264,12 +265,12 @@ public interface Settings {
                 invalids.add("targetTicks cannot be negative or 0");
             }
 
-            if(settings.getWidth() < 1) {
-                invalids.add("width cannot be negative or 0");
+            if(settings.getFrameDimension().getWidth() < 0 || settings.getFrameDimension().getHeight() < 0) {
+                invalids.add("getFrameDimension cannot have negative or 0 width or/and height");
             }
 
-            if(settings.getHeight() < 1) {
-                invalids.add("height cannot be negative or 0");
+            if(settings.getWindowDimension().getWidth() < 0 || settings.getWindowDimension().getHeight() < 0) {
+                invalids.add("getWindowDimension cannot have negative or 0 width or/and height");
             }
 
             if(settings.getLogCapacity() < 1) {

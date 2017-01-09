@@ -7,8 +7,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import de.SweetCode.e.loop.ProfilerLoop;
-import de.SweetCode.e.math.BoundingBox;
-import de.SweetCode.e.math.IBoundingBox;
+import de.SweetCode.e.math.IDimension;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.AspectRatio;
 import de.SweetCode.e.rendering.GameScene;
@@ -65,7 +64,7 @@ public class EScreen extends JFrame implements GLEventListener {
         this.setTitle(settings.getName());
         this.setUndecorated(!settings.isDecorated());
         this.setResizable(settings.isResizable());
-        this.setPreferredSize(new Dimension(settings.getWidth(), settings.getHeight()));
+        this.setPreferredSize(settings.getWindowDimension().toDimension());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         EScreen.graphicConfiguration = this.getGraphicsConfiguration();
@@ -150,14 +149,14 @@ public class EScreen extends JFrame implements GLEventListener {
             ILocation drawPosition = new ILocation(0, 0);
 
             if(E.getE().getSettings().fixAspectRatio()) {
-                AspectRatio.Result aspectRatio = AspectRatio.calculateOptimal(new Dimension(s.getWidth(), s.getHeight()), new Dimension(this.getWidth(), this.getHeight()));
+                AspectRatio.Result aspectRatio = AspectRatio.calculateOptimal(s.getFrameDimension(), s.getWindowDimension());
 
                 drawPosition = aspectRatio.getPosition();
-                Dimension dimension = aspectRatio.getDimension();
+                IDimension dimension = aspectRatio.getDimension();
 
                 //Note: only rescale if necessary
                 if(!(frame.getWidth(null) == dimension.getWidth()) || !(frame.getHeight(null) == dimension.getHeight())) {
-                    frame = frame.getScaledInstance((int) dimension.getWidth(), (int) dimension.getHeight(), Image.SCALE_SMOOTH);
+                    frame = frame.getScaledInstance(dimension.getWidth(), dimension.getHeight(), Image.SCALE_SMOOTH);
                 }
             }
 
@@ -305,9 +304,11 @@ public class EScreen extends JFrame implements GLEventListener {
 
         int xStep = 1;
 
+        int width = settings.getFrameDimension().getWidth();
+
         layer.g().setColor(
                 EScreen.highContrast(
-                        new Color(layer.b().getRGB(settings.getWidth() - xOffset / 2, (int) (yOffset * 1.5D)))
+                        new Color(layer.b().getRGB(width - xOffset / 2, (int) (yOffset * 1.5D)))
                 )
         );
 
@@ -319,7 +320,7 @@ public class EScreen extends JFrame implements GLEventListener {
                             profilerLoop.getAverageCPU() * 100,
                             profilerLoop.getAvailableProcessors()
                     ),
-                    settings.getWidth() - xOffset,
+                    width - xOffset,
                     yOffset * xStep
             );
 
@@ -337,7 +338,7 @@ public class EScreen extends JFrame implements GLEventListener {
                             (EScreen.USE_VRAM ? "on" : "off"),
                             (EScreen.USE_JOGL ? "on" : "off")
                     ),
-                    settings.getWidth() - xOffset,
+                    width - xOffset,
                     yOffset * xStep
             );
 
@@ -346,13 +347,13 @@ public class EScreen extends JFrame implements GLEventListener {
 
         //--- MEMORY_PROFILE
         if(displays.contains(Settings.DebugDisplay.MEMORY_PROFILE)) {
-            layer.g().drawString("Memory Usage JVM & Heap", settings.getWidth() - xOffset, yOffset * xStep);
+            layer.g().drawString("Memory Usage JVM & Heap", width - xOffset, yOffset * xStep);
             layer.g().drawString(
                     String.format(
                         "JVM - Used: %.2fMB",
                             profilerLoop.getAverageJvmMemoryUsed() * E.C.BYTES_TO_MEGABYTES
                     ),
-                    (int) (settings.getWidth() - xOffset * 0.95),
+                    (int) (width - xOffset * 0.95),
                     yOffset * (xStep + 1)
             );
             layer.g().drawString(
@@ -361,7 +362,7 @@ public class EScreen extends JFrame implements GLEventListener {
                             profilerLoop.getMaxHeapSize() * E.C.BYTES_TO_MEGABYTES,
                             profilerLoop.getAverageHeapMemoryUsed() * E.C.BYTES_TO_MEGABYTES
                     ),
-                    (int) (settings.getWidth() - xOffset * 0.95),
+                    (int) (width - xOffset * 0.95),
                     yOffset * (xStep + 2)
             );
 
@@ -376,7 +377,7 @@ public class EScreen extends JFrame implements GLEventListener {
                         "GCs: %d",
                             gcBeans.size()
                     ),
-                    settings.getWidth() - xOffset,
+                    width - xOffset,
                     yOffset * xStep
             );
 
@@ -392,7 +393,7 @@ public class EScreen extends JFrame implements GLEventListener {
                                 gc.getCollectionCount(),
                                 gc.getCollectionTime()
                         ),
-                        (int) (settings.getWidth() - xOffset * 0.95),
+                        (int) (width - xOffset * 0.95),
                         yOffset * ((xStep + 1) + i)
                 );
 
@@ -401,7 +402,7 @@ public class EScreen extends JFrame implements GLEventListener {
                 for(int x = 0; x < pools.length; x++) {
                     layer.g().drawString(
                             String.format("%s", pools[x]),
-                            (int) (settings.getWidth() - xOffset * 0.9),
+                            (int) (width - xOffset * 0.9),
                             yOffset * ((xStep + 2) + i + x)
                     );
                 }
@@ -425,7 +426,7 @@ public class EScreen extends JFrame implements GLEventListener {
                         "Threads: %d",
                             threads.size()
                     ),
-                    settings.getWidth() - xOffset,
+                    width - xOffset,
                     yOffset * xStep
             );
 
@@ -439,7 +440,7 @@ public class EScreen extends JFrame implements GLEventListener {
                             "%s",
                                 threadGroup.getName()
                         ),
-                        (int) (settings.getWidth() - xOffset * 0.95),
+                        (int) (width - xOffset * 0.95),
                         yOffset * ((finalXStep + 1) + i[0]))
                 ;
                 i[0]++;
@@ -454,7 +455,7 @@ public class EScreen extends JFrame implements GLEventListener {
                                     t.getName(),
                                     t.getState().name()
                             ),
-                            (int) (settings.getWidth() - xOffset * 0.9),
+                            (int) (width - xOffset * 0.9),
                             yOffset * ((finalXStep + 1) + i[0])
                     );
                     i[0]++;

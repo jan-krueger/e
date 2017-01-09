@@ -1,5 +1,6 @@
 package de.SweetCode.e.rendering;
 
+import de.SweetCode.e.math.IDimension;
 import de.SweetCode.e.math.ILocation;
 
 import java.awt.*;
@@ -39,7 +40,7 @@ public class AspectRatio {
      * @return A {@link AspectRatio.Result} containing the information where the image should be positioned ({@link Result#getPosition()})
      *         and the new size of the image ({@link Result#getDimension()}).
      */
-    public static Result calculateOptimal(Dimension image, Dimension window) {
+    public static Result calculateOptimal(IDimension image, IDimension window) {
 
         //--- Key for the cache
         int key = 59 * (31 + image.hashCode()) * (31 + window.hashCode());
@@ -47,6 +48,8 @@ public class AspectRatio {
         if(AspectRatio.cache.containsKey(key)) {
             return AspectRatio.cache.get(key);
         }
+
+        Dimension d;
 
         //--- Some basic math to scale the image correctly
         double imageRatio = image.getWidth() / image.getHeight();
@@ -68,7 +71,7 @@ public class AspectRatio {
                     (int) Math.floor((window.getWidth() - fixedWidth) / 2),
                     (int) Math.floor((window.getHeight() - fixedHeight) / 2)
                 ),
-                new Dimension(
+                new IDimension(
                         (int) Math.floor(fixedWidth),
                         (int) Math.floor(fixedHeight)
                 )
@@ -86,7 +89,7 @@ public class AspectRatio {
     public static class Result {
 
         private ILocation position;
-        private Dimension dimension;
+        private IDimension dimension;
 
         /**
          * <p>
@@ -96,7 +99,7 @@ public class AspectRatio {
          * @param position The upper-left position of the frame in the window.
          * @param dimension The new width and height of the frame in the window.
          */
-        private Result(ILocation position, Dimension dimension) {
+        private Result(ILocation position, IDimension dimension) {
             this.position = position;
             this.dimension = dimension;
         }
@@ -119,7 +122,7 @@ public class AspectRatio {
          *
          * @return The dimension of the frame.
          */
-        public Dimension getDimension() {
+        public IDimension getDimension() {
             return this.dimension;
         }
 
