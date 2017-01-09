@@ -1,13 +1,12 @@
 package de.SweetCode.e;
 
 import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.Priority;
 
 /**
  * <p>
  * A game component is a component that can be added to the {@link de.SweetCode.e.loop.UpdateLoop} by calling {@link E#addComponent(GameComponent)}
- * or {@link E#addScene(GameScene, Priority)}. If it has been added it is part of the loop and will be called if active.
+ * or {@link E#addComponent(GameComponent, Priority)}. If it has been added it is part of the loop and will be called if active.
  * </p>
  */
 public interface GameComponent {

@@ -10,22 +10,30 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 /**
- * Managing and combining all layers.
+ * <p>
+ * Layers is responsible for keeping all {@link Layer Layers} together and combining them to a frame.
+ * </p>
  */
 public class Layers {
 
     private final List<Layer> layers = new LinkedList<>();
 
     /**
-     * Constructor.
-     * @param amount The amount of layers that the constructor sould generate.
+     * <p>
+     *     Creates a new Layers.
+     * </p>
+     *
+     * @param amount The amount of layers that the constructor generates and holds, initially.
      */
     public Layers(int amount) {
         IntStream.range(0, amount).forEach(i -> this.layers.add(new Layer()));
     }
 
     /**
-     * Gives a reference to the list of all layers stored by the object.
+     * <p>
+     *    Gives a {@link LinkedList} of all {@link Layer Layers} currently stored in the Layers wrapper.
+     * </p>
+     *
      * @return Returns a {@link LinkedList} list of {@link Layer} references.
      */
     public List<Layer> getLayers() {
@@ -33,24 +41,38 @@ public class Layers {
     }
 
     /**
-     * Returns the first layer.
+     * <p>
+     *    Returns the first layer from the {@link LinkedList} of {@link Layer layer} references. The index of the item is
+     *    0.
+     * </p>
      *
      * @return Returns a {@link Layer}.
      */
     public Layer first() {
+        Assert.assertFalse("The layer list is empty.", this.layers.isEmpty());
+
         return this.layers.get(0);
     }
 
     /**
-     * Returns the last layer.
+     * <p>
+     *    Returns the first layer from the {@link LinkedList} of {@link Layer layer} references. The index of the item is
+     *    n - 1. n is the total size of the list storing all {@link Layer layers}. If there is only one element in the list
+     *    it will return as {@link Layers#first()}.
+     * </p>
+     *
      * @return Returns a {@link Layer}.
      */
     public Layer last() {
+        Assert.assertFalse("The layer list is empty.", this.layers.isEmpty());
+
         return this.layers.get(this.layers.size() - 1);
     }
 
     /**
-     * Returns the layer by a specified index.
+     * <p>
+     *     Returns a layer based on the its index.
+     * </p>
      *
      * @param index The index of the layer to grab.
      * @return Returns a {@link Layer}.
@@ -62,19 +84,26 @@ public class Layers {
     }
 
     /**
-     * Adds a new layer.
+     * <p>
+     *    Adds a new {@link Layer} to the list.
+     * </p>
      *
      * @param layer A reference to the layer to store.
      */
     public void add(Layer layer) {
         Assert.assertNotNull("The layer cannot be null.", layer);
+        Assert.assertFalse("The layer already exists.", this.layers.contains(layer));
 
         this.layers.add(layer);
     }
 
     /**
-     * Combines all layers to a single {@link BufferedImage} used in the final render process. The BufferdImage is
-     * using the ARGB color space.
+     * <p>
+     *    Combines all layers to a single {@link BufferedImage} used in the final render process. The BufferedImage is
+     *    using the ARGB color space. - If the alpha value of {@link Layers#last()} is equals to one, it will render only
+     *    the frame of it, because no others would be visible. The method also avoids images where the alpha value is
+     *    equals to 0.
+     * </p>
      *
      * @return Returns a {@link BufferedImage}.
      */
