@@ -98,7 +98,7 @@ public class E {
 
         //--- Setting up loops
         this.renderLoop = new RenderLoop(this.screen, (C.SECOND_AS_NANO / this.settings.getTargetFPS()));
-        this.updateLoop = new UpdateLoop(this.settings, this.input, (C.SECOND_AS_NANO / this.settings.getTargetTicks()));
+        this.updateLoop = new UpdateLoop(this.input, (C.SECOND_AS_NANO / this.settings.getTargetTicks()));
 
         if(settings.isDebugging()) {
             this.profilerLoop = new ProfilerLoop();
