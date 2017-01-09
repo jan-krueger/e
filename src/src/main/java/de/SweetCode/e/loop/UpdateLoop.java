@@ -9,15 +9,26 @@ import de.SweetCode.e.input.InputEntry;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+/**
+ * <p>
+ * The update loop is responsible for updating all active {@link de.SweetCode.e.GameComponent GameComponents}.
+ * </p>
+ */
 public class UpdateLoop extends Loop {
 
-    private final Settings settings;
     private final Input input;
 
-    public UpdateLoop(Settings settings, Input input, long optimalTime) {
+    /**
+     * <p>
+     *    Creates a new UpdateLoop.
+     * </p>
+     *
+     * @param input The input instance which provides all input.
+     * @param optimalTime The time between each call in {@link TimeUnit#NANOSECONDS}.
+     */
+    public UpdateLoop(Input input, long optimalTime) {
         super("Update Loop", optimalTime);
 
-        this.settings = settings;
         this.input = input;
 
     }
@@ -25,10 +36,12 @@ public class UpdateLoop extends Loop {
     @Override
     public void tick(long updateLength) {
 
+        Settings settings = E.getE().getSettings();
+
         // update length to required delta unit
         long delta = Math.max(
-                this.settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS),
-                (this.settings.roundDelta() ? 1 : 0)
+                settings.getDeltaUnit().convert(updateLength, TimeUnit.NANOSECONDS),
+                (settings.roundDelta() ? 1 : 0)
         );
 
         // get the input
@@ -37,7 +50,7 @@ public class UpdateLoop extends Loop {
 
         //--- Depending on what the developer chose, we gonna use a sequential or parallelized stream.
         Stream<GameComponentEntry> stream = (
-            this.settings.isParallelizingUpdate() ?
+            settings.isParallelizingUpdate() ?
                     E.getE().getGameComponents().parallelStream() : E.getE().getGameComponents().stream()
         );
         stream.forEach(k -> {
