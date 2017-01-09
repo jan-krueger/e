@@ -11,6 +11,13 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * <p>
+ * ProfilerLoop is part of the debugging system that comes with e. It is mainly responsible for collecting data frequently.
+ * The loop only gets registered if {@link Settings#isDebugging()} is true and only keeps track of values specified by
+ * {@link Settings#getDebugInformation()}.
+ * </p>
+ */
 public class ProfilerLoop extends Loop {
 
     private OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
@@ -33,47 +40,76 @@ public class ProfilerLoop extends Loop {
     private double deltaTime = 0;
     private double updates = 0;
 
+    /**
+     * <p>
+     *    Creates a new profiler loop.
+     * </p>
+     */
     public ProfilerLoop() {
         super("Profiler Loop", TimeUnit.MILLISECONDS.toNanos(100));
     }
 
     /**
-     * @return Gives average CPU usage in the last time frame caused by the JVM.
+     * <p>
+     *    Returns the average CPU value measured in the last full second. The value is relative and is always in the rang
+     *    of [0; 1].
+     * </p>
+     *
+     * @return Average CPU usage.
      */
     public double getAverageCPU() {
         return this.averageCPU;
     }
 
     /**
-     * @return Gives mount of available processors.
+     * <p>
+     *    The amount of process threads available for the JVM.
+     * </p>
+     *
+     * @return Amount of available processors.
      */
     public int getAvailableProcessors() {
         return this.CPU_PROCESSORS;
     }
 
     /**
-     * @return Gives the average memory use in the last time frame.
+     * <p>
+     *    The average amount of heap memory used by the application in bytes.
+     * </p>
+     *
+     * @return Average heap usage in bytes.
      */
     public double getAverageHeapMemoryUsed() {
         return this.averageHeapMemoryUsed;
     }
 
     /**
-     * @return Gives the max heap size.
+     * <p>
+     *    The max. size of the heap memory space in bytes.
+     * </p>
+     *
+     * @return Heap size in bytes.
      */
     public long getMaxHeapSize() {
         return this.MEMORY_HEAP_MAX;
     }
 
     /**
-     * Returns the average memory use in the last time frame by the JVM.
-     * @return
+     * <p>
+     *     The average amount of memory used by the JVM (Java Runtime Environment) in the last full second in bytes.
+     * </p>
+     *
+     * @return JVM memory usage in bytes.
      */
     public double getAverageJvmMemoryUsed() {
         return this.averageJvmMemoryUsed;
     }
 
     /**
+     * <p>
+     *    A {@link List} of GC beans.
+     * </p>
+     *
      * @return Gives all related GC (garbage collection) beans.
      */
     public List<GarbageCollectorMXBean> getGCBeans() {
@@ -81,7 +117,12 @@ public class ProfilerLoop extends Loop {
     }
 
     /**
-     * @return Gives all threads grouped by their thread group name.
+     * <p>
+     *    Returns a map of all threads found by the engine. The key of the map is the {@link ThreadGroup} of a thread
+     *    and the value is a {@link List} of {@link Thread Threads}. The threads are sorted by their IDs.
+     * </p>
+     *
+     * @return All threads.
      */
     public Map<ThreadGroup, List<Thread>> getThreads() {
         return this.THREAD_LIST;
@@ -147,8 +188,13 @@ public class ProfilerLoop extends Loop {
     }
 
     /**
-     * Generating a map of all threads grouped by their thread group.
-     * @return
+     * <p>
+     *    Generates a map with {@link ThreadGroup} as key and a {@link List} of {@link Thread Threads} as value. It grabs
+     *    the threads by calling {@link Thread#getAllStackTraces()}. It is also sorting the value by the ID of the threads,
+     *    and grouping the thread by their {@link ThreadGroup}.
+     * </p>
+     *
+     * @return A map of threads and thread groups.
      */
     private static Map<ThreadGroup, List<Thread>> getThreadsByGroup() {
         // get & sort by id
