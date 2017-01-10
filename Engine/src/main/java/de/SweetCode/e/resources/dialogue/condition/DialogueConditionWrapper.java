@@ -8,7 +8,9 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * A class to wrap all dialogue conditions.
+ * <p>
+ * A DialogueConditionWrapper is a wrapper object containing all related information to a condition.
+ * </p>
  */
 public class DialogueConditionWrapper {
 
@@ -20,7 +22,11 @@ public class DialogueConditionWrapper {
     private final List<String> fieldNames;
 
     /**
-     * @param instance The instance of the dialogue conditions.
+     * <p>
+     *    Creates a new DialogueConditionWrapper.
+     * </p>
+     *
+     * @param instance The instance of the dialogue conditions class.
      * @param id The unique id of the condition.
      * @param method The method of the condition to invoke.
      * @param fields The fields the method expects.
@@ -35,15 +41,20 @@ public class DialogueConditionWrapper {
     }
 
     /**
-     * Gives the identifier of the condition.
-     * @return The unique id of the condition.
+     * <p>
+     *    Gives the unique identifier of the condition provided by {@link DialogueCondition#id()}.
+     * </p>
+     * @return The identifier of the condition.
      */
-    public String getId() {
+    public String getIdentifier() {
         return this.id;
     }
 
     /**
-     * Checks if the condition is fulfilled.
+     * <p>
+     *    Invokes the condition method with all required values requested by {@link DialogueConditionOption}.
+     * </p>
+     *
      * @param fields A map with all fields and their current values to pass them to condition method.
      * @return Returns true of all conditions are fulfilled, otherwise false.
      */
@@ -68,10 +79,14 @@ public class DialogueConditionWrapper {
     }
 
     /**
-     * Parsing all conditions from the instance.
+     * <p>
+     *    This method creates a new map of all {@link DialogueCondition DialogueConditions}. - The key of the map is the
+     *    id with a leading at-symbol (@, e.g: <i>@myId</i>). The value is a {@link DialogueConditionWrapper which contains}
+     *    all related information of the validation rule.
+     * </p>
+     *
      * @param dialogueConditions A wrapper class containing all DialogueConditions that can be used in the context.
-     * @return Returns a map with the parsed conditions. The key is the ID of the {@link DialogueCondition} with an
-     *          leading at (@) symbol. The value is a wrapper and helper object of the condition method.
+     * @return Returns a map with the parsed conditions, the map is empty if there are no condtions present.
      */
     public static Map<String, DialogueConditionWrapper> getConditionWrappers(DialogueConditions dialogueConditions) {
 

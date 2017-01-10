@@ -303,7 +303,7 @@ public class E {
         // clear scenes to put in "clear" order
         this.scenes.clear();
         list.forEach(e -> this.scenes.put(e.getKey(), e.getValue()));
-        System.out.println();
+
     }
 
     /**

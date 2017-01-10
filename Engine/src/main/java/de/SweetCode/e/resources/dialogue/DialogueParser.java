@@ -4,24 +4,20 @@ import com.sun.istack.internal.Nullable;
 import de.SweetCode.e.resources.dialogue.condition.DialogueConditions;
 
 /**
- * The dialogue parser.
+ * <p>
+ *    The dialogue parser interface represents a dialogue parser to make it easier to handle dialogues of various standards.
+ * </p>
  *
  * @param <P> The type of the given input.
- * @param <N> The type of a node that will be used to validate it.
  * @param <I> The type of the identifier used to identify the first node.
  */
-public interface DialogueParser<P, N, I> {
+public interface DialogueParser<P, I> {
 
     /**
-     * Validates a node.
-     *
-     * @param node The node to check.
-     * @return true, if it is a valid node, otherwise false.
-     */
-    boolean isValidNode(N node);
-
-    /**
-     * Is parsing the input.
+     * <p>
+     *    This method parses a Dialogue and creates a new {@link Dialogue} by creating all cross-references and representing
+     *    all conditions correctly in the structure.
+     * </p>
      *
      * @param startIdentifier The identifier of the start node.
      * @param input The input to parse.

@@ -1,7 +1,9 @@
 package de.SweetCode.e.resources.dialogue.condition;
 
 /**
- * An interface that can be implemented in a class. It
- * is supposed to contain all relevant dialogue conditions.
+ * <p>
+ *    An interface which classes have implemented representing conditions. An instance of such classes can then be provided
+ *    to the parser to make these rules available for dialogues.
+ * </p>
  */
 public interface DialogueConditions {}

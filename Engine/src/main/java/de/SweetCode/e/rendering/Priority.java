@@ -10,16 +10,23 @@ import de.SweetCode.e.utils.ToString.ToStringBuilder;
 public enum Priority {
 
     /**
-     * Lowest priority. Called after {@link Priority#LOW} and {@link Priority#NORMAL}.
+     * <p>
+     *     Lowest priority. Called after {@link Priority#LOW} and {@link Priority#NORMAL}.
+     * </p>
      */
     LOW(-1),
+
     /**
-     * Normal priority. Called before {@link Priority#LOW}, but after {@link Priority#HIGH}.
+     * <p>
+     *     Normal priority. Called before {@link Priority#LOW}, but after {@link Priority#HIGH}.
+     * </p>
      */
     NORMAL(0),
 
     /**
-     * Highest priority. Called before {@link Priority#LOW} and {@link Priority#NORMAL}.
+     * <p>
+     *     Highest priority. Called before {@link Priority#LOW} and {@link Priority#NORMAL}.
+     * </p>
      */
     HIGH(1);
 

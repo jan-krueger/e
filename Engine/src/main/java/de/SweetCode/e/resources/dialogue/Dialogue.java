@@ -3,7 +3,10 @@ package de.SweetCode.e.resources.dialogue;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 /**
- * Represents one dialogue.
+ * <p>
+ * Represents a dialogue by providing access to the start node.
+ * </p>
+ *
  * @param <T> The type of the {@link DialogueNode} identifier.
  */
 public class Dialogue<T> {
@@ -11,6 +14,10 @@ public class Dialogue<T> {
     private DialogueNode<T> startNode;
 
     /**
+     * <p>
+     *    Creates a new Dialogue.
+     * </p>
+     *
      * @param startNode The start node of the dialogue.
      */
     public Dialogue(DialogueNode<T> startNode) {
@@ -18,7 +25,11 @@ public class Dialogue<T> {
     }
 
     /**
-     * @return Gives the start node of the dialogue.
+     * <p>
+     *    Gives the {@link DialogueNode} of the dialogue.
+     * </p>
+     *
+     * @return Returns the start node.
      */
     public DialogueNode<T> getStartNode() {
         return this.startNode;

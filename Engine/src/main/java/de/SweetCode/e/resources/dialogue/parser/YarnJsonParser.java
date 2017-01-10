@@ -17,32 +17,14 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class YarnJsonParser implements DialogueParser<String, JsonElement, String> {
+public class YarnJsonParser implements DialogueParser<String, String> {
 
     private final static Pattern pattern = Pattern.compile("\\[{2}(.*?)\\|(.*?)(\\|(@.*))?\\]{2}");
     private JsonParser jsonParser = new JsonParser();
 
-    private Map<DialogueNode<String>, List<DialogueOptionPointer<String>>> dialogueNodes = new HashMap<>();
+    private Map<DialogueNode<String>, List<DialogueOptionPointer>> dialogueNodes = new HashMap<>();
 
     public YarnJsonParser() {
-    }
-
-    @Override
-    public boolean isValidNode(JsonElement node) {
-
-        if (node == null || !(node.isJsonObject())) {
-            return false;
-        }
-
-        JsonObject object = node.getAsJsonObject();
-
-        //@TODO Validate that the node id (title) doesn't exist yet
-        return (
-                object.has("title") && object.get("title").isJsonPrimitive() &&
-                        object.has("body") && object.get("body").isJsonPrimitive() &&
-                        !(this.dialogueNodes.containsKey(DialogueNode.dummy(object.get("title").getAsString())))
-        );
-
     }
 
     @Override
@@ -72,7 +54,7 @@ public class YarnJsonParser implements DialogueParser<String, JsonElement, Strin
                 String body = node.get("body").getAsString();
 
                 //parsing body, and adding all pointers.
-                List<DialogueOptionPointer<String>> pointers = new LinkedList<>();
+                List<DialogueOptionPointer> pointers = new LinkedList<>();
                 List<DialogueConditionWrapper> conditionPointers = new ArrayList<>();
 
                 Matcher matcher = YarnJsonParser.pattern.matcher(body);
@@ -100,7 +82,13 @@ public class YarnJsonParser implements DialogueParser<String, JsonElement, Strin
 
                     }
 
-                    pointers.add(new DialogueOptionPointer<>(optionText, optionPointer, conditionPointers));
+                    pointers.add(
+                            new DialogueOptionPointer(
+                                    optionText,
+                                    DialogueNode.dummy(optionPointer),
+                                    conditionPointers
+                            )
+                    );
                     // @TODO: Do I wanna support pointers in-text, not sure about that yet...
 
                 }
@@ -121,14 +109,15 @@ public class YarnJsonParser implements DialogueParser<String, JsonElement, Strin
 
         this.dialogueNodes.forEach((node, fakePointers) -> {
 
-            List<DialogueOptionPointer<DialogueNode>> pointers = new LinkedList<>();
+            List<DialogueOptionPointer> pointers = new LinkedList<>();
 
             fakePointers.forEach(p -> {
 
-                Optional<DialogueNode<String>> realPointer = this.getNodeByIdentifier(p.getPointer());
+                // Note: can be safely casted to a String, because I always set as identifier of a pointer a string in this parser.
+                Optional<DialogueNode<String>> realPointer = this.getNodeByIdentifier((String) p.getPointer().getIdentifier());
 
                 if(realPointer.isPresent()) {
-                    pointers.add(new DialogueOptionPointer<>(p.getOptionText(), realPointer.get(), p.getDialogueConditionWrappers()));
+                    pointers.add(new DialogueOptionPointer(p.getOptionText(), realPointer.get(), p.getDialogueConditionWrappers()));
                 } else {
                     //@TODO Log error, couldn't find pointer
                 }
@@ -144,6 +133,23 @@ public class YarnJsonParser implements DialogueParser<String, JsonElement, Strin
         }
 
         return new Dialogue<>(startNode[0]);
+
+    }
+
+    private boolean isValidNode(JsonElement node) {
+
+        if (node == null || !(node.isJsonObject())) {
+            return false;
+        }
+
+        JsonObject object = node.getAsJsonObject();
+
+        //@TODO Validate that the node id (title) doesn't exist yet
+        return (
+                object.has("title") && object.get("title").isJsonPrimitive() &&
+                        object.has("body") && object.get("body").isJsonPrimitive() &&
+                        !(this.dialogueNodes.containsKey(DialogueNode.dummy(object.get("title").getAsString())))
+        );
 
     }
 

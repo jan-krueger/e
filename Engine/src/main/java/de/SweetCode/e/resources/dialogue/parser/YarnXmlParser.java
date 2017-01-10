@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class YarnXmlParser implements DialogueParser<File, Node, String> {
+public class YarnXmlParser implements DialogueParser<File, String> {
 
     private final static Pattern pattern = Pattern.compile("\\[{2}(.*?)\\|(.*?)(\\|(@.*))?\\]{2}");
 
@@ -33,19 +33,9 @@ public class YarnXmlParser implements DialogueParser<File, Node, String> {
     private DocumentBuilder documentBuilder = this.factory.newDocumentBuilder();
 
 
-    private Map<DialogueNode<String>, List<DialogueOptionPointer<String>>> dialogueNodes = new HashMap<>();
+    private Map<DialogueNode<String>, List<DialogueOptionPointer>> dialogueNodes = new HashMap<>();
 
     public YarnXmlParser() throws ParserConfigurationException {
-    }
-
-    @Override
-    public boolean isValidNode(Node node) {
-
-        if(!(node.getNodeType() == Node.ELEMENT_NODE)) {
-            return false;
-        }
-
-        return false;
     }
 
     @Override
@@ -90,6 +80,15 @@ public class YarnXmlParser implements DialogueParser<File, Node, String> {
         }
 
         return new Dialogue<>(null);
+    }
+
+    private boolean isValidNode(Node node) {
+
+        if(!(node.getNodeType() == Node.ELEMENT_NODE)) {
+            return false;
+        }
+
+        return false;
     }
 
 }

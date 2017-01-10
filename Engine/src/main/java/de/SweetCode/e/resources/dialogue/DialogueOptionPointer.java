@@ -8,37 +8,49 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * DialogueOptionPointer is a wrapper class to store the option pointer information.
- *
- * @param <T> The type of the pointer.
+ * <p>
+ * DialogueOptionPointer represents one option of a {@link DialogueNode}.
+ * </p>
  */
-public class DialogueOptionPointer<T> {
-
-    private T pointer;
+public class DialogueOptionPointer {
 
     private String optionText;
+
+    private DialogueNode pointer;
 
     private List<DialogueConditionWrapper> dialogueConditionWrappers;
 
     /**
+     * <p>
+     *    Creates a new DialogueOptionPointer.
+     * </p>
+     *
      * @param optionText The option text.
      * @param pointer The pointer the option is pointing at.
      * @param dialogueConditionWrappers The list of all wrapped conditions.
      */
-    public DialogueOptionPointer(String optionText, T pointer, List<DialogueConditionWrapper> dialogueConditionWrappers) {
+    public DialogueOptionPointer(String optionText, DialogueNode pointer, List<DialogueConditionWrapper> dialogueConditionWrappers) {
         this.optionText = optionText;
         this.pointer = pointer;
         this.dialogueConditionWrappers = dialogueConditionWrappers;
     }
 
     /**
-     * @return Gives the object the pointer is pointing at.
+     * <p>
+     *    Gives the object at which the pointer is pointing at.
+     * </p>
+     *
+     * @return Returns the pointer.
      */
-    public T getPointer() {
+    public DialogueNode getPointer() {
         return this.pointer;
     }
 
     /**
+     * <p>
+     *    Gives the option text representing the DialogueOptionPointer.
+     * </p>
+     *
      * @return Gives the option text.
      */
     public String getOptionText() {
@@ -46,6 +58,11 @@ public class DialogueOptionPointer<T> {
     }
 
     /**
+     * <p>
+     *    Returns a list of {@link DialogueConditionWrapper DialogueConditionWrappers} which represent all conditions which
+     *    have to be fulfilled, if the option should be available.
+     * </p>
+     *
      * @return Gives all related dialogue conditions.
      */
     public List<DialogueConditionWrapper> getDialogueConditionWrappers() {
@@ -53,7 +70,10 @@ public class DialogueOptionPointer<T> {
     }
 
     /**
-     * Checks all connected dialogue conditions.
+     * <p>
+     *    Calls all related {@link DialogueConditionWrapper DialogueConditionWrappers} to check if the option should be
+     *    visible to the end-user.
+     * </p>
      *
      * @param caller The DialogueNode calling this method.
      * @return true, if all conditions are fulfilled, otherwise false.
