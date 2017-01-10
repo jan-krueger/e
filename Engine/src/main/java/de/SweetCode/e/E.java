@@ -298,12 +298,12 @@ public class E {
 
         // Sort
         List<Map.Entry<Class<? extends GameScene>, GameSceneEntry>> list = new LinkedList<>(this.scenes.entrySet());
-        Collections.sort(list, new GameSceneEntry.EntryComparator());
+        list.sort(Comparator.comparingInt(i -> -i.getValue().getPriority().getPriority()));
 
         // clear scenes to put in "clear" order
         this.scenes.clear();
         list.forEach(e -> this.scenes.put(e.getKey(), e.getValue()));
-
+        System.out.println();
     }
 
     /**

@@ -6,7 +6,9 @@ import java.util.Comparator;
 import java.util.Map;
 
 /**
- * A simple data holder for game scenes. Used to store scenes more handy.
+ * <p>
+ * A GameSceneEntry in {@link de.SweetCode.e.E} to store {@link GameScene GameScenes} more handy.
+ * </p>
  */
 public class GameSceneEntry {
 
@@ -14,6 +16,10 @@ public class GameSceneEntry {
     private Priority priority;
 
     /**
+     * <p>
+     *    A new GameSceneEntry instance.
+     * </p>
+     *
      * @param gameScene The game-scene.
      * @param priority The priority the game-scene has in the render-loop.
      */
@@ -23,6 +29,10 @@ public class GameSceneEntry {
     }
 
     /**
+     * <p>
+     *    Gives the stored {@link GameScene}.
+     * </p>
+     *
      * @return Returns the wrapped {@link GameScene}.
      */
     public GameScene getGameScene() {
@@ -30,6 +40,12 @@ public class GameSceneEntry {
     }
 
     /**
+     * <p>
+     *    Gives the priority of the {@link GameScene} in the {@link de.SweetCode.e.loop.RenderLoop}. If the priority is
+     *    {@link Priority#HIGH} it will be in the first n iterations of the loop. The position depends on when it was added
+     *    to it, and vice versa.
+     * </p>
+     *
      * @return Gives the {@link Priority} of the game-scene in the game-loop.
      */
     public Priority getPriority() {
@@ -42,24 +58,6 @@ public class GameSceneEntry {
                 .append("gameScene", this.gameScene)
                 .append("priority", this.priority)
                 .build();
-    }
-
-    public static class EntryComparator implements Comparator<Map.Entry<Class<? extends GameScene>, GameSceneEntry>> {
-
-        @Override
-        public int compare(
-                Map.Entry<Class<? extends GameScene>, GameSceneEntry> o1,
-                Map.Entry<Class<? extends GameScene>, GameSceneEntry> o2
-        ) {
-
-            if(o1.getValue().getPriority().getPriority() == o2.getValue().getPriority().getPriority()) {
-                return 0;
-            }
-
-            return (o1.getValue().getPriority().getPriority() < o2.getValue().getPriority().getPriority() ? 1 : -1);
-
-        }
-
     }
 
 }

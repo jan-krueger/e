@@ -26,6 +26,7 @@ public enum Priority {
     @Override
     public String toString() {
         return ToStringBuilder.create(this)
+                .append("name", this.name())
                 .append("value", this.priority)
             .build();
     }
