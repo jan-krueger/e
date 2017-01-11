@@ -29,6 +29,44 @@ public class IDimension {
         return new Dimension(width, height);
     }
 
+    /**
+     * Checks if the bounding box contains a location.
+     *
+     * @param origin the origin of the IDimension.
+     * @param location The location to check against.
+     * @return true, if this object contains the other location, otherwise false.
+     */
+    public boolean contains(Location origin, Location location) {
+        return (
+                location.getX() >= origin.getX() &&
+                location.getX() <= (origin.getX() + this.getWidth()) &&
+                location.getY() >= origin.getY() &&
+                location.getY() <= (origin.getY() + this.getHeight())
+        );
+    }
+
+    /**
+     * Checks if the bounding box contains a location.
+     *
+     * @param origin the origin of the IDimension.
+     * @param location The location to check against.
+     * @return true, if this object contains the other location, otherwise false.
+     */
+    public boolean contains(Location origin, ILocation location) {
+        return this.contains(origin, new Location(location));
+    }
+
+    /**
+     * Checks if the bounding box contains a location.
+     *
+     * @param origin the origin of the IDimension.
+     * @param location The location to check against.
+     * @return true, if this object contains the other location, otherwise false.
+     */
+    public boolean contains(ILocation origin, ILocation location) {
+        return this.contains(new Location(origin), new Location(location));
+    }
+
     @Override
     public int hashCode() {
         int sum = this.width + this.height;

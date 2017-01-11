@@ -29,10 +29,6 @@ public abstract class Entity implements GameComponent {
      * @param boundingBox The bounding box acting as collision box.
      */
     public Entity(UUID identifier, BoundingBox boundingBox) {
-
-        Assert.assertNotNull("The identifier cannot be null.", identifier);
-        Assert.assertNotNull("The bounding box cannot be null.", boundingBox);
-
         this.identifier = identifier;
         this.boundingBox = boundingBox;
     }

@@ -25,6 +25,7 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * <p>
@@ -193,12 +194,10 @@ public class EScreen extends JFrame implements GLEventListener {
      * @return The frame to render.
      */
     private BufferedImage frame() {
-
-        this.current.render(E.getE().getLayers());
-
         E.getE().getGameComponents().forEach(k -> {
             GameComponent e = k.getGameComponent();
-            if(e instanceof Renderable && e.isActive()) {
+
+            if (e instanceof Renderable && e.isActive()) {
                 ((Renderable) e).render(E.getE().getLayers());
             }
 
@@ -330,11 +329,12 @@ public class EScreen extends JFrame implements GLEventListener {
         if(displays.contains(Settings.DebugDisplay.LOOP_PROFILE)) {
             layer.g().drawString(
                     String.format(
-                        "FPS: %d (%d) | Ticks: %d (%d) | VRAM: %s | OpenGL: %s",
+                        "FPS: %d (%d) | Ticks: %d (%d) | AO: %d | VRAM: %s | OpenGL: %s",
                             E.getE().getCurrentFPS(),
                             settings.getTargetFPS(),
                             E.getE().getCurrentTicks(),
                             settings.getTargetTicks(),
+                            profilerLoop.getActiveObjects(),
                             (EScreen.USE_VRAM ? "on" : "off"),
                             (EScreen.USE_JOGL ? "on" : "off")
                     ),
@@ -487,7 +487,7 @@ public class EScreen extends JFrame implements GLEventListener {
         float brightness = hsb[2];
 
         //--- If we have a color with low saturation -> not colorful
-        if(saturation < 0.3) {
+        if(saturation < 0.45) {
             return (brightness < 0.5 ? Color.WHITE : Color.BLACK);
         }
 

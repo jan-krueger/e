@@ -1,6 +1,5 @@
 package de.SweetCode.e.resources.dialogue;
 
-import com.sun.istack.internal.Nullable;
 import de.SweetCode.e.resources.dialogue.condition.DialogueConditions;
 
 /**
@@ -24,6 +23,6 @@ public interface DialogueParser<P, I> {
      * @param conditions A {@link DialogueConditions} reference with all conditions that can be used in the given dialogue.
      * @return Always a new {@link Dialogue} if it was successful, otherwise the root of the dialogue is null.
      */
-    Dialogue parse(I startIdentifier, P input, @Nullable DialogueConditions conditions);
+    Dialogue parse(I startIdentifier, P input, DialogueConditions conditions);
 
 }

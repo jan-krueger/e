@@ -306,6 +306,12 @@ public class E {
 
     }
 
+    //--- EXPERIMENTAL
+    public void addRenderbale(Renderable renderable, Priority priority) {
+        this.gameComponents.add(new GameComponentEntry(renderable, priority));
+    }
+    //---
+
     /**
      * <pre>
      *     Selects the seen that the renderer is supposed to render. - The argument is the class of the scene you wanna

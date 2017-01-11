@@ -89,32 +89,6 @@ public class BoundingBox {
     }
 
     /**
-     * Checks if a square is intersecting this bounding box.
-     * @param minX The minimum x coordinate of the box.
-     * @param minY The minimum y coordinate of the box.
-     * @param maxX The maximum x coordinate of the box.
-     * @param maxY The maximum y coordinate of the box.
-     * @return true, if they intersect, otherwise false.
-     */
-    public boolean intersects(double minX, double minY, double maxX, double maxY) {
-        return this.intersects(new BoundingBox(minX, minY, maxX, maxY));
-    }
-
-    /**
-     * Checks if a square is intersecting this bounding box.
-     * @param other The bounding box to check against.
-     * @return true, if they intersect, otherwise false.
-     */
-    public boolean intersects(BoundingBox other) {
-        return (
-                this.getMin().getX() < other.getMax().getX() &&
-                this.getMax().getX() > other.getMin().getX() &&
-                this.getMin().getY() < other.getMax().getY() &&
-                this.getMax().getY() > other.getMin().getY()
-        );
-    }
-
-    /**
      * Checks if the bounding box contains another bounding box.
      * @param other The bounding box to check against.
      * @return true, if this object contains the other, otherwise false.
@@ -122,9 +96,9 @@ public class BoundingBox {
     public boolean contains(BoundingBox other) {
         return (
                 this.getMin().getX() <= other.getMin().getX() &&
-                this.getMax().getX() <= other.getMax().getX() &&
+                this.getMax().getX() >= other.getMax().getX() &&
                 this.getMin().getY() <= other.getMin().getY() &&
-                this.getMax().getY() <= other.getMax().getY()
+                this.getMax().getY() >= other.getMax().getY()
         );
     }
 

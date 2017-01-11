@@ -97,6 +97,17 @@ public interface Settings {
 
     /**
      * <p>
+     *    Defines the size of the map of the game in pixel.
+     * </p>
+     *
+     * @return The size of the map wrapped in a {@link IDimension}.
+     */
+    default IDimension getMapDimension() {
+        return this.getFrameDimension();
+    }
+
+    /**
+     * <p>
      *     Defines whether the engine should fix the aspect ratio or not if the window sizes changes. This can happen if
      *     you allow the user to resize the size of the window. If this method returns true then the engine scales the
      *     frame correctly while keeping the aspect ratio of it.

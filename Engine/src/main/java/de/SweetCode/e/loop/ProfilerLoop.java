@@ -2,6 +2,7 @@ package de.SweetCode.e.loop;
 
 import com.sun.management.OperatingSystemMXBean;
 import de.SweetCode.e.E;
+import de.SweetCode.e.GameComponentEntry;
 import de.SweetCode.e.Settings;
 
 import java.lang.management.GarbageCollectorMXBean;
@@ -32,6 +33,7 @@ public class ProfilerLoop extends Loop {
     private double averageJvmMemoryUsed = 0;
 
     private int CPU_PROCESSORS = 0;
+    private long OBJECTS_ACTIVE = 0;
     private long MEMORY_HEAP_MAX = 0;
 
     private List<GarbageCollectorMXBean> GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
@@ -107,6 +109,16 @@ public class ProfilerLoop extends Loop {
 
     /**
      * <p>
+     *    The amount of active {@link de.SweetCode.e.GameComponent GameComponents} in the last full second.
+     * </p>
+     * @return Amount of active objects.
+     */
+    public long getActiveObjects() {
+        return this.OBJECTS_ACTIVE;
+    }
+
+    /**
+     * <p>
      *    A {@link List} of GC beans.
      * </p>
      *
@@ -177,6 +189,15 @@ public class ProfilerLoop extends Loop {
         //--- Threads
         if(displays.contains(Settings.DebugDisplay.THREAD_PROFILE) && updateRequired) {
             this.THREAD_LIST = ProfilerLoop.getThreadsByGroup();
+        }
+
+        //--- Profile
+        if(displays.contains(Settings.DebugDisplay.LOOP_PROFILE) && updateRequired) {
+
+            this.OBJECTS_ACTIVE = E.getE().getGameComponents().stream()
+                    .filter(e -> e.getGameComponent().isActive())
+                    .count();
+
         }
 
         //--- Reset

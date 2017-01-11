@@ -1,6 +1,5 @@
 package de.SweetCode.e.resources.dialogue.parser;
 
-import com.sun.istack.internal.Nullable;
 import de.SweetCode.e.E;
 import de.SweetCode.e.resources.dialogue.Dialogue;
 import de.SweetCode.e.resources.dialogue.DialogueNode;
@@ -39,7 +38,7 @@ public class YarnXmlParser implements DialogueParser<File, String> {
     }
 
     @Override
-    public Dialogue parse(String startIdentifier, File input, @Nullable DialogueConditions conditions) {
+    public Dialogue parse(String startIdentifier, File input, DialogueConditions conditions) {
 
         Assert.assertNotNull("The input cannot be null.", input);
         Assert.assertNotNull("The start identifier cannot be null.", startIdentifier);
