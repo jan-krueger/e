@@ -4,7 +4,7 @@ import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
 
-public class Location {
+public class Location implements Cloneable {
 
     private double x;
     private double y;

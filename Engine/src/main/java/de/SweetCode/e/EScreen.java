@@ -23,9 +23,9 @@ import java.awt.image.DataBufferInt;
 import java.awt.image.VolatileImage;
 import java.lang.management.GarbageCollectorMXBean;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * <p>
@@ -43,21 +43,18 @@ public class EScreen extends JFrame implements GLEventListener {
      * I am currently working on some bugs and on the implementation itself to ensure its
      * performance.
      */
-    public static final boolean USE_VRAM = true;
+    public static final boolean USE_VRAM = false;
 
     /**
      * @TODO:
      * Experimental Feature: using OpenGL to render the frame.
      */
-    public static final boolean USE_JOGL = false;
+    public static final boolean USE_JOGL = true;
 
     private BufferStrategy bufferStrategy;
     private GameScene current = null;
 
     private static GraphicsConfiguration graphicConfiguration;
-
-    // OpenGL
-    private GLProfile glProfile = null;
 
     EScreen() {
 
@@ -67,27 +64,15 @@ public class EScreen extends JFrame implements GLEventListener {
         this.setResizable(settings.isResizable());
         this.setPreferredSize(settings.getWindowDimension().toDimension());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setLocationRelativeTo(null);
 
         EScreen.graphicConfiguration = this.getGraphicsConfiguration();
 
-        if(USE_JOGL) {
+        if(!(USE_JOGL)) {
+            this.setVisible(true);
 
-            this.glProfile = GLProfile.get(GLProfile.GL2);
-            GLCapabilities glCapabilities = new GLCapabilities(glProfile);
-            glCapabilities.setDoubleBuffered(false);
-
-            GLCanvas canvas = new GLCanvas(glCapabilities);
-            canvas.addGLEventListener(this);
-            canvas.setSize(400, 400);
-
-            FPSAnimator animator = new FPSAnimator(canvas, 200);
-            animator.start();
-
-            this.add(canvas);
-
-        } else {
-
-            this.createBufferStrategy(1);
+            this.createBufferStrategy(3);
             this.bufferStrategy = this.getBufferStrategy();
 
             if (this.bufferStrategy == null) {
@@ -95,10 +80,6 @@ public class EScreen extends JFrame implements GLEventListener {
             }
 
         }
-
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
 
     }
 
@@ -139,7 +120,6 @@ public class EScreen extends JFrame implements GLEventListener {
         }
 
         Settings s = E.getE().getSettings();
-
         do {
 
             Graphics2D g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
@@ -194,6 +174,7 @@ public class EScreen extends JFrame implements GLEventListener {
      * @return The frame to render.
      */
     private BufferedImage frame() {
+
         E.getE().getGameComponents().forEach(k -> {
             GameComponent e = k.getGameComponent();
 
@@ -223,15 +204,36 @@ public class EScreen extends JFrame implements GLEventListener {
 
         if(!(this.current == null)) {
 
+            drawable.swapBuffers();
+
             // getting the new frame
             BufferedImage frame = this.frame();
 
             // Frame to Buffer
-            IntBuffer buffer = IntBuffer.allocate(frame.getWidth() * frame.getHeight() * 4);
-            buffer.put(((DataBufferInt) frame.getRaster().getDataBuffer()).getData());
+            // Note and @TODO: We have to convert RGBA to BGRA for some reason. This works currently but the performance
+            // might not be the best. We should think about caching data from old frames, maybe or something compareable.
+            int[] data = ((DataBufferInt)frame.getRaster().getDataBuffer()).getData();
+            IntBuffer buffer = IntBuffer.allocate(data.length);
+            Arrays.stream(data).forEachOrdered(e -> {
+
+                int red = (e >> 16) & 0xFF;
+                int green = (e >> 8) & 0xFF;
+                int blue = (e & 0xFF) & 0xFF;
+                int alpha = (e >> 24) & 0xFF;
+
+                buffer.put(
+                        ((alpha & 0xFF) << 24)  |
+                        ((red & 0xFF)   << 0)   |
+                        ((green & 0xFF) << 8)   |
+                        ((blue & 0xFF)  << 16)
+                );
+            });
             buffer.flip();
 
             GL2 gl = drawable.getGL().getGL2();
+
+            // bypass sync
+            gl.setSwapInterval(0);
 
             // clear
             gl.glClearColor(0F, 0F, 0F, 0F);
@@ -239,7 +241,20 @@ public class EScreen extends JFrame implements GLEventListener {
             gl.glLoadIdentity();
 
             // generating & binding texture
-            TextureData textureData = new TextureData(this.glProfile, GL.GL_RGBA, frame.getWidth(), frame.getHeight(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, false, false, false, buffer, null);
+            TextureData textureData = new TextureData(
+                    E.getE().getRenderLoop().getGlProfile(),         //glp                   GLProfile
+                    GL.GL_RGBA,             //internalFormat        int
+                    frame.getWidth(),       //width                 int
+                    frame.getHeight(),      //height                int
+                    0,                      //border                int
+                    GL.GL_RGBA,             //pixelFormat           int
+                    GL2.GL_UNSIGNED_BYTE,   //pixelType             int
+                    false,                  //mipmap                boolean
+                    false,                  //dataIsCompressed      boolean
+                    false,                  //mustFlopVertically    boolean
+                    buffer,                 //buffer                Buffer
+                    null                    //flusher               TextureData.Flusher
+            );
             Texture texture = new Texture(gl, textureData);
             texture.enable(gl);
             texture.bind(gl);
@@ -277,6 +292,11 @@ public class EScreen extends JFrame implements GLEventListener {
             texture.destroy(gl);
 
             buffer.clear();
+
+            drawable.swapBuffers();
+
+            E.getE().getLayers().getLayers().forEach(Layer::clean);
+
         }
 
     }
@@ -329,20 +349,31 @@ public class EScreen extends JFrame implements GLEventListener {
         if(displays.contains(Settings.DebugDisplay.LOOP_PROFILE)) {
             layer.g().drawString(
                     String.format(
-                        "FPS: %d (%d) | Ticks: %d (%d) | AO: %d | VRAM: %s | OpenGL: %s",
+                        "FPS: %d (%d) | Ticks: %d (%d) | Objects: %d (%.4f%%)",
                             E.getE().getCurrentFPS(),
                             settings.getTargetFPS(),
                             E.getE().getCurrentTicks(),
                             settings.getTargetTicks(),
-                            profilerLoop.getActiveObjects(),
-                            (EScreen.USE_VRAM ? "on" : "off"),
-                            (EScreen.USE_JOGL ? "on" : "off")
+                            E.getE().getGameComponents().size(),
+                            ((double) profilerLoop.getActiveObjects() / E.getE().getGameComponents().size()) * 100D
                     ),
                     width - xOffset,
                     yOffset * xStep
             );
 
-            xStep++;
+            layer.g().drawString(
+                    String.format(
+                            "VRAM: %s | OpenGL: %s | Updates: %s",
+                            (EScreen.USE_VRAM ? "on" : "off"),
+                            (EScreen.USE_JOGL ? "on" : "off"),
+                            (E.getE().getSettings().isParallelizingUpdate() ? "parallelized" : "sequential")
+                    ),
+                    width - xOffset,
+                    yOffset * (xStep + 1)
+            );
+
+
+            xStep += 2;
         }
 
         //--- MEMORY_PROFILE

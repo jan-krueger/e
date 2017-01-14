@@ -14,10 +14,12 @@ import java.util.UUID;
  * An Entity repents and entity in the engine. The purpose of this class is not fully flashed out yet and it may get
  * removed later down the path. <b>A use is not recommended, yet.</b>
  * </p>
+ *
+ * @param <T> identifier type
  */
-public abstract class Entity implements GameComponent {
+public abstract class Entity<T> implements GameComponent {
 
-    private final UUID identifier;
+    private T identifier;
     private BoundingBox boundingBox;
 
     /**
@@ -28,19 +30,20 @@ public abstract class Entity implements GameComponent {
      * @param identifier The unique identifier for the Entity.
      * @param boundingBox The bounding box acting as collision box.
      */
-    public Entity(UUID identifier, BoundingBox boundingBox) {
+    public Entity(T identifier, BoundingBox boundingBox) {
         this.identifier = identifier;
         this.boundingBox = boundingBox;
     }
 
     /**
      * <p>
-     *    Creates a new Entity but calls {@link UUID#randomUUID()}.
+     *    Creates a new Entity but calls {@link UUID#randomUUID()}. The identifier is null.
      * </p>
+     *
      * @param boundingBox The bounding box acting as collision box.
      */
     public Entity(BoundingBox boundingBox) {
-        this(UUID.randomUUID(), boundingBox);
+        this(null, boundingBox);
     }
 
     /**
@@ -50,8 +53,19 @@ public abstract class Entity implements GameComponent {
      *
      * @return Gives the identifier of the entity.
      */
-    public UUID getIdentifier() {
+    public T getIdentifier() {
         return this.identifier;
+    }
+
+    /**
+     * <p>
+     *    Gives the bounding box of the entity representing its hit box.
+     * </p>
+     *
+     * @return Gives the hit box.
+     */
+    public BoundingBox getBoundingBox() {
+        return this.boundingBox;
     }
 
     /**

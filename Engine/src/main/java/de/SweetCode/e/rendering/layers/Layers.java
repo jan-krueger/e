@@ -112,7 +112,7 @@ public class Layers {
         BufferedImage img = new BufferedImage(
                 E.getE().getSettings().getFrameDimension().getWidth(),
                 E.getE().getSettings().getFrameDimension().getHeight(),
-                BufferedImage.TYPE_INT_ARGB
+                BufferedImage.TYPE_INT_ARGB_PRE
         );
         Graphics2D g2 = img.createGraphics();
 

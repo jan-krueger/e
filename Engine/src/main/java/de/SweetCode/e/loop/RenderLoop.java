@@ -1,6 +1,12 @@
 package de.SweetCode.e.loop;
 
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.util.FPSAnimator;
+import de.SweetCode.e.E;
 import de.SweetCode.e.EScreen;
+import de.SweetCode.e.Settings;
 
 /**
  * <p>
@@ -10,6 +16,10 @@ import de.SweetCode.e.EScreen;
 public class RenderLoop extends Loop {
 
     private final EScreen screen;
+
+    //--- OpenGL
+    private GLProfile glProfile = null;
+    private final FPSAnimator animator;
 
     /**
      * <p>
@@ -23,12 +33,61 @@ public class RenderLoop extends Loop {
         super("Render Loop", optimalTime);
 
         this.screen  = screen;
+
+        if(EScreen.USE_JOGL) {
+            this.glProfile = GLProfile.get(GLProfile.GL2);
+
+            GLCapabilities glCapabilities = new GLCapabilities(this.glProfile);
+            glCapabilities.setDoubleBuffered(true);
+
+            Settings s = E.getE().getSettings();
+
+            GLCanvas canvas = new GLCanvas(glCapabilities);
+            canvas.addGLEventListener(E.getE().getScreen());
+            canvas.setSize(s.getFrameDimension().getWidth(), s.getFrameDimension().getHeight());
+
+            this.animator = new FPSAnimator(canvas, s.getTargetFPS());
+            this.animator.setUpdateFPSFrames(s.getTargetFPS() / 5, null);
+
+            this.animator.start();
+
+            E.getE().getScreen().add(canvas);
+            E.getE().getScreen().setVisible(true);
+
+
+        }
+    }
+
+    /**
+     * <p>
+     *    Gives the GLProfile if the engine is using OpenGL to render the scene.
+     * </p>
+     *
+     * @return Gives GLProfile, is null if OpenGL not active.
+     */
+    public GLProfile getGlProfile() {
+        return this.glProfile;
+    }
+
+    /**
+     * <p>
+     *    Gives the FPSAnimator if the engine is using OpenGL to render the scene.
+     * </p>
+     *
+     * @return Gives FPSAnimator, is null if OpenGL not active.
+     */
+    public FPSAnimator getAnimator() {
+        return animator;
     }
 
     @Override
     public void tick(long updateLength) {
-        this.screen.invalidate();
-        this.screen.repaint();
+
+        if(!(EScreen.USE_JOGL)) {
+            this.screen.invalidate();
+            this.screen.repaint();
+        }
+
     }
 
 

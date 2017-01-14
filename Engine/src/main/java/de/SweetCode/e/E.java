@@ -166,6 +166,17 @@ public class E {
 
     /**
      * <p>
+     *     Gives a instance of the {@link RenderLoop} used by the engine to coordinate rendering processes.
+     * </p>
+     *
+     * @return Returns a {@link RenderLoop} reference.
+     */
+    public RenderLoop getRenderLoop() {
+        return this.renderLoop;
+    }
+
+    /**
+     * <p>
      *     Returns a {@link LinkedHashMap} of all scenes registered to the engine. The key is the {@link Class} of the
      *     {@link GameScene} and the value is the related {@link GameSceneEntry}.
      * </p>
@@ -195,7 +206,7 @@ public class E {
      * @return The amount of frames per second, never negative.
      */
     public int getCurrentFPS() {
-        return this.renderLoop.getCurrentTicks();
+        return EScreen.USE_JOGL ? (int) this.renderLoop.getAnimator().getLastFPS() : this.renderLoop.getCurrentTicks();
     }
 
     /**
@@ -249,7 +260,7 @@ public class E {
      */
     public void addComponent(GameComponent gameComponent, Priority priority) {
 
-        if(!(priority == Priority.NORMAL)) {
+        if(!(priority == Priority.NORMAL) && this.settings.isParallelizingUpdate()) {
             this.getLog().log(
                     LogEntry.Builder.create().message(
                         "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +

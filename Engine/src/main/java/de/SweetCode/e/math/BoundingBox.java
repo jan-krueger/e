@@ -102,6 +102,19 @@ public class BoundingBox {
         );
     }
 
+    public boolean intersects(BoundingBox other) {
+        return (
+                this.getMin().getX() < other.getMax().getX() &&
+                        this.getMax().getX() > other.getMin().getX() &&
+                        this.getMin().getY() < other.getMax().getY() &&
+                        this.getMax().getY() > other.getMin().getY()
+        );
+    }
+
+    public boolean intersects(IBoundingBox other) {
+        return this.intersects(new BoundingBox(other.getMin(), other.getMax()));
+    }
+
     /**
      * Checks if the bounding box contains a location.
      * @param location The location to check against.
@@ -124,6 +137,7 @@ public class BoundingBox {
     public boolean contains(ILocation location) {
         return this.contains(new Location(location));
     }
+
 
     @Override
     public String toString() {

@@ -86,6 +86,19 @@ public class IBoundingBox {
         return Math.abs(this.getMax().getX() - this.getMin().getX());
     }
 
+    public boolean intersects(BoundingBox other) {
+        return (
+                this.getMin().getX() < other.getMax().getX() &&
+                        this.getMax().getX() > other.getMin().getX() &&
+                        this.getMin().getY() < other.getMax().getY() &&
+                        this.getMax().getY() > other.getMin().getY()
+        );
+    }
+
+    public boolean intersects(IBoundingBox other) {
+        return this.intersects(new BoundingBox(other.getMin(), other.getMax()));
+    }
+
     /**
      * Checks if the bounding box contains another bounding box.
      * @param other The bounding box to check against.
