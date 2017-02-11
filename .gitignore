@@ -6,7 +6,9 @@
 *.ear
 
 out
-/src/target/
 .idea/
-src/Engine.iml
-src/src/main/resources/
+-Engine/src/main/resources/
+Engine/target/classes/
+Engine/target/generated-sources/
+Engine/target/generated-test-sources/
+Engine/target/test-classes/

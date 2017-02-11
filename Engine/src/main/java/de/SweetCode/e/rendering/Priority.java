@@ -11,7 +11,7 @@ public enum Priority {
 
     /**
      * <p>
-     *     Lowest priority. Called after {@link Priority#LOW} and {@link Priority#NORMAL}.
+     *     Lowest priority. Called after {@link Priority#NORMAL} and {@link Priority#HIGH}.
      * </p>
      */
     LOW(-1),
@@ -38,7 +38,7 @@ public enum Priority {
 
     /**
      * <p>
-     *    Returns the numeric value of the priority. This makes it easier to compare them.
+     *    Returns the numeric value of the priority.
      * </p>
      *
      * @return The numeric value.

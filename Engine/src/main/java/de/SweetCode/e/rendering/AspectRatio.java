@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * <p>
- * AspectRatio is a class which is responsible for fixing the aspect ratio, if the dimension of the frame don't fit onto
+ * AspectRatio is a class which is responsible for fixing the aspect ratio, if the dimension of the frame doesn't fit onto
  * the window it is supposed to be rendered on. - The class has also a small cache keeping the last 10 calculations in it
  * making it faster.
  * </p>

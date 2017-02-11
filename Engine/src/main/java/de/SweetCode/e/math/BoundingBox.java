@@ -54,6 +54,32 @@ public class BoundingBox {
     }
 
     /**
+     * <p>
+     *    Sets the center of the bounding box and adjusts all related positions.
+     * </p>
+     *
+     * @param x The new x coordinate.
+     * @param y The new y coordinate.
+     */
+    public void setCenter(double x, double y) {
+        this.getCenter().set(x, y);
+
+        this.getMin().set(x - (this.getWidth() / 2), y - (this.getHeight() / 2));
+        this.getMax().set(x + (this.getWidth() / 2), y + (this.getHeight() / 2));
+    }
+
+    /**
+     * <p>
+     *    Sets the center of the bounding box and adjusts all related positions.
+     * </p>
+     *
+     * @param center The location of the new center.
+     */
+    public void setCenter(Location center) {
+        this.setCenter(center.getX(), center.getY());
+    }
+
+    /**
      * @return Gives the max. {@link Location}.
      */
     public Location getMax() {

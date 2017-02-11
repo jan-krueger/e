@@ -3,6 +3,7 @@ package de.SweetCode.e.input;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.entries.KeyEntry;
 import de.SweetCode.e.input.entries.MouseEntry;
+import de.SweetCode.e.input.entries.MouseMovingEntry;
 import de.SweetCode.e.input.entries.MouseWheelEntry;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
@@ -164,11 +165,11 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * <pre>
+     * <p>
      *    This method returns a {@link LinkedList} of all keyboard entries since its last call. It copies all entries
      *    from the queue which the listener is feeding into the list and clears it.
      *    <b>Event:</b> {@link KeyEvent} and {@link KeyEvent#getID()} equals to <i>{@link KeyEvent#KEY_PRESSED}</i>
-     * </pre>
+     * </p>
      *
      * @return A list of all registered keyboard entries.
      */
@@ -179,11 +180,11 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * <pre>
+     * <p>
      *    This method returns a {@link LinkedList} of all mouse entries since its last call. It copies all entries from
      *    the queue which the listener is feeding into the list and clears it.
      *    <b>Event:</b> {@link MouseAdapter#mousePressed(MouseEvent)}
-     * </pre>
+     * </p>
      *
      * @return A list of all registered mouse entries.
      */
@@ -194,11 +195,11 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * <pre>
+     * <p>
      *    This method returns a {@link LinkedList} of all mouse wheel entries since its last call. It copies all entries
      *    from the queue which the listener is feeding into the list and clears it.
      *    <b>Event:</b> {@link MouseWheelEvent}
-     * </pre>
+     * </p>
      *
      * @return A list of all registered mouse wheel entries.
      */
@@ -209,11 +210,11 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * <pre>
+     * <p>
      *    This method returns a {@link LinkedList} of all mouse dragged entries since its last call. It copies all entries
      *    from the queue which the listener is feeding into the list and clears it.
      *    <b>Event:</b> {@link MouseMotionAdapter#mouseDragged(MouseEvent)}
-     * </pre>
+     * </p>
      *
      * @return A list of all registered mouse dragged entries.
      */
@@ -224,11 +225,11 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * <pre>
+     * <p>
      *    This method returns a {@link LinkedList} of all mouse moved entries since its last call. It copies all entries
      *    from the queue which the listener is feeding into the list and clears it.
      *    <b>Event:</b> {@link MouseMotionAdapter#mouseMoved(MouseEvent)}
-     * </pre>
+     * </p>
      *
      * @return A list of all registered mouse moved entries.
      */
@@ -239,11 +240,27 @@ public final class Input extends KeyAdapter {
     }
 
     /**
-     * <pre>
+     * <p>
+     *    This method returns a {@link LinkedList} of all mouse moving entries since its last call. It copies all entries
+     *    from the queue which the listener is feeding into the list and clears it.
+     *    <b>Event:</b> Since Java doesn't support listing to mouse movement we are using an internal loop to keep track
+     *    of the movement. The {@link de.SweetCode.e.loop.MouseMovingLoop} is responsible for this task.
+     * </p>
+     *
+     * @return A list of all required mouse moving entries.
+     */
+    public LinkedList<MouseMovingEntry> getMouseMovingEntries() {
+        LinkedList<MouseMovingEntry> stream = new LinkedList<>(E.getE().getMouseMovingLoop().getMouseMovingEntries());
+        E.getE().getMouseMovingLoop().getMouseMovingEntries().clear();
+        return stream;
+    }
+
+    /**
+     * <p>
      *    This method returns a {@link LinkedList} of all mouse moved entries since its last call. It copies all entries
      *    from the queue which the listener is feeding into the list and clears it.
      *    <b>Event:</b> {@link MouseAdapter#mouseReleased(MouseEvent)}
-     * </pre>
+     * </p>
      *
      * @return A list of all registered mouse release entries.
      */
@@ -263,6 +280,7 @@ public final class Input extends KeyAdapter {
      *     <li>{@link Input#getMouseWheelEntries()}</li>
      *     <li>{@link Input#getMouseDraggedEntries()}</li>
      *     <li>{@link Input#getMouseMovedEntries()}</li>
+     *     <li>{@link Input#getMouseMovingEntries()}</li>
      *     <li>{@link Input#getMouseReleasedQueue()}</li>
      * </ul>
      * <p>
@@ -278,6 +296,7 @@ public final class Input extends KeyAdapter {
                 this.getMouseWheelEntries(),
                 this.getMouseDraggedEntries(),
                 this.getMouseMovedEntries(),
+                this.getMouseMovingEntries(),
                 this.getMouseReleasedQueue()
         );
     }
@@ -290,6 +309,7 @@ public final class Input extends KeyAdapter {
             .append("mouseScrollQueue", this.mouseScrollQueue)
             .append("mouseDraggedEntries", this.mouseDraggedEntries)
             .append("mouseMovedEntries", this.mouseMovedEntries)
+            .append("mouseMovingEntries", E.getE().getMouseMovingLoop().getMouseMovingEntries())
             .append("mouseReleasedQueue", this.mouseReleasedQueue)
         .build();
     }

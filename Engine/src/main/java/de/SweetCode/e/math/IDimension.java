@@ -1,5 +1,7 @@
 package de.SweetCode.e.math;
 
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
+
 import java.awt.*;
 
 public class IDimension {
@@ -65,6 +67,14 @@ public class IDimension {
      */
     public boolean contains(ILocation origin, ILocation location) {
         return this.contains(new Location(origin), new Location(location));
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.create(this)
+                .append("width", this.width)
+                .append("width", this.height)
+            .build();
     }
 
     @Override

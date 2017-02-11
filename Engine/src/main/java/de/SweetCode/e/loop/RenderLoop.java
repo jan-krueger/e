@@ -19,7 +19,7 @@ public class RenderLoop extends Loop {
 
     //--- OpenGL
     private GLProfile glProfile = null;
-    private final FPSAnimator animator;
+    private FPSAnimator animator;
 
     /**
      * <p>
@@ -34,7 +34,9 @@ public class RenderLoop extends Loop {
 
         this.screen  = screen;
 
-        if(EScreen.USE_JOGL) {
+        //--- If we use OpenGL, we are just going to setup JOGL's built-in support for running the loop. No need to do it
+        // ourselves.
+        if(E.getE().getSettings().useOpenGL()) {
             this.glProfile = GLProfile.get(GLProfile.GL2);
 
             GLCapabilities glCapabilities = new GLCapabilities(this.glProfile);
@@ -47,15 +49,16 @@ public class RenderLoop extends Loop {
             canvas.setSize(s.getFrameDimension().getWidth(), s.getFrameDimension().getHeight());
 
             this.animator = new FPSAnimator(canvas, s.getTargetFPS());
-            this.animator.setUpdateFPSFrames(s.getTargetFPS() / 5, null);
+
+            //--- The rate at which we wanna update the FPS counter
+            this.animator.setUpdateFPSFrames(Math.max(s.getTargetFPS() / 5, 1), null);
 
             this.animator.start();
 
             E.getE().getScreen().add(canvas);
             E.getE().getScreen().setVisible(true);
-
-
         }
+
     }
 
     /**
@@ -77,13 +80,15 @@ public class RenderLoop extends Loop {
      * @return Gives FPSAnimator, is null if OpenGL not active.
      */
     public FPSAnimator getAnimator() {
-        return animator;
+        return this.animator;
     }
 
     @Override
     public void tick(long updateLength) {
 
-        if(!(EScreen.USE_JOGL)) {
+        //--- If we DO NOT use OpenGL, we have to call EScreen's update methods to make sure that we always get a fresh
+        // frame.
+        if(!(E.getE().getSettings().useOpenGL())) {
             this.screen.invalidate();
             this.screen.repaint();
         }

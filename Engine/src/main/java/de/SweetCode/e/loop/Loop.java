@@ -13,7 +13,6 @@ public abstract class Loop implements Runnable {
     private final String name;
     private final long optimalIterationTime;
 
-    private boolean isRunning = false;
     private int currentTicks = 0;
     //---
 
@@ -35,6 +34,8 @@ public abstract class Loop implements Runnable {
     Loop(String name, long optimalIterationTime) {
         this.name = name;
         this.optimalIterationTime = Math.max(optimalIterationTime, 1);
+
+
     }
 
     /**

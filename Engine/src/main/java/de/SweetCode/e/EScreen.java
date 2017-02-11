@@ -1,9 +1,10 @@
 package de.SweetCode.e;
 
-import com.jogamp.opengl.*;
-import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
-import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import de.SweetCode.e.loop.ProfilerLoop;
@@ -34,6 +35,12 @@ import java.util.Map;
  */
 public class EScreen extends JFrame implements GLEventListener {
 
+    //---DEBUG
+    private final static int DEBUG_FONT_SIZE = 12;
+    private static boolean debugFirstRun = true;
+    private static int debugXOffset = -1;
+
+
     /**
      * @TODO:
      * Experimental Feature - it will allocate VRAM instead of RAM
@@ -44,12 +51,6 @@ public class EScreen extends JFrame implements GLEventListener {
      * performance.
      */
     public static final boolean USE_VRAM = false;
-
-    /**
-     * @TODO:
-     * Experimental Feature: using OpenGL to render the frame.
-     */
-    public static final boolean USE_JOGL = true;
 
     private BufferStrategy bufferStrategy;
     private GameScene current = null;
@@ -69,7 +70,7 @@ public class EScreen extends JFrame implements GLEventListener {
 
         EScreen.graphicConfiguration = this.getGraphicsConfiguration();
 
-        if(!(USE_JOGL)) {
+        if(!(settings.useOpenGL())) {
             this.setVisible(true);
 
             this.createBufferStrategy(3);
@@ -110,7 +111,9 @@ public class EScreen extends JFrame implements GLEventListener {
     @Override
     public void paint(Graphics graphics) {
 
-        if(USE_JOGL) {
+        Settings s = E.getE().getSettings();
+
+        if(s.useOpenGL()) {
             super.paint(graphics);
             return;
         }
@@ -119,7 +122,6 @@ public class EScreen extends JFrame implements GLEventListener {
             return;
         }
 
-        Settings s = E.getE().getSettings();
         do {
 
             Graphics2D g = (Graphics2D) this.bufferStrategy.getDrawGraphics();
@@ -137,7 +139,7 @@ public class EScreen extends JFrame implements GLEventListener {
 
                 //Note: only rescale if necessary
                 if(!(frame.getWidth(null) == dimension.getWidth()) || !(frame.getHeight(null) == dimension.getHeight())) {
-                    frame = frame.getScaledInstance(dimension.getWidth(), dimension.getHeight(), Image.SCALE_SMOOTH);
+                    frame = frame.getScaledInstance(dimension.getWidth(), dimension.getHeight(), Image.SCALE_AREA_AVERAGING);
                 }
             }
 
@@ -210,29 +212,39 @@ public class EScreen extends JFrame implements GLEventListener {
             BufferedImage frame = this.frame();
 
             // Frame to Buffer
-            // Note and @TODO: We have to convert RGBA to BGRA for some reason. This works currently but the performance
-            // might not be the best. We should think about caching data from old frames, maybe or something compareable.
             int[] data = ((DataBufferInt)frame.getRaster().getDataBuffer()).getData();
+
             IntBuffer buffer = IntBuffer.allocate(data.length);
+
+            // Note: Well, in a normal case we just could have called IntBuffer#put and passed the as parameter the data
+            // int-array, however the RGB values in it have a wrong order, so we have to fix them. This is what we are doing
+            // below. The values stored in the image-object are in the following order: ARGB, however the OpenGL pipeline
+            // expects ABGR for some reason.
+            // Since bit-shifting is not a expensive operation it usually takes about 1ms (of course depending on the system,
+            // but still acceptable). I tried to implement a cache but even if the look-up time is O(1) it is too slow
+            // to make any sense.
             Arrays.stream(data).forEachOrdered(e -> {
 
+                int alpha = (e >> 24) & 0xFF;
                 int red = (e >> 16) & 0xFF;
                 int green = (e >> 8) & 0xFF;
                 int blue = (e & 0xFF) & 0xFF;
-                int alpha = (e >> 24) & 0xFF;
+
 
                 buffer.put(
                         ((alpha & 0xFF) << 24)  |
-                        ((red & 0xFF)   << 0)   |
+                        ((blue & 0xFF)  << 16)  |
                         ((green & 0xFF) << 8)   |
-                        ((blue & 0xFF)  << 16)
+                        ((red & 0xFF)   << 0)
                 );
+
             });
+
             buffer.flip();
 
             GL2 gl = drawable.getGL().getGL2();
 
-            // bypass sync
+            // disables sync-to-vertical-refresh
             gl.setSwapInterval(0);
 
             // clear
@@ -302,7 +314,7 @@ public class EScreen extends JFrame implements GLEventListener {
     }
 
     @Override
-    public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {}
+    public void reshape(GLAutoDrawable glAutoDrawable, int x, int y, int width, int height) {}
 
     /**
      * <p>
@@ -317,9 +329,28 @@ public class EScreen extends JFrame implements GLEventListener {
         ProfilerLoop profilerLoop = E.getE().getProfilerLoop();
         List<Settings.DebugDisplay> displays = settings.getDebugInformation();
 
+        float defaultHeight = layer.g().getFont().getSize2D();
+        float fontHeight = Math.max(7, DEBUG_FONT_SIZE * (settings.getFrameDimension().getHeight() / 720F));
+        layer.g().setFont(layer.g().getFont().deriveFont(fontHeight));
+
         //--- Offsets
-        int xOffset = 360;
-        int yOffset = 12;
+        if(EScreen.debugFirstRun) {
+            EScreen.debugXOffset = (int) (layer.g().getFontMetrics().stringWidth(
+                    String.format(
+                            "FPS: %d (%d) | Ticks: %d (%d) | Objects: %d (%.4f%%)",
+                            E.getE().getCurrentFPS(),
+                            settings.getTargetFPS(),
+                            E.getE().getCurrentTicks(),
+                            settings.getTargetTicks(),
+                            E.getE().getGameComponents().size(),
+                            ((double) profilerLoop.getActiveObjects() / E.getE().getGameComponents().size()) * 100D
+                    )
+            ) * 1.28D);
+            EScreen.debugFirstRun = false;
+        }
+
+        int xOffset = EScreen.debugXOffset;
+        int yOffset = (int) (0.02D * settings.getFrameDimension().getHeight());
 
         int xStep = 1;
 
@@ -365,7 +396,7 @@ public class EScreen extends JFrame implements GLEventListener {
                     String.format(
                             "VRAM: %s | OpenGL: %s | Updates: %s",
                             (EScreen.USE_VRAM ? "on" : "off"),
-                            (EScreen.USE_JOGL ? "on" : "off"),
+                            (settings.useOpenGL() ? "on" : "off"),
                             (E.getE().getSettings().isParallelizingUpdate() ? "parallelized" : "sequential")
                     ),
                     width - xOffset,
@@ -497,6 +528,9 @@ public class EScreen extends JFrame implements GLEventListener {
             xStep += i[0];
             xStep++;
         }
+
+        layer.g().setFont(layer.g().getFont().deriveFont(defaultHeight));
+
     }
 
     /**

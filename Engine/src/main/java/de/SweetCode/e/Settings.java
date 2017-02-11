@@ -201,6 +201,16 @@ public interface Settings {
     default boolean isParallelizingUpdate() { return false; }
 
     /**
+     * <pre>
+     *     Defines if the engine should use OpenGL to render the scenes.
+     * </pre>
+     * @return
+     */
+    default boolean useOpenGL() {
+        return false;
+    }
+
+    /**
      * <p>
      *     Defines {@link RenderingHints} used by the renderer to draw the screen.
      * </p>

@@ -2,10 +2,7 @@ package de.SweetCode.e;
 
 import de.SweetCode.e.input.Input;
 import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.loop.LoopThreadFactory;
-import de.SweetCode.e.loop.ProfilerLoop;
-import de.SweetCode.e.loop.RenderLoop;
-import de.SweetCode.e.loop.UpdateLoop;
+import de.SweetCode.e.loop.*;
 import de.SweetCode.e.rendering.DefaultGameScene;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.GameSceneEntry;
@@ -60,6 +57,7 @@ public class E {
     private RenderLoop renderLoop;
     private UpdateLoop updateLoop;
     private ProfilerLoop profilerLoop;
+    private MouseMovingLoop mouseMovingLoop;
     //---
 
     /**
@@ -99,6 +97,7 @@ public class E {
         //--- Setting up loops
         this.renderLoop = new RenderLoop(this.screen, (C.SECOND_AS_NANO / this.settings.getTargetFPS()));
         this.updateLoop = new UpdateLoop(this.input, (C.SECOND_AS_NANO / this.settings.getTargetTicks()));
+        this.mouseMovingLoop = new MouseMovingLoop((C.SECOND_AS_NANO / this.settings.getTargetTicks()));
 
         if(settings.isDebugging()) {
             this.profilerLoop = new ProfilerLoop();
@@ -143,7 +142,7 @@ public class E {
 
     /**
      * <p>
-     *     Gives a instance of the {@link Layers} of the engine, it contains all {@link de.SweetCode.e.rendering.layers.Layer}
+     *     Gives an instance of the {@link Layers} of the engine, it contains all {@link de.SweetCode.e.rendering.layers.Layer}
      *     references used in the engine instance.
      * </p>
      *
@@ -155,7 +154,7 @@ public class E {
 
     /**
      * <p>
-     *     Gives a instance of the {@link ProfilerLoop} used by the engine to collect data if the engine is in debug mode.
+     *     Gives an instance of the {@link ProfilerLoop} used by the engine to collect data if the engine is in debug mode.
      * </p>
      *
      * @return Returns a {@link ProfilerLoop} reference if debugging is enabled, otherwise null.
@@ -166,13 +165,24 @@ public class E {
 
     /**
      * <p>
-     *     Gives a instance of the {@link RenderLoop} used by the engine to coordinate rendering processes.
+     *     Gives an instance of the {@link RenderLoop} used by the engine to coordinate rendering processes.
      * </p>
      *
      * @return Returns a {@link RenderLoop} reference.
      */
     public RenderLoop getRenderLoop() {
         return this.renderLoop;
+    }
+
+    /**
+     * <p>
+     *    Gives an instance of the {@link MouseMovingLoop} which is responsible for tracking the position of the mouse.
+     * </p>
+     *
+     * @return Returns a {@link MouseMovingLoop} reference.
+     */
+    public MouseMovingLoop getMouseMovingLoop() {
+        return this.mouseMovingLoop;
     }
 
     /**
@@ -206,7 +216,7 @@ public class E {
      * @return The amount of frames per second, never negative.
      */
     public int getCurrentFPS() {
-        return EScreen.USE_JOGL ? (int) this.renderLoop.getAnimator().getLastFPS() : this.renderLoop.getCurrentTicks();
+        return this.settings.useOpenGL() ? (int) this.renderLoop.getAnimator().getLastFPS() : this.renderLoop.getCurrentTicks();
     }
 
     /**
@@ -317,12 +327,6 @@ public class E {
 
     }
 
-    //--- EXPERIMENTAL
-    public void addRenderbale(Renderable renderable, Priority priority) {
-        this.gameComponents.add(new GameComponentEntry(renderable, priority));
-    }
-    //---
-
     /**
      * <pre>
      *     Selects the seen that the renderer is supposed to render. - The argument is the class of the scene you wanna
@@ -366,6 +370,12 @@ public class E {
                 this.updateLoop,
                 0,
                 this.updateLoop.getOptimalIterationTime(),
+                TimeUnit.NANOSECONDS
+        );
+        this.executor.scheduleAtFixedRate(
+                this.mouseMovingLoop,
+                0,
+                this.mouseMovingLoop.getOptimalIterationTime(),
                 TimeUnit.NANOSECONDS
         );
 
