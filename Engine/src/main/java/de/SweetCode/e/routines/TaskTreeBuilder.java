@@ -73,13 +73,13 @@ public class TaskTreeBuilder {
     }
 
     /**
-     * Adds a {@link TaskAlwaysSucceeds}.
+     * Adds a {@link TaskAlwaysSucceed}.
      *
-     * @param name The name of the {@link TaskAlwaysSucceeds}.
+     * @param name The name of the {@link TaskAlwaysSucceed}.
      * @return The reference to the used builder.
      */
     public TaskTreeBuilder alwaysSucceed(String name) {
-        this.addChild(new TaskAlwaysSucceeds(name));
+        this.addChild(new TaskAlwaysSucceed(name));
         return this;
     }
 

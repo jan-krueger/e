@@ -5,18 +5,18 @@ import de.SweetCode.e.routines.TaskDecorator;
 import de.SweetCode.e.routines.TaskStatus;
 
 /**
- * The TaskAlwaysSucceeds task will always succeed no matter the wrapped task succeeds or fails.
+ * The TaskAlwaysSucceed task will always succeed no matter the wrapped task succeeds or fails.
  *
  */
-public class TaskAlwaysSucceeds extends TaskDecorator {
+public class TaskAlwaysSucceed extends TaskDecorator {
 
-    public TaskAlwaysSucceeds() {}
+    public TaskAlwaysSucceed() {}
 
-    public TaskAlwaysSucceeds(String name) {
+    public TaskAlwaysSucceed(String name) {
         this(name, null);
     }
 
-    public TaskAlwaysSucceeds(String name, Task child) {
+    public TaskAlwaysSucceed(String name, Task child) {
         super(name, child);
     }
 

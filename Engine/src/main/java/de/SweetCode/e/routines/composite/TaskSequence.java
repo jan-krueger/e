@@ -8,7 +8,7 @@ import java.util.LinkedList;
 /**
  * A sequence is a task that runs each of its child behaviors in turn. It will return immediately with a failure
  * status code when one of its children fails. As long as its children are succeeding, it will keep on running the tasks.
- * If it runs out of children completely, it will return a succeeded status code
+ * If it runs out of children completely, it will return a succeeded status code.
  */
 public class TaskSequence extends TaskSelector {
 

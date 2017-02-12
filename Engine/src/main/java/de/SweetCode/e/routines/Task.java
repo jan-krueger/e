@@ -95,6 +95,8 @@ public abstract class Task {
     public void addChild(Task child) {
         //@TODO Check if one of the parents has this child's instance already as child/parent, if this is the case
         // the child cannot be added again, because e.g. this would cause an endless loop in the cancel method.
+        // Update: Maybe you wanna allow endless loops... not sure about that yet, if there should maybe be an option
+        // to detect or ignore in the Settings.
 
         child.setParent(this);
         this.children.add(child);
@@ -179,7 +181,7 @@ public abstract class Task {
     public final void cancel() {
 
         if(this.is(TaskStatus.RUNNING)) {
-            this.children.stream().forEach(Task::cancel);
+            this.children.forEach(Task::cancel);
         }
 
         this.taskStatus = TaskStatus.CANCELLED;
@@ -203,7 +205,7 @@ public abstract class Task {
         }
 
         // If all predicates succeed, we can run it
-        if(!(this.predicates.stream().filter(e -> !e.test(this)).findFirst().isPresent())) {
+        if(this.predicates.stream().allMatch(e -> e.test(this))) {
             this.run();
         } else {
             this.fail();
@@ -220,7 +222,7 @@ public abstract class Task {
             this.cancel();
         }
 
-        this.children.stream().forEach(Task::reset);
+        this.children.forEach(Task::reset);
         this.taskStatus = TaskStatus.FRESH;
 
     }
