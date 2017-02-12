@@ -65,6 +65,8 @@ public class EScreen extends JFrame implements GLEventListener {
         this.setResizable(settings.isResizable());
         this.setPreferredSize(settings.getWindowDimension().toDimension());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setFocusable(true);
+        this.setFocusableWindowState(true);
         this.pack();
         this.setLocationRelativeTo(null);
 
@@ -397,7 +399,7 @@ public class EScreen extends JFrame implements GLEventListener {
                             "VRAM: %s | OpenGL: %s | Updates: %s",
                             (EScreen.USE_VRAM ? "on" : "off"),
                             (settings.useOpenGL() ? "on" : "off"),
-                            (E.getE().getSettings().isParallelizingUpdate() ? "parallelized" : "sequential")
+                            (E.getE().getSettings().isParallelizingUpdate() ? String.format("parallelized (%d)", E.POOL_SIZE) : "sequential")
                     ),
                     width - xOffset,
                     yOffset * (xStep + 1)

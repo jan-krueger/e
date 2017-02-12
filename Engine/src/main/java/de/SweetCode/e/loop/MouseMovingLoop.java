@@ -45,7 +45,10 @@ public class MouseMovingLoop extends Loop {
 
         //--- Translate to window coordinates
         Point screen = E.getE().getScreen().getLocation();
-        Point windowLocation = new Point((int) (current.getX() - screen.getX()), (int) (current.getY() - screen.getY()));
+        Point windowLocation = new Point(
+                (int) (current.getX() - screen.getX()),
+                (int) (current.getY() - screen.getY())
+        );
 
         //--- Set the current location to the last location & add a new entry
         this.lastLocation = current;

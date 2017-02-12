@@ -13,6 +13,18 @@ public class Vector2D {
      * @param y The y direction of the vector.
      */
     public Vector2D(double x, double y) {
+        this.set(x, y);
+    }
+
+    /**
+     * <p>
+     *    Sets the x and y of the vector.
+     * </p>
+     *
+     * @param x The x direction of the vector.
+     * @param y The y direction of the vector.
+     */
+    public void set(double x, double y) {
         this.x = x;
         this.y = y;
         this.magnitude = Math.sqrt(

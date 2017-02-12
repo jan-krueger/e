@@ -62,7 +62,11 @@ public final class Input extends KeyAdapter {
                 );
             }
 
-            return false;
+            if(e.getID() == KeyEvent.KEY_RELEASED) {
+                this.keyQueue.removeIf(entry -> entry.getKeyCode() == e.getKeyCode());
+            }
+
+            return true;
 
         });
 
@@ -164,7 +168,7 @@ public final class Input extends KeyAdapter {
 
     }
 
-    /**
+    /**s
      * <p>
      *    This method returns a {@link LinkedList} of all keyboard entries since its last call. It copies all entries
      *    from the queue which the listener is feeding into the list and clears it.
@@ -175,7 +179,7 @@ public final class Input extends KeyAdapter {
      */
     public LinkedList<KeyEntry> getKeyboardEntries() {
         LinkedList<KeyEntry> stream = new LinkedList<>(this.keyQueue);
-        this.keyQueue.clear();
+        //this.keyQueue.clear();
         return stream;
     }
 

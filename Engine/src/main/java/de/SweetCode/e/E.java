@@ -28,6 +28,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class E {
 
+    /**
+     * @TODO This is the pool size representing the number of threads to keep in the pool, even if they are idle, which are
+     * responsible for executing the loops. This should maybe be a changeable in the {@link Settings}.
+     */
+    public static int POOL_SIZE = 2;
+
     //--- Static & Final Variables
     private static E instance;
     private final static Random random = new Random();
@@ -52,7 +58,7 @@ public class E {
     //---
 
     //--- Related To Loops
-    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(2, new LoopThreadFactory());
+    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(POOL_SIZE, new LoopThreadFactory());
 
     private RenderLoop renderLoop;
     private UpdateLoop updateLoop;

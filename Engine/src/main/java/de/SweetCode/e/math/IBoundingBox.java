@@ -7,6 +7,9 @@ public class IBoundingBox {
     private final ILocation min;
     private final ILocation max;
 
+    private final int width;
+    private final int height;
+
     /**
      * Casting double locations to int.
      * @param a One corner of the bounding box.
@@ -38,6 +41,8 @@ public class IBoundingBox {
     public IBoundingBox(int minX, int minY, int maxX, int maxY) {
         this.min = new ILocation(minX, minY);
         this.max = new ILocation(maxX, maxY);
+        this.width = Math.abs(this.max.getX() - this.min.getX());
+        this.height = Math.abs(this.max.getY() - this.min.getY());
     }
 
     /**
@@ -46,9 +51,8 @@ public class IBoundingBox {
      * @param y The units to move on the y axis.
      */
     public void move(int x, int y) {
-        this.getMax().add(x, y);
-        this.getCenter().add(x, y);
-        this.getMin().add(x, y);
+        this.max.add(x, y);
+        this.min.add(x, y);
     }
 
     /**
@@ -60,10 +64,14 @@ public class IBoundingBox {
      * @param y The new y coordinate.
      */
     public void setCenter(int x, int y) {
-        this.getCenter().set(x, y);
-
-        this.getMin().set(x - (this.getWidth() / 2), y - (this.getHeight() / 2));
-        this.getMax().set(x + (this.getWidth() / 2), y + (this.getHeight() / 2));
+        this.min.set(
+                x - (this.getWidth() / 2),
+                y - (this.getHeight() / 2)
+        );
+        this.max.set(
+                x + (this.getWidth() / 2),
+                y + (this.getHeight() / 2)
+        );
     }
 
     /**
@@ -102,14 +110,14 @@ public class IBoundingBox {
      * @return Returns the height of the bounding box.
      */
     public int getHeight() {
-        return Math.abs(this.getMax().getY() - this.getMin().getY());
+        return this.height;
     }
 
     /**
      * @return Returns the with of the bounding box.
      */
     public int getWidth() {
-        return Math.abs(this.getMax().getX() - this.getMin().getX());
+        return this.width;
     }
 
     public boolean intersects(BoundingBox other) {
