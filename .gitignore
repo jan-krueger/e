@@ -7,8 +7,6 @@
 
 out
 .idea/
--Engine/src/main/resources/
-Engine/target/classes/
-Engine/target/generated-sources/
-Engine/target/generated-test-sources/
-Engine/target/test-classes/
+Engine/src/main/resources/
+Engine/target/
+*.iml
