@@ -1,8 +1,8 @@
-package de.SweetCode.e.routines.composite;
+package de.SweetCode.e.resources.routines.composite;
 
-import de.SweetCode.e.routines.Task;
-import de.SweetCode.e.routines.TaskDecorator;
-import de.SweetCode.e.routines.TaskStatus;
+import de.SweetCode.e.resources.routines.Task;
+import de.SweetCode.e.resources.routines.TaskDecorator;
+import de.SweetCode.e.resources.routines.TaskStatus;
 
 /**
  * The TaskInverter task succeeds if the wrapped class fails and fails if it succeeds.

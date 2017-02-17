@@ -1,6 +1,6 @@
-package de.SweetCode.e.routines;
+package de.SweetCode.e.resources.routines;
 
-import de.SweetCode.e.routines.composite.*;
+import de.SweetCode.e.resources.routines.composite.*;
 import de.SweetCode.e.utils.Assert;
 
 import java.util.function.Predicate;
@@ -8,6 +8,8 @@ import java.util.function.Predicate;
 public class TaskTreeBuilder {
 
     private final Task root;
+
+    private boolean async = false;
     private Task currentNode;
 
     private TaskTreeBuilder(Task root) {
@@ -135,6 +137,11 @@ public class TaskTreeBuilder {
      */
     public TaskTreeBuilder filter(Predicate<Task> predicate) {
         this.currentNode.addFilter(predicate);
+        return this;
+    }
+
+    public TaskTreeBuilder async(boolean async) {
+        this.async = async;
         return this;
     }
 

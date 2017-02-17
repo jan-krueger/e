@@ -1,4 +1,4 @@
-package de.SweetCode.e.routines;
+package de.SweetCode.e.resources.routines;
 
 public enum TaskStatus {
 

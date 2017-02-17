@@ -1,7 +1,7 @@
-package de.SweetCode.e.routines.composite;
+package de.SweetCode.e.resources.routines.composite;
 
-import de.SweetCode.e.routines.Task;
-import de.SweetCode.e.routines.TaskStatus;
+import de.SweetCode.e.resources.routines.Task;
+import de.SweetCode.e.resources.routines.TaskStatus;
 
 import java.util.LinkedList;
 

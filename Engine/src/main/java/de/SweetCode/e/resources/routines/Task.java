@@ -1,4 +1,4 @@
-package de.SweetCode.e.routines;
+package de.SweetCode.e.resources.routines;
 
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
@@ -95,7 +95,7 @@ public abstract class Task {
     public void addChild(Task child) {
         //@TODO Check if one of the parents has this child's instance already as child/parent, if this is the case
         // the child cannot be added again, because e.g. this would cause an endless loop in the cancel method.
-        // Update: Maybe you wanna allow endless loops... not sure about that yet, if there should maybe be an option
+        // Update 12-2-2017: Maybe you wanna allow endless loops... not sure about that yet, if there should maybe be an option
         // to detect or ignore in the Settings.
 
         child.setParent(this);
