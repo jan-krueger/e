@@ -2,6 +2,7 @@ package de.SweetCode.e.resources.dialogue.condition;
 
 import de.SweetCode.e.E;
 import de.SweetCode.e.utils.log.LogEntry;
+import de.SweetCode.e.utils.log.LogPrefixes;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -105,9 +106,10 @@ public class DialogueConditionWrapper {
                     if(!(m.getReturnType().isAssignableFrom(boolean.class))) {
                         System.out.println(m.getReturnType().getName());
                         E.getE().getLog().log(
-                                LogEntry.Builder.create()
-                                        .message("The DialogueConditions method %s does not return a boolean.", m.getName())
-                                        .build()
+                            LogEntry.Builder.create(DialogueConditionWrapper.class)
+                                .prefix(LogPrefixes.DIALOGUE)
+                                .message("The DialogueConditions method %s does not return a boolean.", m.getName())
+                            .build()
                         );
                         return;
                     }
@@ -129,9 +131,10 @@ public class DialogueConditionWrapper {
                     // if the length is not equal, than we didn't get for all parameters a field type
                     if(!(m.getParameterTypes().length == fields.size())) {
                         E.getE().getLog().log(
-                                LogEntry.Builder.create()
-                                        .message("The DialogueConditions method %s has not enough annotations.", m.getName())
-                                        .build()
+                            LogEntry.Builder.create(DialogueConditionWrapper.class)
+                                .prefix(LogPrefixes.DIALOGUE)
+                                .message("The DialogueConditions method %s has not enough annotations.", m.getName())
+                            .build()
                         );
                         return;
                     }

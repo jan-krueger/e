@@ -7,6 +7,7 @@ import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.log.LogEntry;
+import de.SweetCode.e.utils.log.LogPrefixes;
 import me.lemire.integercompression.differential.IntegratedIntCompressor;
 
 import javax.imageio.ImageIO;
@@ -82,7 +83,8 @@ public class DynamicTextureLoader implements TextureLoader {
             this.compressedImage = compressor.compress(data);
 
             E.getE().getLog().log(
-                LogEntry.Builder.create()
+                LogEntry.Builder.create(DynamicTextureLoader.class)
+                    .prefix(LogPrefixes.TEXTURE)
                     .message(
                         String.format(
                             "DynamicTextureLoader compressed the image (%s) and could save %.2f%% in-memory space.",
@@ -116,7 +118,8 @@ public class DynamicTextureLoader implements TextureLoader {
 
         } catch (IOException e) {
             E.getE().getLog().log(
-                LogEntry.Builder.create()
+                LogEntry.Builder.create(DynamicTextureLoader.class)
+                    .prefix(LogPrefixes.TEXTURE)
                     .message(String.format("DynamicTextureLoader failed to load the image (%s).", this.file.getAbsolutePath()))
                 .build()
             );
@@ -156,10 +159,10 @@ public class DynamicTextureLoader implements TextureLoader {
              *
              * offset   = 0, because we had no offset in our original RGB array.
              * y        = y, the y coordinate we calculated from the index.
-             * startY   = 0, because the new BufferdImage has the same size as the array, no startY-offset required.
+             * startY   = 0, because the new BufferedImage has the same size as the array, no startY-offset required.
              * scansize = with of the original spritesheet, because this is the scansize used in the original RGB array.
              * x        = x, the x coordinate we calculated from the index.
-             * startX   = 0, because the new BufferdImage has the same size as the array, no startX-offset required.
+             * startX   = 0, because the new BufferedImage has the same size as the array, no startX-offset required.
              */
             bufferedImage.setRGB(0, 0, this.tileWidth, this.tileHeight, uncompressed, (y * this.boundingBox.getWidth() + x), this.boundingBox.getWidth());
 
@@ -209,7 +212,7 @@ public class DynamicTextureLoader implements TextureLoader {
         public ImageCacheEntry(long expired, BufferedImage image) {
             this.expired = expired;
 
-            // Storing images in VRAM if we are supposed to... :) otherwise just plain BufferdImage in normal RAM
+            // Storing images in VRAM if we are supposed to... :) otherwise just plain BufferedImage in normal RAM
             this.image = (EScreen.USE_VRAM ? toVolatile(image) : image);
         }
 

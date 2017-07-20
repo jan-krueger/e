@@ -2,6 +2,11 @@ package de.SweetCode.e.utils;
 
 import java.util.Arrays;
 
+/**
+ * <p>
+ *    You can use the assert class to assert values and if they don't match throw an error.
+ * </p>
+ */
 public class Assert {
 
     private Assert() {}

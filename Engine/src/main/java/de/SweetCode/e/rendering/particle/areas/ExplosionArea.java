@@ -84,12 +84,12 @@ public class ExplosionArea implements Renderable {
 
         }
 
-        Collections.sort(this.particles, (o1, o2) -> {
+        this.particles.sort((o1, o2) -> {
 
             double o1D = o1.getLocation().distanceTo(this.circleBox.getCenter());
             double o2D = o2.getLocation().distanceTo(this.circleBox.getCenter());
 
-            if(o1D == o2D) {
+            if (o1D == o2D) {
                 return 0;
             }
 

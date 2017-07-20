@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import de.SweetCode.e.E;
 import de.SweetCode.e.resources.dialogue.Dialogue;
 import de.SweetCode.e.resources.dialogue.DialogueNode;
 import de.SweetCode.e.resources.dialogue.DialogueOptionPointer;
@@ -12,6 +13,8 @@ import de.SweetCode.e.resources.dialogue.condition.DialogueConditionWrapper;
 import de.SweetCode.e.resources.dialogue.condition.DialogueConditions;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.exceptions.ParserException;
+import de.SweetCode.e.utils.log.LogEntry;
+import de.SweetCode.e.utils.log.LogPrefixes;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -119,7 +122,12 @@ public class YarnJsonParser implements DialogueParser<String, String> {
                 if(realPointer.isPresent()) {
                     pointers.add(new DialogueOptionPointer(p.getOptionText(), realPointer.get(), p.getDialogueConditionWrappers()));
                 } else {
-                    //@TODO Log error, couldn't find pointer
+                    E.getE().getLog().log(
+                        LogEntry.Builder.create(YarnJsonParser.class)
+                            .prefix(LogPrefixes.DIALOGUE)
+                            .message("Failed to find the DialogueOptionPointer with this identifier: %s.", (String) p.getPointer().getIdentifier())
+                        .build()
+                    );
                 }
 
             });

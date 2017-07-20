@@ -98,7 +98,7 @@ public class BoundingBox {
      * @return Gives the center of the bounding box.
      */
     public Location getCenter() {
-        return new Location(((this.getMin().getX() + this.getMax().getX()) / 2.0D), ((this.getMin().getY() + this.getMax().getY()) / 2.0D));
+        return new Location((this.getMin().getX() + (this.getWidth() / 2.0D)), (this.getMin().getY() + (this.getHeight() / 2.0D)));
     }
 
     /**

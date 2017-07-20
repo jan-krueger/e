@@ -1,24 +1,27 @@
 import de.SweetCode.e.E;
 import de.SweetCode.e.Settings;
+import de.SweetCode.e.resources.file.HotSwapFile;
 
-public class Test {
+public class Test  {
 
     public static void main(String[] args) {
-
         E e = new E(new Settings() {
-
             @Override
-            public boolean isParallelizingUpdate() {
-                return false;
+            public boolean isHotSwapEnabled() {
+                return true;
             }
 
             @Override
             public boolean isDebugging() {
-                return false;
+                return true;
             }
         });
-        e.run();
 
+        new HotSwapFile("C:\\Users\\Yonas\\Downloads\\A.txt");
+        new HotSwapFile("C:\\Users\\Yonas\\Downloads\\B");
+
+        e.run();
     }
+
 
 }

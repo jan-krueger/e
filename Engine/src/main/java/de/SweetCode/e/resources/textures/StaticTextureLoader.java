@@ -6,6 +6,7 @@ import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.log.LogEntry;
+import de.SweetCode.e.utils.log.LogPrefixes;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -55,7 +56,8 @@ public class StaticTextureLoader implements TextureLoader {
 
         } catch (IOException e) {
             E.getE().getLog().log(
-                LogEntry.Builder.create()
+                LogEntry.Builder.create(StaticTextureLoader.class)
+                    .prefix(LogPrefixes.TEXTURE)
                     .message(String.format("DynamicTextureLoader failed to load the image (%s).", this.file.getAbsolutePath()))
                 .build()
             );

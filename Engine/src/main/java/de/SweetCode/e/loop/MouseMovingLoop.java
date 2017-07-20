@@ -22,7 +22,7 @@ public class MouseMovingLoop extends Loop {
      *    A queue containing all mouse movements.
      * </p>
      *
-     * @return
+     * @return The queue containing the movements, never null.
      */
     public Queue<MouseMovingEntry> getMouseMovingEntries() {
         return this.mouseMovingEntries;

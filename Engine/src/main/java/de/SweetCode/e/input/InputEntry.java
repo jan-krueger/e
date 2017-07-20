@@ -35,7 +35,6 @@ public class InputEntry {
      * @param mouseWheelEntries All mouse entries from the mouse wheel.
      * @param mouseDraggedEntries All mouse entries from mouse dragging.
      * @param mouseMovedEntries All mouse entries from mouse movement.
-     * @param mouseMovedEntries All mouse entries from mouse moving.
      * @param mouseReleasedQueue All mouse entries from mouse releases.
      */
     public InputEntry(

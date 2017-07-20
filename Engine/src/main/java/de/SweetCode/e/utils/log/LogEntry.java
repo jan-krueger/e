@@ -8,13 +8,23 @@ import java.util.Date;
 public class LogEntry {
 
     private final String message;
+    private final Class clazz;
     private final Timestamp timestamp = new Timestamp(new Date().getTime());
 
     /**
+     * @param clazz The clazz we are logging from.
      * @param message Message to appear in the log.
      */
-    public LogEntry(String message) {
+    public LogEntry(Class clazz, String message) {
+        this.clazz = clazz;
         this.message = message;
+    }
+
+    /**
+     * @return The clazz which logged this message.
+     */
+    public Class getClazz() {
+        return this.clazz;
     }
 
     /**
@@ -34,6 +44,7 @@ public class LogEntry {
     @Override
     public String toString() {
         return ToStringBuilder.create(this)
+                .append("source", this.clazz.getSimpleName())
                 .append("message", this.message)
                 .append("timestamp", this.timestamp.toString())
             .build();
@@ -41,12 +52,21 @@ public class LogEntry {
 
     public static class Builder {
 
+        private Class clazz;
+        private LogPrefix prefix;
         private String message;
 
-        public Builder() {}
+        public Builder(Class clazz) {
+            this.clazz = clazz;
+        }
 
-        public static Builder create() {
-            return new Builder();
+        public static Builder create(Class clazz) {
+            return new Builder(clazz);
+        }
+
+        public Builder prefix(LogPrefix prefix) {
+            this.prefix = prefix;
+            return this;
         }
 
         public Builder message(String message) {
@@ -60,7 +80,7 @@ public class LogEntry {
         }
 
         public LogEntry build() {
-            return new LogEntry(this.message);
+            return new LogEntry(this.clazz, String.format("[%s] %s", this.prefix.prefix(), this.message));
         }
 
     }

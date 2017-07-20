@@ -136,6 +136,28 @@ public interface Settings {
 
     /**
      * <p>
+     *     Defines if the HotSwap feature is enabled.
+     * </p>
+     *
+     * @return true, if the feature is enabled, otherwise false.
+     */
+    default boolean isHotSwapEnabled() {
+        return true;
+    }
+
+    /**
+     * <p>
+     *     Defines the amount of ticks/second between checking if a file should be refreshed or not.
+     * </p>
+     *
+     * @return
+     */
+    default double getHotSwapInterval() {
+        return 0.25;
+    }
+
+    /**
+     * <p>
      *     The maximum of elements the log can store. The log is used by the engine, but you can also send your own
      *     entries to it. If the log reaches the maximum it will delete the oldest entry in it.
      * </p>
@@ -204,7 +226,8 @@ public interface Settings {
      * <pre>
      *     Defines if the engine should use OpenGL to render the scenes.
      * </pre>
-     * @return
+     *
+     * @return True, if the engine is supposed to use OpenGL, otherwise false.
      */
     default boolean useOpenGL() {
         return false;

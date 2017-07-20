@@ -54,7 +54,7 @@ public class StringUtils {
             return null;
         }
 
-        StringBuffer builder = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for(double entry : value) {
 
@@ -80,7 +80,7 @@ public class StringUtils {
             return null;
         }
 
-        StringBuffer builder = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for(double entry : value) {
 
@@ -103,7 +103,7 @@ public class StringUtils {
             return null;
         }
 
-        StringBuffer builder = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for(long entry : value) {
             builder.append(entry).append(delimiter);
@@ -128,7 +128,7 @@ public class StringUtils {
             return null;
         }
 
-        StringBuffer builder = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for(double entry : value) {
 
@@ -154,7 +154,7 @@ public class StringUtils {
             return null;
         }
 
-        StringBuffer builder = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for(byte entry : value) {
 
@@ -176,7 +176,7 @@ public class StringUtils {
             return null;
         }
 
-        StringBuffer builder = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for(char entry : value) {
 
@@ -198,7 +198,7 @@ public class StringUtils {
             return null;
         }
 
-        StringBuffer builder = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for(boolean entry : value) {
 
@@ -225,7 +225,7 @@ public class StringUtils {
             return null;
         }
 
-        StringBuffer builder = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         for(T entry : value) {
 
@@ -247,7 +247,7 @@ public class StringUtils {
             return null;
         }
 
-        StringBuffer builder = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
         value.forEach(e -> builder.append(e).append(delimiter));
 
@@ -269,6 +269,10 @@ public class StringUtils {
 
     public static int indexOf(String value, char character, int start, int end) {
 
+        if(value == null) {
+            return StringUtils.INDEX_NOT_FOUND;
+        }
+
         if(start < 0) {
             throw new IllegalArgumentException("Start cannot less than zero.");
         }
@@ -279,10 +283,6 @@ public class StringUtils {
 
         if(end > value.length()) {
             throw new IllegalArgumentException("End cannot be greater than the value length.");
-        }
-
-        if(value == null) {
-            return StringUtils.INDEX_NOT_FOUND;
         }
 
         char[] array = value.toCharArray();

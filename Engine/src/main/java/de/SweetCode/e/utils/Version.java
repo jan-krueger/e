@@ -1,5 +1,7 @@
 package de.SweetCode.e.utils;
 
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
+
 public class Version implements Comparable<Version> {
 
     private final String readable;
@@ -53,6 +55,12 @@ public class Version implements Comparable<Version> {
         return this.build;
     }
 
+    /**
+     * <p>
+     *    Gives a human readable string of the version.
+     * </p>
+     * @return
+     */
     public String getVersion() {
         return this.readable;
     }
@@ -63,7 +71,8 @@ public class Version implements Comparable<Version> {
 
     @Override
     public String toString() {
-        return this.getVersion();
+        return ToStringBuilder.create(this)
+                .build();
     }
 
     @Override

@@ -9,6 +9,7 @@ import de.SweetCode.e.resources.dialogue.condition.DialogueConditionWrapper;
 import de.SweetCode.e.resources.dialogue.condition.DialogueConditions;
 import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.log.LogEntry;
+import de.SweetCode.e.utils.log.LogPrefixes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -52,7 +53,8 @@ public class YarnXmlParser implements DialogueParser<File, String> {
             document = this.documentBuilder.parse(input);
         } catch (SAXException | IOException e) {
             E.getE().getLog().log(
-                LogEntry.Builder.create()
+                LogEntry.Builder.create(YarnXmlParser.class)
+                    .prefix(LogPrefixes.DIALOGUE)
                     .message("Failed to parse the provided file (%s). Error: %s", input, e.getMessage())
                 .build()
             );

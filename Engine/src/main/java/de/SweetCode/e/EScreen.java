@@ -15,6 +15,7 @@ import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
 import de.SweetCode.e.utils.log.LogEntry;
+import de.SweetCode.e.utils.log.LogPrefixes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +80,12 @@ public class EScreen extends JFrame implements GLEventListener {
             this.bufferStrategy = this.getBufferStrategy();
 
             if (this.bufferStrategy == null) {
-                E.getE().getLog().log(LogEntry.Builder.create().message("Failed to create BufferStrategy.").build());
+                E.getE().getLog().log(
+                        LogEntry.Builder.create(EScreen.class)
+                            .prefix(LogPrefixes.ENGINE)
+                            .message("Failed to create BufferStrategy.")
+                        .build()
+                );
             }
 
         }

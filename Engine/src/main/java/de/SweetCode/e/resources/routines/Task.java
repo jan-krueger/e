@@ -228,10 +228,14 @@ public abstract class Task {
     }
 
     /**
-     * This metod will be called if the task:
-     *  - RUNNING when one of the children of this task needs to run again.
-     *  - SUCCEEDED when one of the children of this task succeeds.
-     *  - FAILED when one of the children of this task fails.
+     * <p>
+     *    This method will be called if the task:
+     * </p>
+     * <ul>
+     *     <li><i>RUNNING</i> when one of the children of this task needs to run again.</li>
+     *     <li><i>SUCCEEDED</i> when one of the children of this task succeeds.</li>
+     *     <li><i>FAILED</i> when one of the children of this task fails.</li>
+     * </ul>
      *
      * @param taskStatus The taskStatus of the task.
      * @param task The task that called this method.
@@ -245,13 +249,34 @@ public abstract class Task {
 
     @Override
     public String toString() {
+
+        //--- Building the structure
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n");
+        print(builder, "", true);
+
         return ToStringBuilder.create(this)
                 .append("name", (this.name == null ? this.getClass().getSimpleName() : this.name))
                 .append("taskStatus", this.taskStatus.name())
                 .append("parent", (this.parent == null ? null : this.parent.getName()))
                 .append("filters", this.predicates)
-                .append("children", this.children)
+                .append("structure", builder.toString())
             .build();
+    }
+
+    private void print(StringBuilder stringBuilder, String prefix, boolean isTail) {
+        stringBuilder.append(String.format(
+            "%s%s%s\n",
+                prefix,
+                (isTail ? "└── " : "├── "),
+                (this.name == null ? this.getClass().getSimpleName() : this.name)
+        ));
+        for (int i = 0; i < this.children.size() - 1; i++) {
+            this.children.get(i).print(stringBuilder, String.format("%s%s", prefix, (isTail ? "    " : "│   ")), false);
+        }
+        if (this.children.size() > 0) {
+            this.children.get(this.children.size() - 1).print(stringBuilder,  String.format("%s%s", prefix, (isTail ? "    " : "│   ")), true);
+        }
     }
 
 }

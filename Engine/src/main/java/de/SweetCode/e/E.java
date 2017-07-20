@@ -12,6 +12,8 @@ import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
 import de.SweetCode.e.utils.log.Log;
 import de.SweetCode.e.utils.log.LogEntry;
+import de.SweetCode.e.utils.log.LogPrefix;
+import de.SweetCode.e.utils.log.LogPrefixes;
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -58,12 +60,13 @@ public class E {
     //---
 
     //--- Related To Loops
-    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(POOL_SIZE, new LoopThreadFactory());
+    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(POOL_SIZE, new LoopThreadFactory());
 
     private RenderLoop renderLoop;
     private UpdateLoop updateLoop;
     private ProfilerLoop profilerLoop;
     private MouseMovingLoop mouseMovingLoop;
+    private HotSwapLoop hotSwapLoop;
     //---
 
     /**
@@ -104,6 +107,10 @@ public class E {
         this.renderLoop = new RenderLoop(this.screen, (C.SECOND_AS_NANO / this.settings.getTargetFPS()));
         this.updateLoop = new UpdateLoop(this.input, (C.SECOND_AS_NANO / this.settings.getTargetTicks()));
         this.mouseMovingLoop = new MouseMovingLoop((C.SECOND_AS_NANO / this.settings.getTargetTicks()));
+
+        if(settings.isHotSwapEnabled()) {
+            this.hotSwapLoop = new HotSwapLoop((long) (C.SECOND_AS_NANO / this.settings.getHotSwapInterval()));
+        }
 
         if(settings.isDebugging()) {
             this.profilerLoop = new ProfilerLoop();
@@ -193,6 +200,18 @@ public class E {
 
     /**
      * <p>
+     *    Gives an instance of the {@link HotSwapLoop} which is responsible for updating the HotSwap file system.
+     * </p>
+     *
+     * @return Returns a {@link HotSwapLoop} reference.
+     */
+    public HotSwapLoop getHotSwapLoop() {
+        return this.hotSwapLoop;
+    }
+
+
+    /**
+     * <p>
      *     Returns a {@link LinkedHashMap} of all scenes registered to the engine. The key is the {@link Class} of the
      *     {@link GameScene} and the value is the related {@link GameSceneEntry}.
      * </p>
@@ -278,18 +297,21 @@ public class E {
 
         if(!(priority == Priority.NORMAL) && this.settings.isParallelizingUpdate()) {
             this.getLog().log(
-                    LogEntry.Builder.create().message(
-                        "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +
-                        "the GameComponent that is tied to a GameScene, however the priority for the GameScene itself " +
-                        "will be set."
-                    ).build()
+                    LogEntry.Builder.create(E.class)
+                        .prefix(LogPrefixes.ENGINE)
+                        .message(
+                            "If you enabled isParallelizingUpdate you cannot define the priority of a GameComponent and/or" +
+                            "the GameComponent that is tied to a GameScene, however the priority for the GameScene itself " +
+                            "will be set."
+                        )
+                    .build()
             );
         }
 
         this.gameComponents.add(new GameComponentEntry(gameComponent, priority));
 
         // Sort
-        Collections.sort(this.gameComponents, new GameComponentEntry.EntryComparator());
+        this.gameComponents.sort(new GameComponentEntry.EntryComparator());
 
     }
 
@@ -367,30 +389,39 @@ public class E {
 
         //--- Schedule Various Loops (Currently: Rendering & Update Loop)
         this.executor.scheduleAtFixedRate(
-                this.renderLoop,
-                0,
-                this.renderLoop.getOptimalIterationTime(),
-                TimeUnit.NANOSECONDS
+            this.renderLoop,
+            0,
+            this.renderLoop.getOptimalIterationTime(),
+            TimeUnit.NANOSECONDS
         );
         this.executor.scheduleAtFixedRate(
-                this.updateLoop,
-                0,
-                this.updateLoop.getOptimalIterationTime(),
-                TimeUnit.NANOSECONDS
+            this.updateLoop,
+            0,
+            this.updateLoop.getOptimalIterationTime(),
+            TimeUnit.NANOSECONDS
         );
         this.executor.scheduleAtFixedRate(
-                this.mouseMovingLoop,
-                0,
-                this.mouseMovingLoop.getOptimalIterationTime(),
-                TimeUnit.NANOSECONDS
+            this.mouseMovingLoop,
+            0,
+            this.mouseMovingLoop.getOptimalIterationTime(),
+            TimeUnit.NANOSECONDS
         );
+
+        if(this.settings.isHotSwapEnabled()) {
+            this.executor.scheduleAtFixedRate(
+                this.hotSwapLoop,
+                0,
+                this.hotSwapLoop.getOptimalIterationTime(),
+                TimeUnit.NANOSECONDS
+            );
+        }
 
         if(this.settings.isDebugging() && !(this.settings.getDebugInformation().isEmpty())) {
             this.executor.scheduleAtFixedRate(
-                    this.profilerLoop,
-                    0,
-                    this.profilerLoop.getOptimalIterationTime(),
-                    TimeUnit.NANOSECONDS
+                this.profilerLoop,
+                0,
+                this.profilerLoop.getOptimalIterationTime(),
+                TimeUnit.NANOSECONDS
             );
         }
 
