@@ -1,8 +1,10 @@
 package de.SweetCode.e.resources.file;
 
 import de.SweetCode.e.E;
+import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.log.LogEntry;
 import de.SweetCode.e.utils.log.LogPrefixes;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +57,23 @@ public class HotSwapFile extends File {
 
     /**
      * <p>
+     *     Computes the checksum of the file using the CRC32 algorithm.
+     * </p>
+     *
+     * @return the hashsum, negative if it failed to compute.
+     */
+    public final long getCRC32() {
+        try {
+            return FileUtils.checksumCRC32(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+
+    /**
+     * <p>
      *     Loads the current content of the file into memory and makes it accessible through {@link HotSwapFile#getContent()}.
      * </p>
      */
@@ -76,12 +95,32 @@ public class HotSwapFile extends File {
         }
     }
 
+    @Override
+    public boolean createNewFile() {
+        throw new IllegalStateException("The method is not supported");
+    }
+
+    @Override
+    public boolean mkdir() {
+        throw new IllegalStateException("The method is not supported");
+    }
+
+    @Override
+    public boolean mkdirs() {
+        throw new IllegalStateException("The method is not supported");
+    }
+
     /**
      * <p>
      *    Registers the file in the HotSwapLoop.
      * </p>
      */
     private void register() {
+
+        Assert.assertTrue("The HotSwap system only supports existing files.", this.exists());
+        Assert.assertTrue("The HotSwap system only supports files.", this.isFile());
+        Assert.assertTrue("The HotSwap file has to be readable.", this.canRead());
+
         if(this.loadContent()) {
             E.getE().getHotSwapLoop().addFile(this);
         } else {

@@ -11,13 +11,13 @@ e is a really simple 2D game engine (WIP).
 - [x] Behaviour Trees
 - [x] Multithreading
 - [x] Loading Assets
+- [x] Hot Swap Files
 - [ ] Noise Map Generation
 - [ ] Entity Component System
 - [ ] Light mapping
 - [ ] Image manipulation
-- [ ] Streaming Music Files
-- [ ] Streaming Video Files
-
+- [ ] Streaming Files API
+- [ ] Replacing Dependencies with own code
 
 ### Setup
 ```java

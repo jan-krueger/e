@@ -502,6 +502,23 @@ public class EScreen extends JFrame implements GLEventListener {
 
             final int[] i = {0};
             int finalXStep = xStep;
+
+            //--- Main Thread
+            final double[] waiting = {0D};
+            threads
+                .entrySet().stream()
+                .filter(e -> e.getKey().getName().equals("main"))
+                .findFirst().get()
+                .getValue().forEach(thread -> {
+                    if(thread.getState() == Thread.State.WAITING) {
+                        waiting[0]++;
+                    }
+                });
+
+            if(waiting[0] / E.POOL_SIZE > 0.5D) {
+                //layer.g().drawString("WARNING Decrease the pool size.");
+            }
+
             threads.forEach((threadGroup, threadList) -> {
 
                 //--- Group Name
@@ -517,6 +534,18 @@ public class EScreen extends JFrame implements GLEventListener {
 
                 //--- Threads belonging to the group
                 threadList.forEach(t -> {
+                    Color tmp = layer.g().getColor();
+                    if(t.getName().startsWith("e-loop-thread-")) {
+                        double usage = waiting[0] / E.POOL_SIZE;
+                        if(usage < 0.31) {
+                            layer.g().setColor(Color.GREEN);
+                        } else if(usage > 0.3 && usage < 0.51) {
+                            layer.g().setColor(Color.ORANGE);
+                        } else {
+                            layer.g().setColor(Color.RED);
+                        }
+                    }
+
                     layer.g().drawString(
                             String.format(
                                 "%d - P: %d - %s (%s)",
@@ -528,6 +557,8 @@ public class EScreen extends JFrame implements GLEventListener {
                             (int) (width - xOffset * 0.9),
                             yOffset * ((finalXStep + 1) + i[0])
                     );
+
+                    layer.g().setColor(tmp);
                     i[0]++;
                 });
 

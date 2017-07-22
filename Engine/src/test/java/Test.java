@@ -18,7 +18,7 @@ public class Test  {
         });
 
         new HotSwapFile("C:\\Users\\Yonas\\Downloads\\A.txt");
-        new HotSwapFile("C:\\Users\\Yonas\\Downloads\\B");
+
 
         e.run();
     }

@@ -8,7 +8,6 @@ import de.SweetCode.e.utils.log.LogPrefixes;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -17,13 +16,6 @@ public class HotSwapLoop extends Loop {
 
     private Map<HotSwapFile, FileEntry> fileList = new HashMap<>();
 
-    /**
-     * <p>
-     * Creates a new loop.
-     * </p>
-     *
-     * @param optimalIterationTime The time in {@link TimeUnit#NANOSECONDS} between each update call.
-     */
     public HotSwapLoop(long optimalIterationTime) {
         super("HotSwapLoop", optimalIterationTime);
     }
@@ -35,15 +27,18 @@ public class HotSwapLoop extends Loop {
 
             if(
                 (file.lastModified() > fileEntry.getLastModified()) &&
+                !(file.getCRC32() == fileEntry.getLastHash()) &&
                 ((System.nanoTime() - fileEntry.getLastCheck()) <= System.nanoTime())
             ) {
 
                 //--- Refresh the file's content
                 file.refresh();
 
+                //--- Update values
                 FileEntry tmp = this.fileList.get(file);
                 tmp.setLastModified(file.lastModified());
                 tmp.setLastCheck((long) (fileEntry.getLastCheck() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapInterval())));
+                tmp.setLastHash(file.getCRC32());
             }
 
         });
@@ -62,9 +57,11 @@ public class HotSwapLoop extends Loop {
             ));
         }
 
+        //--- Add the file
         this.fileList.put(file, new FileEntry(
                 file.lastModified(),
-                (long) (System.nanoTime() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapInterval()))
+                (long) (System.nanoTime() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapInterval())),
+                file.getCRC32()
         ));
 
         if(E.getE().getSettings().isHotSwapEnabled()) {
@@ -94,26 +91,36 @@ public class HotSwapLoop extends Loop {
 
         private long lastModified;
         private long lastCheck;
+        private long lastHash;
 
-        public FileEntry(long lastModified, long lastCheck) {
+        private FileEntry(long lastModified, long lastCheck, long lastHash) {
             this.lastModified = lastModified;
             this.lastCheck = lastCheck;
+            this.lastHash = lastHash;
         }
 
-        public long getLastModified() {
+        private long getLastModified() {
             return this.lastModified;
         }
 
-        public long getLastCheck() {
+        private long getLastCheck() {
             return this.lastCheck;
         }
 
-        public void setLastCheck(long lastCheck) {
+        private long getLastHash() {
+            return this.lastHash;
+        }
+
+        private void setLastCheck(long lastCheck) {
             this.lastCheck = lastCheck;
         }
 
-        public void setLastModified(long lastModified) {
+        private void setLastModified(long lastModified) {
             this.lastModified = lastModified;
+        }
+
+        private void setLastHash(long lastHash) {
+            this.lastHash = lastHash;
         }
     }
 
