@@ -65,6 +65,30 @@ public class Version implements Comparable<Version> {
         return this.readable;
     }
 
+    /**
+     * <p>
+     *     Lets you created a customized version string. You can simply provide an format with placeholders.
+     * </p>
+     * <ul>
+     *     <li>%major% -> Major Version Number</li>
+     *     <li>%minor% -> Minor Version Number</li>
+     *     <li>%patch% -> Patch Version Number</li>
+     *     <li>%build% -> Build Number</li>
+     * </ul>
+     * @param format The format for the version string.
+     *
+     * @return Returns the format string with replaced placeholders.
+     */
+    public String getVersion(String format) {
+
+        Assert.assertNotNull("The format cannot be null.", format);
+
+        return format.replaceAll("%major%", String.valueOf(this.major))
+                     .replaceAll("%minor%", String.valueOf(this.minor))
+                     .replaceAll("%patch%", String.valueOf(this.patch))
+                     .replaceAll("%build%", String.valueOf(this.build));
+    }
+
     public ReleaseTag getReleaseTag() {
         return this.releaseTag;
     }
