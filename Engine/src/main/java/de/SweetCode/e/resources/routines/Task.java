@@ -2,8 +2,7 @@ package de.SweetCode.e.resources.routines;
 
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class Task {
@@ -29,9 +28,9 @@ public abstract class Task {
     private List<Task> children = new LinkedList<>();
 
     /**
-     * This list keeps track of all predicates.
+     * This map keeps track of all predicates and their last results.
      */
-    private List<Predicate<Task>> predicates = new LinkedList<>();
+    private Map<Predicate<Task>, Boolean> predicates = new LinkedHashMap<>();
 
     public Task() {
         this(null);
@@ -47,6 +46,21 @@ public abstract class Task {
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * <p>
+     *     Returns the structure of the task and its children as a printable string.
+     * </p>
+     *
+     * @return The structure as string.
+     */
+    public String getStructure() {
+
+        StringBuilder builder = new StringBuilder();
+        this.print(builder, "", true);
+        return builder.toString();
+
     }
 
     /**
@@ -108,7 +122,7 @@ public abstract class Task {
      * @param predicate The {@link Predicate}.
      */
     public void addFilter(Predicate<Task> predicate) {
-        this.predicates.add(predicate);
+        this.predicates.put(predicate, null);
     }
 
     /**
@@ -204,8 +218,15 @@ public abstract class Task {
             this.reset();
         }
 
-        // If all predicates succeed, we can run it
-        if(this.predicates.stream().allMatch(e -> e.test(this))) {
+        //--- If all predicates succeed, we can run it
+        //      - We also store the last value that the predicate returned to improve the ability of debugging trees.
+        if(
+            this.predicates.entrySet().stream().allMatch(e -> {
+                boolean value = e.getKey().test(this);
+                this.predicates.put(e.getKey(), value);
+                return value;
+            })
+        ) {
             this.run();
         } else {
             this.fail();
@@ -250,30 +271,39 @@ public abstract class Task {
     @Override
     public String toString() {
 
-        //--- Building the structure
-        StringBuilder builder = new StringBuilder();
-        builder.append("\n");
-        print(builder, "", true);
-
         return ToStringBuilder.create(this)
                 .append("name", (this.name == null ? this.getClass().getSimpleName() : this.name))
                 .append("taskStatus", this.taskStatus.name())
                 .append("parent", (this.parent == null ? null : this.parent.getName()))
                 .append("filters", this.predicates)
-                .append("structure", builder.toString())
             .build();
     }
 
     private void print(StringBuilder stringBuilder, String prefix, boolean isTail) {
+
+        //--- Append current child
         stringBuilder.append(String.format(
             "%s%s%s\n",
                 prefix,
                 (isTail ? "└── " : "├── "),
                 (this.name == null ? this.getClass().getSimpleName() : this.name)
         ));
+
+        //--- Append filters
+        this.predicates.entrySet().forEach(e ->
+            stringBuilder.append(String.format(
+                "%s? FILTER -> %s\n",
+                prefix,
+                (e.getValue() == null ? "[Never Run]" : String.valueOf(e.getValue()))
+            ))
+        );
+
+        //--- Add all of its children minus the last one
         for (int i = 0; i < this.children.size() - 1; i++) {
             this.children.get(i).print(stringBuilder, String.format("%s%s", prefix, (isTail ? "    " : "│   ")), false);
         }
+
+        //--- If it this task has children then append the last one as tail.
         if (this.children.size() > 0) {
             this.children.get(this.children.size() - 1).print(stringBuilder,  String.format("%s%s", prefix, (isTail ? "    " : "│   ")), true);
         }

@@ -10,3 +10,6 @@ out
 Engine/src/main/resources/
 Engine/target/
 *.iml
+
+# TODO: Remove. I haven't done any unit tests yet and I am just using the package to test on-the-fly.
+Engine/src/test
