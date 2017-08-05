@@ -25,10 +25,14 @@ public class HotSwapLoop extends Loop {
 
         this.fileList.forEach((file, fileEntry) -> {
 
+            //--- Check if the the file is entitled to an update
+            //      - The interval time passed by
+            //      - The time was modified since the last check
+            //      - The content (hash) of the file changed
             if(
+                ((System.nanoTime() - fileEntry.getLastCheck()) <= System.nanoTime()) &&
                 (file.lastModified() > fileEntry.getLastModified()) &&
-                !(file.getCRC32() == fileEntry.getLastHash()) &&
-                ((System.nanoTime() - fileEntry.getLastCheck()) <= System.nanoTime())
+                !(file.getCRC32() == fileEntry.getLastHash())
             ) {
 
                 //--- Refresh the file's content

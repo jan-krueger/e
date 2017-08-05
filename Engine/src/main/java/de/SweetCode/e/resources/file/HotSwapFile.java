@@ -20,10 +20,24 @@ public class HotSwapFile extends File {
      */
     private byte[] content;
 
+    /**
+     * <p>
+     *     The callback to notify.
+     * </p>
+     */
+    private HotSwapCallback callback = new HotSwapCallback() {};
+
     public HotSwapFile(String pathname) {
         super(pathname);
 
         this.register();
+    }
+
+    public HotSwapFile(String pathname, HotSwapCallback callback) {
+        this(pathname);
+
+        Assert.assertNotNull(callback);
+        this.callback = callback;
     }
 
     public HotSwapFile(String parent, String child) {
@@ -32,16 +46,37 @@ public class HotSwapFile extends File {
         this.register();
     }
 
+    public HotSwapFile(String parent, String child, HotSwapCallback callback) {
+        this(parent, child);
+
+        Assert.assertNotNull(callback);
+        this.callback = callback;
+    }
+
     public HotSwapFile(File parent, String child) {
         super(parent, child);
 
         this.register();
     }
 
+    public HotSwapFile(File parent, String child, HotSwapCallback callback) {
+        this(parent, child);
+
+        Assert.assertNotNull(callback);
+        this.callback = callback;
+    }
+
     public HotSwapFile(URI uri) {
         super(uri);
 
         this.register();
+    }
+
+    public HotSwapFile(URI uri, HotSwapCallback callback) {
+        this(uri);
+
+        Assert.assertNotNull(callback);
+        this.callback = callback;
     }
 
     /**
@@ -140,12 +175,34 @@ public class HotSwapFile extends File {
      */
     private boolean loadContent() {
         try {
-            this.content = Files.readAllBytes(this.toPath());
+            this.callback.refreshed(
+                this.content,                                       //--- Old Content
+                (this.content = Files.readAllBytes(this.toPath()))  //--- Updated Content
+            );
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    /**
+     * <p>
+     *     The HotSwapCallback class is provided the by the developer, so they can get notified when the content changes.
+     * </p>
+     */
+    public interface HotSwapCallback {
+
+        /**
+         * <p>
+         *     Gets called when a filed was updated and its content changed.
+         * </p>
+         *
+         * @param old The old content of the file.
+         * @param updated The updated content of the file.
+         */
+        default void refreshed(byte[] old, byte[] updated) {}
+
     }
 
 }
