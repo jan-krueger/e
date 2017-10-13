@@ -23,8 +23,6 @@ public class HotSwapLoop extends Loop {
     @Override
     public void tick(long updateLength) {
 
-        System.out.println(updateLength);
-
         this.fileList.forEach((file, fileEntry) -> {
 
             //--- Check if the the file is entitled to an update
