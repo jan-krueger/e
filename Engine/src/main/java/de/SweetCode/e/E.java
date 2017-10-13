@@ -12,7 +12,6 @@ import de.SweetCode.e.utils.Assert;
 import de.SweetCode.e.utils.StringUtils;
 import de.SweetCode.e.utils.log.Log;
 import de.SweetCode.e.utils.log.LogEntry;
-import de.SweetCode.e.utils.log.LogPrefix;
 import de.SweetCode.e.utils.log.LogPrefixes;
 
 import java.security.SecureRandom;
@@ -109,7 +108,7 @@ public class E {
         this.mouseMovingLoop = new MouseMovingLoop((C.SECOND_AS_NANO / this.settings.getTargetTicks()));
 
         if(settings.isHotSwapEnabled()) {
-            this.hotSwapLoop = new HotSwapLoop((long) (C.SECOND_AS_NANO / this.settings.getHotSwapInterval()));
+            this.hotSwapLoop = new HotSwapLoop((C.SECOND_AS_NANO / this.settings.getHotSwapTicks()));
         }
 
         if(settings.isDebugging()) {

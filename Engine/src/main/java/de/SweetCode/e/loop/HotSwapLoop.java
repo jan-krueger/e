@@ -23,6 +23,8 @@ public class HotSwapLoop extends Loop {
     @Override
     public void tick(long updateLength) {
 
+        System.out.println(updateLength);
+
         this.fileList.forEach((file, fileEntry) -> {
 
             //--- Check if the the file is entitled to an update
@@ -41,7 +43,7 @@ public class HotSwapLoop extends Loop {
                 //--- Update values
                 FileEntry tmp = this.fileList.get(file);
                 tmp.setLastModified(file.lastModified());
-                tmp.setLastCheck((long) (fileEntry.getLastCheck() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapInterval())));
+                tmp.setLastCheck((long) (fileEntry.getLastCheck() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapTicks())));
                 tmp.setLastHash(file.getCRC32());
             }
 
@@ -64,7 +66,7 @@ public class HotSwapLoop extends Loop {
         //--- Add the file
         this.fileList.put(file, new FileEntry(
                 file.lastModified(),
-                (long) (System.nanoTime() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapInterval())),
+                (long) (System.nanoTime() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapTicks())),
                 file.getCRC32()
         ));
 

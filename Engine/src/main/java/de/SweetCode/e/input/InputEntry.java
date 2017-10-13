@@ -36,6 +36,7 @@ public class InputEntry {
      * @param mouseDraggedEntries All mouse entries from mouse dragging.
      * @param mouseMovedEntries All mouse entries from mouse movement.
      * @param mouseReleasedQueue All mouse entries from mouse releases.
+     * @param mouseMovingEntries All mouse entries from the movement of itself.
      */
     public InputEntry(
             LinkedList<KeyEntry> keyEntries,

@@ -59,7 +59,8 @@ public class Version implements Comparable<Version> {
      * <p>
      *    Gives a human readable string of the version.
      * </p>
-     * @return
+     *
+     * @return The version in a string, never null.
      */
     public String getVersion() {
         return this.readable;
@@ -70,10 +71,10 @@ public class Version implements Comparable<Version> {
      *     Lets you created a customized version string. You can simply provide an format with placeholders.
      * </p>
      * <ul>
-     *     <li>%major% -> Major Version Number</li>
-     *     <li>%minor% -> Minor Version Number</li>
-     *     <li>%patch% -> Patch Version Number</li>
-     *     <li>%build% -> Build Number</li>
+     *     <li>%major% Major Version Number</li>
+     *     <li>%minor% Minor Version Number</li>
+     *     <li>%patch% Patch Version Number</li>
+     *     <li>%build% Build Number</li>
      * </ul>
      * @param format The format for the version string.
      *

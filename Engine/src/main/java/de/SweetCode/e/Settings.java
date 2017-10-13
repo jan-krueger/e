@@ -130,7 +130,7 @@ public interface Settings {
      *     and {@link de.SweetCode.e.rendering.GameScene#update(InputEntry, long)} methods.
      * </p>
      *
-     * @return How often should run the update-loop/second.
+     * @return How often it should run the update-loop/second.
      */
     default int getTargetTicks() { return 64; }
 
@@ -147,13 +147,14 @@ public interface Settings {
 
     /**
      * <p>
-     *     Defines the amount of ticks/second between checking if a file should be refreshed or not.
+     *     Defines the amount of ticks. aka updates the {@link de.SweetCode.e.loop.HotSwapLoop} should perform each second.
+     *      <span>Warning: This feature can be a heavy I/O feature, so you should be careful with the value you choose.</span>
      * </p>
      *
-     * @return
+     * @return How often it should run the hotswap-loop/second.
      */
-    default double getHotSwapInterval() {
-        return 0.25;
+    default int getHotSwapTicks() {
+        return 1;
     }
 
     /**
@@ -316,6 +317,10 @@ public interface Settings {
 
             if(settings.getDebugInformation() == null) {
                 invalids.add("The getDebugInformation cannot be null.");
+            }
+
+            if(settings.getHotSwapTicks() <= 0) {
+                invalids.add("The getHotSwapTicks cannot be negative or 0");
             }
 
             return invalids;

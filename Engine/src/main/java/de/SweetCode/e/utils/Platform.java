@@ -20,7 +20,8 @@ public enum Platform {
      *    Calls {@link Platform#getPlatform(boolean)} without giving the command to clear
      *    the cache.
      * </p>
-     * @return
+     *
+     * @return The operating system the engine is running on, never null.
      */
     public static Platform getPlatform() {
         return getPlatform(false);
