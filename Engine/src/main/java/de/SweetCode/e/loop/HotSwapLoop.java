@@ -49,6 +49,12 @@ public class HotSwapLoop extends Loop {
 
     }
 
+    public void removeFile(HotSwapFile file) {
+
+        Assert.assertNotNull("The HotSwapFile cannot be null.", file);
+        this.fileList.remove(file);
+
+    }
 
     public void addFile(HotSwapFile file) {
 
@@ -64,7 +70,7 @@ public class HotSwapLoop extends Loop {
         //--- Add the file
         this.fileList.put(file, new FileEntry(
                 file.lastModified(),
-                (long) (System.nanoTime() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapTicks())),
+                System.nanoTime() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapTicks()),
                 file.getCRC32()
         ));
 

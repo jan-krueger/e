@@ -145,6 +145,13 @@ public class HotSwapFile extends File {
         throw new IllegalStateException("The method is not supported");
     }
 
+    @Override
+    public boolean delete() {
+        E.getE().getHotSwapLoop().removeFile(this);
+
+        return super.delete();
+    }
+
     /**
      * <p>
      *    Registers the file in the HotSwapLoop.
