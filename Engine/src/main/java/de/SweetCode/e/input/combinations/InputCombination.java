@@ -1,7 +1,8 @@
-package de.SweetCode.e.input;
+package de.SweetCode.e.input.combinations;
 
 import de.SweetCode.e.GameComponent;
 import de.SweetCode.e.Settings;
+import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.input.entries.KeyEntry;
 
 public class InputCombination implements GameComponent {
@@ -67,4 +68,6 @@ public class InputCombination implements GameComponent {
     public boolean isActive() {
         return true;
     }
+
+
 }

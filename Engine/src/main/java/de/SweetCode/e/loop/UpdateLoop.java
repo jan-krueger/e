@@ -4,10 +4,8 @@ import de.SweetCode.e.E;
 import de.SweetCode.e.GameComponentEntry;
 import de.SweetCode.e.Settings;
 import de.SweetCode.e.input.Input;
-import de.SweetCode.e.input.InputCombination;
 import de.SweetCode.e.input.InputEntry;
 
-import java.awt.event.KeyEvent;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
