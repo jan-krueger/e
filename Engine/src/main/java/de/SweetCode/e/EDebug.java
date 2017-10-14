@@ -12,7 +12,6 @@ public class EDebug implements GameComponent {
     public void update(InputEntry inputEntry, long delta) {
 
         inputEntry.getKeyEntries().forEach(e -> {
-            System.out.println(e.getKeyCode() + " -> " + e.getCharacter());
             if(e.getKeyCode() == KeyEvent.VK_F12) {
                 E.getE().getScreen().setDisplayDebuggingInformation(
                         !E.getE().getScreen().isDisplayDebuggingInformation()
