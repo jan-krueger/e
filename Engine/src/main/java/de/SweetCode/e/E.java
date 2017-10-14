@@ -116,6 +116,11 @@ public class E {
         }
         //---
 
+        //--- Modules
+        if(settings.isDebugging() && !(settings.getDebugInformation().isEmpty())) {
+            this.addComponent(new EDebug(), Priority.LOW);
+        }
+        //--
     }
 
     /**

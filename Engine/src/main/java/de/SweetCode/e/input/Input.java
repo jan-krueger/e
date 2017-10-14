@@ -178,9 +178,7 @@ public final class Input extends KeyAdapter {
      * @return A list of all registered keyboard entries.
      */
     public LinkedList<KeyEntry> getKeyboardEntries() {
-        LinkedList<KeyEntry> stream = new LinkedList<>(this.keyQueue);
-        //this.keyQueue.clear();
-        return stream;
+        return new LinkedList<>(this.keyQueue);
     }
 
     /**
@@ -193,9 +191,7 @@ public final class Input extends KeyAdapter {
      * @return A list of all registered mouse entries.
      */
     public LinkedList<MouseEntry> getMouseEntries() {
-        LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseQueue);
-        this.mouseQueue.clear();
-        return stream;
+        return new LinkedList<>(this.mouseQueue);
     }
 
     /**
@@ -208,9 +204,7 @@ public final class Input extends KeyAdapter {
      * @return A list of all registered mouse wheel entries.
      */
     public LinkedList<MouseWheelEntry> getMouseWheelEntries() {
-        LinkedList<MouseWheelEntry> stream = new LinkedList<>(this.mouseScrollQueue);
-        this.mouseScrollQueue.clear();
-        return stream;
+        return new LinkedList<>(this.mouseScrollQueue);
     }
 
     /**
@@ -223,9 +217,7 @@ public final class Input extends KeyAdapter {
      * @return A list of all registered mouse dragged entries.
      */
     public LinkedList<MouseEntry> getMouseDraggedEntries() {
-        LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseDraggedEntries);
-        this.mouseDraggedEntries.clear();
-        return stream;
+        return new LinkedList<>(this.mouseDraggedEntries);
     }
 
     /**
@@ -238,9 +230,7 @@ public final class Input extends KeyAdapter {
      * @return A list of all registered mouse moved entries.
      */
     public LinkedList<MouseEntry> getMouseMovedEntries() {
-        LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseMovedEntries);
-        this.mouseMovedEntries.clear();
-        return stream;
+        return new LinkedList<>(this.mouseMovedEntries);
     }
 
     /**
@@ -254,9 +244,7 @@ public final class Input extends KeyAdapter {
      * @return A list of all required mouse moving entries.
      */
     public LinkedList<MouseMovingEntry> getMouseMovingEntries() {
-        LinkedList<MouseMovingEntry> stream = new LinkedList<>(E.getE().getMouseMovingLoop().getMouseMovingEntries());
-        E.getE().getMouseMovingLoop().getMouseMovingEntries().clear();
-        return stream;
+        return new LinkedList<>(E.getE().getMouseMovingLoop().getMouseMovingEntries());
     }
 
     /**
@@ -269,9 +257,25 @@ public final class Input extends KeyAdapter {
      * @return A list of all registered mouse release entries.
      */
     public LinkedList<MouseEntry> getMouseReleasedQueue() {
-        LinkedList<MouseEntry> stream = new LinkedList<>(this.mouseReleasedQueue);
+        return new LinkedList<>(this.mouseReleasedQueue);
+    }
+
+    /**
+     * <p>
+     *    This method clears all queues.
+     * </p>
+     */
+    public void clear() {
+
+        this.keyQueue.clear();
+        this.mouseQueue.clear();
+        this.mouseScrollQueue.clear();
+        this.mouseDraggedEntries.clear();
+        this.mouseMovedEntries.clear();
         this.mouseReleasedQueue.clear();
-        return stream;
+
+        E.getE().getMouseMovingLoop().getMouseMovingEntries().clear();
+
     }
 
     /**

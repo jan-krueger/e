@@ -41,6 +41,8 @@ public class EScreen extends JFrame implements GLEventListener {
     private static boolean debugFirstRun = true;
     private static int debugXOffset = -1;
 
+    private boolean displayDebuggingInformation = true;
+
 
     /**
      * @TODO:
@@ -101,6 +103,14 @@ public class EScreen extends JFrame implements GLEventListener {
      */
     public GameScene getCurrent() {
         return this.current;
+    }
+
+    public boolean isDisplayDebuggingInformation() {
+        return this.displayDebuggingInformation;
+    }
+
+    public void setDisplayDebuggingInformation(boolean enabled) {
+        this.displayDebuggingInformation = enabled;
     }
 
     /**
@@ -195,7 +205,7 @@ public class EScreen extends JFrame implements GLEventListener {
         });
 
         //--- Debugging
-        if(E.getE().getSettings().isDebugging() && !(E.getE().getSettings().getDebugInformation().isEmpty())) {
+        if(E.getE().getSettings().isDebugging() && !(E.getE().getSettings().getDebugInformation().isEmpty()) && this.displayDebuggingInformation) {
             EScreen.drawDebugInformation();
         }
         //---

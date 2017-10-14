@@ -41,7 +41,7 @@ public class HotSwapLoop extends Loop {
                 //--- Update values
                 FileEntry tmp = this.fileList.get(file);
                 tmp.setLastModified(file.lastModified());
-                tmp.setLastCheck((long) (fileEntry.getLastCheck() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapTicks())));
+                tmp.setLastCheck((fileEntry.getLastCheck() + (E.C.SECOND_AS_NANO / E.getE().getSettings().getHotSwapTicks())));
                 tmp.setLastHash(file.getCRC32());
             }
 

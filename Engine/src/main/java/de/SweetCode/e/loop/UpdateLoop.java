@@ -66,6 +66,9 @@ public class UpdateLoop extends Loop {
 
         });
 
+        //--- After finishing all updates, we can clear the queues.
+        this.input.clear();
+
     }
 
 }
