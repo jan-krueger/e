@@ -16,7 +16,6 @@ import de.SweetCode.e.utils.log.LogPrefixes;
 
 import java.security.SecureRandom;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +48,7 @@ public class E {
     private final EScreen screen;
     private final Layers layers;
 
-    private final List<GameComponentEntry> gameComponents = new CopyOnWriteArrayList<>();
+    private final List<GameComponentEntry> gameComponents = new ArrayList<>();
     private final Map<Class<? extends GameScene>, GameSceneEntry> scenes = new LinkedHashMap<>();
     //---
 
@@ -261,12 +260,12 @@ public class E {
 
     /**
      * <p>
-     *     Returns a {@link CopyOnWriteArrayList} of all {@link GameComponentEntry GameComponent entries} that are
+     *     Returns a {@link ArrayList} of all {@link GameComponentEntry GameComponent entries} that are
      *     currently registered to the engine. This includes active and inactive components as well as {@link GameScene},
      *     because they are a sub-class of {@link GameScene}.
      * </p>
      *
-     * @return Returns {@link CopyOnWriteArrayList} of {@link GameComponentEntry GameComponentEntries}.
+     * @return Returns {@link ArrayList} of {@link GameComponentEntry GameComponentEntries}.
      */
     public List<GameComponentEntry> getGameComponents() {
         return this.gameComponents;
@@ -313,10 +312,17 @@ public class E {
         }
 
         this.gameComponents.add(new GameComponentEntry(gameComponent, priority));
+        Collections.sort(this.gameComponents, new GameComponentEntry.EntryComparator());
+    }
 
-        // Sort
-        this.gameComponents.sort(new GameComponentEntry.EntryComparator());
-
+    /**
+     * <p>
+     *    Removes the GameComponent so it is no longer registered and can no longer receive updates from tbe engine.
+     * </p>
+     * @param gameComponent The component that should be removed.
+     */
+    public void removeComponent(GameComponent gameComponent) {
+        this.gameComponents.removeIf(e -> e.getGameComponent() == gameComponent);
     }
 
     /**

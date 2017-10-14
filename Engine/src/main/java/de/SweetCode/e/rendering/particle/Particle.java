@@ -123,7 +123,7 @@ public class Particle implements Renderable {
         }
 
         if(!(this.isActive()) && this.destroyItself) {
-            E.getE().getGameComponents().remove(this);
+            E.getE().removeComponent(this);
         }
 
     }
