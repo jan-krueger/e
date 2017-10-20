@@ -1,10 +1,15 @@
 package de.SweetCode.e.input;
 
 import de.SweetCode.e.E;
+import de.SweetCode.e.event.EventListener;
+import de.SweetCode.e.event.Subscribe;
+import de.SweetCode.e.input.combinations.InputCombination;
+import de.SweetCode.e.input.combinations.InputCombinationEvent;
 import de.SweetCode.e.input.entries.KeyEntry;
 import de.SweetCode.e.input.entries.MouseEntry;
 import de.SweetCode.e.input.entries.MouseMovingEntry;
 import de.SweetCode.e.input.entries.MouseWheelEntry;
+import de.SweetCode.e.rendering.Priority;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
@@ -19,7 +24,7 @@ import java.util.concurrent.LinkedTransferQueue;
  *    to make it easier accessible for the user.
  * </p>
  */
-public final class Input extends KeyAdapter {
+public final class Input extends KeyAdapter implements EventListener {
 
     private final Queue<KeyEntry> keyQueue = new LinkedTransferQueue<>();
     private final Queue<MouseEntry> mouseQueue = new LinkedTransferQueue<>();
@@ -27,6 +32,7 @@ public final class Input extends KeyAdapter {
     private final Queue<MouseWheelEntry> mouseScrollQueue = new LinkedTransferQueue<>();
     private final Queue<MouseEntry> mouseDraggedEntries = new LinkedTransferQueue<>();
     private final Queue<MouseEntry> mouseMovedEntries = new LinkedTransferQueue<>();
+    private final Queue<InputCombination> inputCombinationsQueue = new LinkedTransferQueue<>();
 
     /**
      * <p>
@@ -43,6 +49,8 @@ public final class Input extends KeyAdapter {
      * </p>
      */
     private void register() {
+
+        E.getE().getEventHandler().registerListener(this);
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
 
@@ -168,10 +176,14 @@ public final class Input extends KeyAdapter {
 
     }
 
+    @Subscribe(priority = Priority.HIGH)
+    public void onInputCombinationEvent(InputCombinationEvent event) {
+        System.out.println(event.getInputCombination().getName());
+    }
+
     /**s
      * <p>
-     *    This method returns a {@link LinkedList} of all keyboard entries since its last call. It copies all entries
-     *    from the queue which the listener is feeding into the list and clears it.
+     *    This method returns a {@link LinkedList} of all keyboard entries since the last update cycle.
      *    <b>Event:</b> {@link KeyEvent} and {@link KeyEvent#getID()} equals to <i>{@link KeyEvent#KEY_PRESSED}</i>
      * </p>
      *
@@ -183,8 +195,7 @@ public final class Input extends KeyAdapter {
 
     /**
      * <p>
-     *    This method returns a {@link LinkedList} of all mouse entries since its last call. It copies all entries from
-     *    the queue which the listener is feeding into the list and clears it.
+     *    This method returns a {@link LinkedList} of all mouse entries since the last update cycle.
      *    <b>Event:</b> {@link MouseAdapter#mousePressed(MouseEvent)}
      * </p>
      *
@@ -196,8 +207,7 @@ public final class Input extends KeyAdapter {
 
     /**
      * <p>
-     *    This method returns a {@link LinkedList} of all mouse wheel entries since its last call. It copies all entries
-     *    from the queue which the listener is feeding into the list and clears it.
+     *    This method returns a {@link LinkedList} of all mouse wheel entries since the last update cycle.
      *    <b>Event:</b> {@link MouseWheelEvent}
      * </p>
      *
@@ -209,8 +219,7 @@ public final class Input extends KeyAdapter {
 
     /**
      * <p>
-     *    This method returns a {@link LinkedList} of all mouse dragged entries since its last call. It copies all entries
-     *    from the queue which the listener is feeding into the list and clears it.
+     *    This method returns a {@link LinkedList} of all mouse dragged entries since the last update cycle.
      *    <b>Event:</b> {@link MouseMotionAdapter#mouseDragged(MouseEvent)}
      * </p>
      *
@@ -222,8 +231,7 @@ public final class Input extends KeyAdapter {
 
     /**
      * <p>
-     *    This method returns a {@link LinkedList} of all mouse moved entries since its last call. It copies all entries
-     *    from the queue which the listener is feeding into the list and clears it.
+     *    This method returns a {@link LinkedList} of all mouse moved entries since the last update cycle.
      *    <b>Event:</b> {@link MouseMotionAdapter#mouseMoved(MouseEvent)}
      * </p>
      *
@@ -235,8 +243,7 @@ public final class Input extends KeyAdapter {
 
     /**
      * <p>
-     *    This method returns a {@link LinkedList} of all mouse moving entries since its last call. It copies all entries
-     *    from the queue which the listener is feeding into the list and clears it.
+     *    This method returns a {@link LinkedList} of all mouse moving entries since the last update cycle.
      *    <b>Event:</b> Since Java doesn't support listing to mouse movement we are using an internal loop to keep track
      *    of the movement. The {@link de.SweetCode.e.loop.MouseMovingLoop} is responsible for this task.
      * </p>
@@ -249,8 +256,7 @@ public final class Input extends KeyAdapter {
 
     /**
      * <p>
-     *    This method returns a {@link LinkedList} of all mouse moved entries since its last call. It copies all entries
-     *    from the queue which the listener is feeding into the list and clears it.
+     *    This method returns a {@link LinkedList} of all mouse moved entries since the last update cycle
      *    <b>Event:</b> {@link MouseAdapter#mouseReleased(MouseEvent)}
      * </p>
      *
@@ -258,6 +264,17 @@ public final class Input extends KeyAdapter {
      */
     public LinkedList<MouseEntry> getMouseReleasedQueue() {
         return new LinkedList<>(this.mouseReleasedQueue);
+    }
+
+    /**
+     * <p>
+     *    This method returns a {@link LinkedList} of all {@link InputCombination}s since the last update cycle.
+     * </p>
+     *
+     * @return
+     */
+    public LinkedList<InputCombination> getInputCombinationsQueue() {
+        return new LinkedList<>(this.inputCombinationsQueue);
     }
 
     /**
@@ -273,6 +290,7 @@ public final class Input extends KeyAdapter {
         this.mouseDraggedEntries.clear();
         this.mouseMovedEntries.clear();
         this.mouseReleasedQueue.clear();
+        this.inputCombinationsQueue.clear();
 
         E.getE().getMouseMovingLoop().getMouseMovingEntries().clear();
 

@@ -183,8 +183,7 @@ public class EScreen extends JFrame implements GLEventListener {
         return EScreen.graphicConfiguration;
     }
 
-    /**
-     * <p>
+    /**     * <p>
      *     This method generates the next frame that is going to be rendered to the screen. It does this by calling
      *     all {@link GameScene#render(Layers)} methods of all active scenes. Then it checks if the frame should also
      *     contain debug information and calls {@link EScreen#drawDebugInformation()} to draw them if required, and then

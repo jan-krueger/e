@@ -1,5 +1,6 @@
 package de.SweetCode.e;
 
+import de.SweetCode.e.event.EventHandler;
 import de.SweetCode.e.input.Input;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.loop.*;
@@ -44,6 +45,10 @@ public class E {
     private final Input input;
     //---
 
+    //--- Event Handling
+    private final EventHandler eventHandler;
+    //---
+
     //--- Loop & Render Related
     private final EScreen screen;
     private final Layers layers;
@@ -65,6 +70,7 @@ public class E {
     private ProfilerLoop profilerLoop;
     private MouseMovingLoop mouseMovingLoop;
     private HotSwapLoop hotSwapLoop;
+    private EventLoop eventLoop;
     //---
 
     /**
@@ -95,6 +101,7 @@ public class E {
         this.settings = settings;
 
         //--- Setting up internals
+        this.eventHandler = new EventHandler();
         this.log = new Log(settings.getLogCapacity());
         this.screen = new EScreen();
         this.input = new Input();
@@ -105,6 +112,7 @@ public class E {
         this.renderLoop = new RenderLoop(this.screen, (C.SECOND_AS_NANO / this.settings.getTargetFPS()));
         this.updateLoop = new UpdateLoop(this.input, (C.SECOND_AS_NANO / this.settings.getTargetTicks()));
         this.mouseMovingLoop = new MouseMovingLoop((C.SECOND_AS_NANO / this.settings.getTargetTicks()));
+        this.eventLoop = new EventLoop(this.eventHandler, (C.SECOND_AS_NANO / this.settings.getEventHandlerTicks()));
 
         if(settings.isHotSwapEnabled()) {
             this.hotSwapLoop = new HotSwapLoop((C.SECOND_AS_NANO / this.settings.getHotSwapTicks()));
@@ -143,6 +151,17 @@ public class E {
      */
     public Log getLog() {
         return this.log;
+    }
+
+    /**
+     * <p>
+     *     Returns a reference to the {@link EventHandler} used by engine.
+     * </p>
+     *
+     * @return Gives the event handler of the engine instance.
+     */
+    public EventHandler getEventHandler() {
+        return this.eventHandler;
     }
 
     /**
@@ -415,6 +434,13 @@ public class E {
             0,
             this.mouseMovingLoop.getOptimalIterationTime(),
             TimeUnit.NANOSECONDS
+        );
+
+        this.executor.scheduleAtFixedRate(
+                this.eventLoop,
+                0,
+                this.eventLoop.getOptimalIterationTime(),
+                TimeUnit.NANOSECONDS
         );
 
         if(this.settings.isHotSwapEnabled()) {

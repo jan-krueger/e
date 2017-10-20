@@ -9,9 +9,6 @@ import de.SweetCode.e.utils.log.LogPrefixes;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- */
 public class HotSwapLoop extends Loop {
 
     private Map<HotSwapFile, FileEntry> fileList = new HashMap<>();

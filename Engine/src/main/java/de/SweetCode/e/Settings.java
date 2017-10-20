@@ -147,7 +147,7 @@ public interface Settings {
 
     /**
      * <p>
-     *     Defines the amount of ticks. aka updates the {@link de.SweetCode.e.loop.HotSwapLoop} should perform each second.
+     *     Defines the amount of ticks aka updates the {@link de.SweetCode.e.loop.HotSwapLoop} should perform each second.
      *      <span>Warning: This feature can be a heavy I/O feature, so you should be careful with the value you choose.</span>
      * </p>
      *
@@ -155,6 +155,29 @@ public interface Settings {
      */
     default int getHotSwapTicks() {
         return 1;
+    }
+
+    /**
+     * <p>
+     *    Defines the amount of ticks aka updates the {@link de.SweetCode.e.loop.EventLoop} should perform each second.
+     * </p>
+     *
+     * @return How often it should run the event-loop/second.
+     */
+    default int getEventHandlerTicks() {
+        return 4;
+    }
+
+    /**
+     * <p>
+     *     Defines the maximum amount of time the {@link de.SweetCode.e.loop.EventLoop} should spend processing queued
+     *     event calls.
+     * </p>
+     *
+     * @return The max time spent to trigger all events. The time unit is determined by {@link Settings#getDeltaUnit()}.
+     */
+    default long getMaxEventHandlerProcessTime() {
+        return 250;
     }
 
     /**
