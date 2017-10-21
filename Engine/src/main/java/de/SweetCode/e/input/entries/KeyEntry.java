@@ -1,8 +1,9 @@
 package de.SweetCode.e.input.entries;
 
+import de.SweetCode.e.input.InputType;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
-public class KeyEntry {
+public class KeyEntry implements InputType {
 
     private final char character;
 

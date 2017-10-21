@@ -1,13 +1,12 @@
 package de.SweetCode.e.input;
 
-import de.SweetCode.e.input.entries.KeyEntry;
-import de.SweetCode.e.input.entries.MouseEntry;
-import de.SweetCode.e.input.entries.MouseMovingEntry;
-import de.SweetCode.e.input.entries.MouseWheelEntry;
+import de.SweetCode.e.input.combinations.InputCombination;
+import de.SweetCode.e.input.entries.*;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.function.Predicate;
 
 /**
  * <p>
@@ -19,42 +18,88 @@ public class InputEntry {
 
     private final LinkedList<KeyEntry> keyEntries;
     private final LinkedList<MouseEntry> mouseEntries;
-    private final LinkedList<MouseEntry> mouseReleasedQueue;
-    private final LinkedList<MouseEntry> mouseDraggedEntries;
-    private final LinkedList<MouseEntry> mouseMovedEntries;
+    private final LinkedList<MouseReleaseEntry> mouseReleasedEntries;
+    private final LinkedList<MouseDraggedEntry> mouseDraggedEntries;
+    private final LinkedList<MouseMoveEntry> mouseMovedEntries;
     private final LinkedList<MouseMovingEntry> mouseMovingEntries;
     private final LinkedList<MouseWheelEntry> mouseWheelEntries;
+    private final LinkedList<InputCombinationEntry> inputCombinationsEntries;
 
     /**
      * <p>
      *    Creates a new instance of InputEntry.
      * </p>
-     *
-     * @param keyEntries All key entries from the keyboard.
+     *  @param keyEntries All key entries from the keyboard.
      * @param mouseEntries All mouse entries from normal clicks.
      * @param mouseWheelEntries All mouse entries from the mouse wheel.
      * @param mouseDraggedEntries All mouse entries from mouse dragging.
      * @param mouseMovedEntries All mouse entries from mouse movement.
-     * @param mouseReleasedQueue All mouse entries from mouse releases.
      * @param mouseMovingEntries All mouse entries from the movement of itself.
+     * @param mouseReleasedEntries All mouse entries from mouse releases.
+     * @param inputCombinationsEntries All triggered input combinations.
      */
     public InputEntry(
             LinkedList<KeyEntry> keyEntries,
             LinkedList<MouseEntry> mouseEntries,
             LinkedList<MouseWheelEntry> mouseWheelEntries,
-            LinkedList<MouseEntry> mouseDraggedEntries,
-            LinkedList<MouseEntry> mouseMovedEntries,
+            LinkedList<MouseDraggedEntry> mouseDraggedEntries,
+            LinkedList<MouseMoveEntry> mouseMovedEntries,
             LinkedList<MouseMovingEntry> mouseMovingEntries,
-            LinkedList<MouseEntry> mouseReleasedQueue
+            LinkedList<MouseReleaseEntry> mouseReleasedEntries,
+            LinkedList<InputCombinationEntry> inputCombinationsEntries
     ) {
         this.keyEntries = keyEntries;
         this.mouseEntries = mouseEntries;
-        this.mouseReleasedQueue = mouseReleasedQueue;
+        this.mouseReleasedEntries = mouseReleasedEntries;
         this.mouseWheelEntries = mouseWheelEntries;
         this.mouseDraggedEntries = mouseDraggedEntries;
         this.mouseMovedEntries = mouseMovedEntries;
         this.mouseMovingEntries = mouseMovingEntries;
+        this.inputCombinationsEntries = inputCombinationsEntries;
+    }
 
+    public <T extends InputType> LinkedList<T> get(Class<T> type) {
+
+        //--- KeyEntry
+        if(type.isAssignableFrom(KeyEntry.class)) {
+            return (LinkedList<T>) this.keyEntries;
+        }
+        //--- MouseEntry
+        else if(type.isAssignableFrom(MouseEntry.class)) {
+            return (LinkedList<T>) this.mouseEntries;
+        }
+        //--- MouseReleaseEntry
+        else if(type.isAssignableFrom(MouseReleaseEntry.class)) {
+            return (LinkedList<T>) this.mouseReleasedEntries;
+        }
+        //--- MouseWheelEntries
+        else if(type.isAssignableFrom(MouseWheelEntry.class)) {
+            return (LinkedList<T>) this.mouseWheelEntries;
+        }
+        //--- MouseDraggedEntries
+        else if(type.isAssignableFrom(MouseDraggedEntry.class)) {
+            return (LinkedList<T>) this.mouseDraggedEntries;
+        }
+        //--- MouseMovedEntries
+        else if(type.isAssignableFrom(MouseMoveEntry.class)) {
+            return (LinkedList<T>) this.mouseMovedEntries;
+        }
+        //--- MouseMovingEntries
+        else if(type.isAssignableFrom(MouseMovingEntry.class)) {
+            return (LinkedList<T>) this.mouseMovingEntries;
+        }
+        //--- InputCombinationEntries
+        else if(type.isAssignableFrom(InputCombinationEntry.class)) {
+            return (LinkedList<T>) this.inputCombinationsEntries;
+        }
+
+        throw new InternalError("Notify the developer that an InputType wasn't implemented in InputEntry#get and provide" +
+                " the name of the used type.");
+
+    }
+
+    public <T extends InputType> boolean has(Class<T> type, Predicate<LinkedList<T>> predicate) {
+        return predicate.test(this.get(type));
     }
 
     /**
@@ -86,8 +131,8 @@ public class InputEntry {
      *
      * @return Gives all mouse entries from mouse releases.
      */
-    public LinkedList<MouseEntry> getMouseReleasedQueue() {
-        return this.mouseReleasedQueue;
+    public LinkedList<MouseReleaseEntry> getMouseReleasedEntries() {
+        return this.mouseReleasedEntries;
     }
 
     /**
@@ -108,7 +153,7 @@ public class InputEntry {
      *
      * @return Gives all mouse entries from mouse dragging.
      */
-    public LinkedList<MouseEntry> getMouseDraggedEntries() {
+    public LinkedList<MouseDraggedEntry> getMouseDraggedEntries() {
         return this.mouseDraggedEntries;
     }
 
@@ -119,7 +164,7 @@ public class InputEntry {
      *
      * @return Gives all mouse entries from mouse movement.
      */
-    public LinkedList<MouseEntry> getMouseMovedEntries() {
+    public LinkedList<MouseMoveEntry> getMouseMovedEntries() {
         return this.mouseMovedEntries;
     }
 
@@ -128,10 +173,21 @@ public class InputEntry {
      *    A LinkedList of all key entries generated by {@link de.SweetCode.e.loop.MouseMovingLoop}.
      * </p>
      *
-     * @return Gives all mouse entries from mouse movements while they happend.
+     * @return Gives all mouse moving entries.
      */
     public LinkedList<MouseMovingEntry> getMouseMovingEntries() {
         return this.mouseMovingEntries;
+    }
+
+    /**
+     * <p>
+     *    A LinkedList of all triggered InputCombinations.
+     * </p>
+     *
+     * @return Gives all InputCombinations.
+     */
+    public LinkedList<InputCombinationEntry> getInputCombinationsEntries() {
+        return this.inputCombinationsEntries;
     }
 
     @Override
@@ -143,7 +199,8 @@ public class InputEntry {
             .append("mouseDraggedEntries", this.mouseDraggedEntries)
             .append("mouseMovedEntries", this.mouseMovedEntries)
             .append("mouseMovingEntries", this.mouseMovingEntries)
-            .append("mouseReleasedQueue", this.mouseReleasedQueue)
+            .append("mouseReleasedEntries", this.mouseReleasedEntries)
+            .append("inputCombinationsEntries", this.inputCombinationsEntries)
         .build();
     }
 

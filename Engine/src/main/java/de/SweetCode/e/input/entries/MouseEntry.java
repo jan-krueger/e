@@ -1,10 +1,11 @@
 package de.SweetCode.e.input.entries;
 
+import de.SweetCode.e.input.InputType;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
 
-public class MouseEntry {
+public class MouseEntry implements InputType {
 
     private final Point locationOnScreen;
     private final Point point;
@@ -158,6 +159,36 @@ public class MouseEntry {
         public Builder isShiftDown(boolean isShiftDown) {
             this.isShiftDown = isShiftDown;
             return this;
+        }
+
+        public MouseReleaseEntry buildReleaseEntry() {
+            return new MouseReleaseEntry(
+                    this.locationOnScreen,
+                    this.point,
+                    this.button,
+                    this.clickCount,
+                    this.isPopupTrigger,
+                    this.isAltDown,
+                    this.isAltGraphDown,
+                    this.isControlDown,
+                    this.isMetaDown,
+                    this.isShiftDown
+            );
+        }
+
+        public MouseDraggedEntry buildDraggedEntry() {
+            return new MouseDraggedEntry(
+                    this.locationOnScreen,
+                    this.point,
+                    this.button,
+                    this.clickCount,
+                    this.isPopupTrigger,
+                    this.isAltDown,
+                    this.isAltGraphDown,
+                    this.isControlDown,
+                    this.isMetaDown,
+                    this.isShiftDown
+            );
         }
 
         public MouseEntry build() {

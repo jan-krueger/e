@@ -10,7 +10,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class LoopThreadFactory implements ThreadFactory {
 
-    private final static String NAME_FORMAT = "e-loop-thread-%d";
+    //---
+    private final static String NAME_FORMAT = "e-%s-thread-%d";
+
+    //---
+    private final String name;
+    private final int priority;
 
     private final ThreadGroup group;
     private final AtomicInteger threadNumber = new AtomicInteger(1);
@@ -22,7 +27,10 @@ public class LoopThreadFactory implements ThreadFactory {
      *    thread group.
      * </p>
      */
-    public LoopThreadFactory() {
+    public LoopThreadFactory(String name, int priority) {
+        this.name = name;
+        this.priority = priority;
+
         SecurityManager s = System.getSecurityManager();
         this.group = (s == null) ? Thread.currentThread().getThreadGroup() : s.getThreadGroup();
     }
@@ -31,12 +39,14 @@ public class LoopThreadFactory implements ThreadFactory {
     @Override
     public Thread newThread(Runnable runnable) {
 
-        Thread thread = new Thread(this.group, runnable, String.format(NAME_FORMAT, threadNumber.getAndIncrement()),0);
+        Thread thread = new Thread(this.group, runnable, String.format(NAME_FORMAT, this.name, this.threadNumber.getAndIncrement()),0);
 
         // Note: All threads are user threads.
         if (thread.isDaemon()) {
             thread.setDaemon(false);
         }
+
+        thread.setPriority(this.priority);
 
         // Note: All threads should have a NORMAL priority
         // @TODO Should the user be able to define the priority of each loop?

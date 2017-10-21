@@ -4,6 +4,7 @@ import com.sun.management.OperatingSystemMXBean;
 import de.SweetCode.e.E;
 import de.SweetCode.e.GameComponentEntry;
 import de.SweetCode.e.Settings;
+import de.SweetCode.e.event.Event;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -35,6 +36,8 @@ public class ProfilerLoop extends Loop {
     private int CPU_PROCESSORS = 0;
     private long OBJECTS_ACTIVE = 0;
     private long MEMORY_HEAP_MAX = 0;
+
+    private int EVENT_SIZE = 0;
 
     private List<GarbageCollectorMXBean> GC_BEANS = ManagementFactory.getGarbageCollectorMXBeans();
     private Map<ThreadGroup, List<Thread>> THREAD_LIST = ProfilerLoop.getThreadsByGroup();
@@ -119,6 +122,17 @@ public class ProfilerLoop extends Loop {
 
     /**
      * <p>
+     *    The amount of queued {@link de.SweetCode.e.event.Event} via {@link de.SweetCode.e.event.EventHandler#trigger(Event, boolean)}.
+     * </p>
+     *
+     * @return Amount of queued events.
+     */
+    public int getEventSize() {
+        return this.EVENT_SIZE;
+    }
+
+    /**
+     * <p>
      *    A {@link List} of GC beans.
      * </p>
      *
@@ -193,11 +207,14 @@ public class ProfilerLoop extends Loop {
 
         //--- Profile
         if(displays.contains(Settings.DebugDisplay.LOOP_PROFILE) && updateRequired) {
-
             this.OBJECTS_ACTIVE = E.getE().getGameComponents().stream()
                     .filter(e -> e.getGameComponent().isActive())
                     .count();
+        }
 
+        //--- Event
+        if(displays.contains(Settings.DebugDisplay.EVENT_PROFILE) && updateRequired) {
+            this.EVENT_SIZE = E.getE().getEventHandler().getQueuedEvents().size();
         }
 
         //--- Reset

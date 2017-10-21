@@ -170,18 +170,6 @@ public interface Settings {
 
     /**
      * <p>
-     *     Defines the maximum amount of time the {@link de.SweetCode.e.loop.EventLoop} should spend processing queued
-     *     event calls.
-     * </p>
-     *
-     * @return The max time spent to trigger all events. The time unit is determined by {@link Settings#getDeltaUnit()}.
-     */
-    default long getMaxEventHandlerProcessTime() {
-        return 250;
-    }
-
-    /**
-     * <p>
      *     The maximum of elements the log can store. The log is used by the engine, but you can also send your own
      *     entries to it. If the log reaches the maximum it will delete the oldest entry in it.
      * </p>
@@ -353,7 +341,7 @@ public interface Settings {
     }
 
     /**
-     * The developer can chose what he wanna see as debug informatuon.
+     * The developer can chose what he wanna see as debug information.
      */
     enum DebugDisplay {
 
@@ -362,6 +350,7 @@ public interface Settings {
         LOOP_PROFILE,
         GC_PROFILE,
         THREAD_PROFILE,
+        EVENT_PROFILE,
 
     }
 

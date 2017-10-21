@@ -18,7 +18,6 @@ public class InputCombination implements GameComponent {
     //--- State values; used only internal to determine if the combination got triggered or not.
     private InputNode currentState;
     private int timeLeft = 0;
-    private boolean parent = true;
 
     /**
      * <p>
@@ -52,24 +51,11 @@ public class InputCombination implements GameComponent {
         }
 
         for(KeyEntry e : inputEntry.getKeyEntries()) {
-
-            //--- Check current parent
-            if(this.parent) {
-                if(this.currentState.getKeyCode() == e.getKeyCode()) {
-                    this.parent = false;
-                } else {
-                    this.reset();
-                    break;
-                }
-            }
-            //--- Check parent's children
-            else {
-                Optional<InputNode> node = this.currentState.getChildByKeyCode(e.getKeyCode());
-                if (node.isPresent()) {
-                    this.currentState = node.get();
-                } else {
-                    this.reset();
-                }
+            Optional<InputNode> node = this.currentState.getChildByKeyCode(e.getKeyCode());
+            if (node.isPresent()) {
+                this.currentState = node.get();
+            } else {
+                this.reset();
             }
         }
 
@@ -80,7 +66,6 @@ public class InputCombination implements GameComponent {
     }
 
     private void reset() {
-        this.parent = true;
         this.currentState = this.root;
         this.timeLeft = this.timeLimit;
     }

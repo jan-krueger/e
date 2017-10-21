@@ -1,10 +1,11 @@
 package de.SweetCode.e.input.entries;
 
+import de.SweetCode.e.input.InputType;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
 
-public class MouseMovingEntry {
+public class MouseMovingEntry implements InputType {
 
     private final Point locationOnScreen;
     private final Point point;

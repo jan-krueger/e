@@ -448,6 +448,11 @@ public class EScreen extends JFrame implements GLEventListener {
             xStep += 3;
         }
 
+        if(displays.contains(Settings.DebugDisplay.EVENT_PROFILE)) {
+            layer.g().drawString(String.format("Event Queue: %d", E.getE().getEventHandler().getQueuedEvents().size()), width - xOffset, yOffset * xStep);
+            xStep += 1;
+        }
+
         //--- GC_PROFILE
         if(displays.contains(Settings.DebugDisplay.GC_PROFILE)) {
             List<GarbageCollectorMXBean> gcBeans = profilerLoop.getGCBeans();

@@ -46,19 +46,12 @@ public class EventHandler {
 
             Subscribe subscribe = method.getAnnotation(Subscribe.class);
 
-            if(subscribe == null) {
-                continue;
-            }
-
-            if(!(method.getParameterTypes().length == 1)) {
-                continue;
-            }
-
-            if(!(method.getReturnType().equals(void.class))) {
-                continue;
-            }
-
-            if(!(Event.class.isAssignableFrom(method.getParameterTypes()[0]))) {
+            if (
+                (subscribe == null) ||
+                (!(method.getParameterTypes().length == 1)) ||
+                (!(method.getReturnType().equals(void.class))) ||
+                (!(Event.class.isAssignableFrom(method.getParameterTypes()[0])))
+            ) {
                 continue;
             }
 

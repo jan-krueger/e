@@ -5,10 +5,7 @@ import de.SweetCode.e.event.EventListener;
 import de.SweetCode.e.event.Subscribe;
 import de.SweetCode.e.input.combinations.InputCombination;
 import de.SweetCode.e.input.combinations.InputCombinationEvent;
-import de.SweetCode.e.input.entries.KeyEntry;
-import de.SweetCode.e.input.entries.MouseEntry;
-import de.SweetCode.e.input.entries.MouseMovingEntry;
-import de.SweetCode.e.input.entries.MouseWheelEntry;
+import de.SweetCode.e.input.entries.*;
 import de.SweetCode.e.rendering.Priority;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
@@ -28,11 +25,11 @@ public final class Input extends KeyAdapter implements EventListener {
 
     private final Queue<KeyEntry> keyQueue = new LinkedTransferQueue<>();
     private final Queue<MouseEntry> mouseQueue = new LinkedTransferQueue<>();
-    private final Queue<MouseEntry> mouseReleasedQueue = new LinkedTransferQueue<>();
+    private final Queue<MouseReleaseEntry> mouseReleasedQueue = new LinkedTransferQueue<>();
     private final Queue<MouseWheelEntry> mouseScrollQueue = new LinkedTransferQueue<>();
-    private final Queue<MouseEntry> mouseDraggedEntries = new LinkedTransferQueue<>();
+    private final Queue<MouseDraggedEntry> mouseDraggedEntries = new LinkedTransferQueue<>();
     private final Queue<MouseEntry> mouseMovedEntries = new LinkedTransferQueue<>();
-    private final Queue<InputCombination> inputCombinationsQueue = new LinkedTransferQueue<>();
+    private final Queue<InputCombinationEntry> inputCombinationsQueue = new LinkedTransferQueue<>();
 
     /**
      * <p>
@@ -113,7 +110,7 @@ public final class Input extends KeyAdapter implements EventListener {
                         .isControlDown(e.isControlDown())
                         .isMetaDown(e.isMetaDown())
                         .isShiftDown(e.isShiftDown())
-                    .build()
+                    .buildReleaseEntry()
                 );
             }
         });
@@ -150,7 +147,7 @@ public final class Input extends KeyAdapter implements EventListener {
                         .isControlDown(e.isControlDown())
                         .isMetaDown(e.isMetaDown())
                         .isShiftDown(e.isShiftDown())
-                    .build()
+                    .buildDraggedEntry()
                 );
 
             }
@@ -176,9 +173,9 @@ public final class Input extends KeyAdapter implements EventListener {
 
     }
 
-    @Subscribe(priority = Priority.HIGH)
+    @Subscribe
     public void onInputCombinationEvent(InputCombinationEvent event) {
-        System.out.println(event.getInputCombination().getName());
+        this.inputCombinationsQueue.add(new InputCombinationEntry(event.getInputCombination()));
     }
 
     /**s
@@ -225,7 +222,7 @@ public final class Input extends KeyAdapter implements EventListener {
      *
      * @return A list of all registered mouse dragged entries.
      */
-    public LinkedList<MouseEntry> getMouseDraggedEntries() {
+    public LinkedList<MouseDraggedEntry> getMouseDraggedEntries() {
         return new LinkedList<>(this.mouseDraggedEntries);
     }
 
@@ -237,8 +234,8 @@ public final class Input extends KeyAdapter implements EventListener {
      *
      * @return A list of all registered mouse moved entries.
      */
-    public LinkedList<MouseEntry> getMouseMovedEntries() {
-        return new LinkedList<>(this.mouseMovedEntries);
+    public LinkedList<MouseMoveEntry> getMouseMovedEntries() {
+        return new LinkedList(this.mouseMovedEntries);
     }
 
     /**
@@ -262,7 +259,7 @@ public final class Input extends KeyAdapter implements EventListener {
      *
      * @return A list of all registered mouse release entries.
      */
-    public LinkedList<MouseEntry> getMouseReleasedQueue() {
+    public LinkedList<MouseReleaseEntry> getMouseReleasedQueue() {
         return new LinkedList<>(this.mouseReleasedQueue);
     }
 
@@ -273,7 +270,7 @@ public final class Input extends KeyAdapter implements EventListener {
      *
      * @return
      */
-    public LinkedList<InputCombination> getInputCombinationsQueue() {
+    public LinkedList<InputCombinationEntry> getInputCombinationsQueue() {
         return new LinkedList<>(this.inputCombinationsQueue);
     }
 
@@ -316,15 +313,20 @@ public final class Input extends KeyAdapter implements EventListener {
      * @return Builds a new {@link InputEntry} with the current values and removes all from the queue.
      */
     public InputEntry build() {
-        return new InputEntry(
-                this.getKeyboardEntries(),
-                this.getMouseEntries(),
-                this.getMouseWheelEntries(),
-                this.getMouseDraggedEntries(),
-                this.getMouseMovedEntries(),
-                this.getMouseMovingEntries(),
-                this.getMouseReleasedQueue()
+
+        InputEntry inputEntry = new InputEntry(
+            this.getKeyboardEntries(),
+            this.getMouseEntries(),
+            this.getMouseWheelEntries(),
+            this.getMouseDraggedEntries(),
+            this.getMouseMovedEntries(),
+            this.getMouseMovingEntries(),
+            this.getMouseReleasedQueue(),
+            this.getInputCombinationsQueue()
         );
+
+        this.clear();
+        return inputEntry;
     }
 
     @Override
@@ -337,6 +339,7 @@ public final class Input extends KeyAdapter implements EventListener {
             .append("mouseMovedEntries", this.mouseMovedEntries)
             .append("mouseMovingEntries", E.getE().getMouseMovingLoop().getMouseMovingEntries())
             .append("mouseReleasedQueue", this.mouseReleasedQueue)
+            .append("inputCombinationsQueue", this.inputCombinationsQueue)
         .build();
     }
 

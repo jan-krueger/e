@@ -19,6 +19,7 @@ import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,7 +34,7 @@ public class E {
      * @TODO This is the pool size representing the number of threads to keep in the pool, even if they are idle, which are
      * responsible for executing the loops. This should maybe be a changeable in the {@link Settings}.
      */
-    public static int POOL_SIZE = 2;
+    public static int POOL_SIZE = 4;
 
     //--- Static & Final Variables
     private static E instance;
@@ -63,14 +64,17 @@ public class E {
     //---
 
     //--- Related To Loops
-    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(POOL_SIZE, new LoopThreadFactory());
+    private final ScheduledExecutorService executorCore = Executors.newScheduledThreadPool(POOL_SIZE, new LoopThreadFactory("core", Thread.MAX_PRIORITY));
+    private final ScheduledExecutorService executorNormal = Executors.newScheduledThreadPool(POOL_SIZE, new LoopThreadFactory("normal", Thread.MIN_PRIORITY));
 
     private RenderLoop renderLoop;
     private UpdateLoop updateLoop;
-    private ProfilerLoop profilerLoop;
+
     private MouseMovingLoop mouseMovingLoop;
+
     private HotSwapLoop hotSwapLoop;
     private EventLoop eventLoop;
+    private ProfilerLoop profilerLoop;
     //---
 
     /**
@@ -417,26 +421,27 @@ public class E {
         //
 
         //--- Schedule Various Loops (Currently: Rendering & Update Loop)
-        this.executor.scheduleAtFixedRate(
+        this.executorCore.scheduleAtFixedRate(
             this.renderLoop,
             0,
             this.renderLoop.getOptimalIterationTime(),
             TimeUnit.NANOSECONDS
         );
-        this.executor.scheduleAtFixedRate(
+        this.executorCore.scheduleAtFixedRate(
             this.updateLoop,
             0,
             this.updateLoop.getOptimalIterationTime(),
             TimeUnit.NANOSECONDS
         );
-        this.executor.scheduleAtFixedRate(
+
+        this.executorNormal.scheduleAtFixedRate(
             this.mouseMovingLoop,
             0,
             this.mouseMovingLoop.getOptimalIterationTime(),
             TimeUnit.NANOSECONDS
         );
 
-        this.executor.scheduleAtFixedRate(
+        this.executorNormal.scheduleAtFixedRate(
                 this.eventLoop,
                 0,
                 this.eventLoop.getOptimalIterationTime(),
@@ -444,7 +449,7 @@ public class E {
         );
 
         if(this.settings.isHotSwapEnabled()) {
-            this.executor.scheduleAtFixedRate(
+            this.executorNormal.scheduleAtFixedRate(
                 this.hotSwapLoop,
                 0,
                 this.hotSwapLoop.getOptimalIterationTime(),
@@ -453,7 +458,7 @@ public class E {
         }
 
         if(this.settings.isDebugging() && !(this.settings.getDebugInformation().isEmpty())) {
-            this.executor.scheduleAtFixedRate(
+            this.executorNormal.scheduleAtFixedRate(
                 this.profilerLoop,
                 0,
                 this.profilerLoop.getOptimalIterationTime(),

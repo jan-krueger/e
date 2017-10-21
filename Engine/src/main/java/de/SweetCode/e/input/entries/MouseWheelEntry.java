@@ -1,11 +1,12 @@
 package de.SweetCode.e.input.entries;
 
+import de.SweetCode.e.input.InputType;
 import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
 
 
-public class MouseWheelEntry {
+public class MouseWheelEntry implements InputType {
 
     private final Point point;
 
